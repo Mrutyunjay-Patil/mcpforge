@@ -29,7 +29,7 @@ Converting OpenAPI specifications into MCP (Model Context Protocol) servers toda
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/mcpforge-app.git
+git clone https://github.com/Mrutyunjay-Patil/mcpforge.git
 cd mcpforge-app
 
 # 2. Install dependencies
@@ -56,10 +56,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser tests from a product requirements document.
 
-- **30 test cases** across 8+ requirement categories (Authentication, Landing Page, Navigation, Dashboard, Create Project, Endpoint Explorer, MCP Type Management, and more)
-- **25 of 30 passing** (83.33% pass rate)
+- **59 test cases** across 13 requirement categories covering authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API testing
+- **59 of 59 passing** (100% pass rate)
+- Tests executed across 3 separate TestSprite runs (2 frontend rounds + 1 backend round)
 - Full test report and individual test scripts are in the [`testsprite_tests/`](./testsprite_tests/) folder
-- Detailed results with screenshots and video replays available in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
+- Detailed results available in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
 
 ## Project Structure
 

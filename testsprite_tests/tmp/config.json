@@ -1,19 +1,20 @@
 {
   "status": "commited",
-  "type": "backend",
+  "type": "frontend",
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
-  "backendAuthType": "public",
+  "loginUser": "test@mcpforge.dev",
+  "loginPassword": "Password1",
   "executionArgs": {
     "projectName": "mcpforge-app",
     "projectPath": "D:\\apps\\mcpforge\\mcpforge-app",
     "testIds": [],
-    "additionalInstruction": "Execute all 10 backend API tests. The app runs on localhost:3000 in production mode. Test credentials: email test@mcpforge.dev password Password1. There is one existing project called Petstore MCP Server with 11 endpoints. The session is managed via NextAuth v5 JWT cookies. To authenticate API requests, first POST to /api/auth/callback/credentials with csrfToken, email, and password to get session cookies, then use those cookies for subsequent requests. The CSRF token can be obtained from GET /api/auth/csrf.",
+    "additionalInstruction": "Execute all frontend tests. App runs on localhost:3000 in production mode. Test credentials: email test@mcpforge.dev password Password1. There is one existing project called Petstore MCP Server with 11 endpoints. Sign in page is at /auth/signin. After login user lands on /dashboard.",
     "serverMode": "production",
     "envs": {
       "API_KEY": "sk-user-uhWwMJ4MEvEN1YDWzUT1TJdnQ-SOBcb3ujt6Fw4ZclonuqbxB7UlGA3Gm-Je8JIVW3Dwu7v6z42rqqXqogj83gnJfzXzI72GGRqDLCKApMvYhSLR9M21aACjpkB59GR4-f8"
     }
   },
-  "serverPort": 59948,
-  "proxy": "http://03d93588-2aff-4ea5-a387-9caa7af5f5c6:ZTiORCXg3U9unayBXwxHwHMAdhyhHeFH@tun.testsprite.com:8080"
+  "serverPort": 59637,
+  "proxy": "http://65823a5e-71e2-4701-b3d5-d78d4f54d868:iBmJ5V78jg2HJHH96jolNpuFN7wncUht@tun.testsprite.com:8080"
 }
