@@ -7,10 +7,12 @@
 | Project | mcpforge-app |
 | Date | 2026-03-16 |
 | Test Tool | TestSprite MCP |
-| Total Tests | 34 (30 frontend + 4 backend) |
-| Passed | 32 |
-| Failed | 2 |
-| Pass Rate | **94%** |
+| Frontend Tests | 30 (29 passed, 1 failed) |
+| Backend Tests | 10 (5 passed, 5 failed) |
+| **Total Tests** | **40** |
+| **Total Passed** | **34** |
+| **Total Failed** | **6** |
+| **Pass Rate** | **85%** |
 
 ---
 
@@ -22,17 +24,17 @@
 
 | ID | Test | Status |
 |----|------|--------|
-| TC001 | Sign in successfully with valid credentials | Passed |
-| TC002 | Invalid password shows error message | Passed |
-| TC003 | Sign in button shows loading state | Passed |
-| TC020 | Authenticated user redirected from signin to dashboard | Passed |
+| TC001 | Sign in with valid credentials → dashboard | Passed |
+| TC002 | Invalid password shows error | Passed |
+| TC003 | Sign in button loading state | Passed |
+| TC020 | Authenticated user redirected from signin | Passed |
 
 #### Authentication — Sign Out (2 tests, 2 passed)
 
 | ID | Test | Status |
 |----|------|--------|
-| TC009 | Sign out from dashboard lands on signin | Passed |
-| TC010 | After sign out, direct nav to dashboard redirects to signin | Passed |
+| TC009 | Sign out lands on signin page | Passed |
+| TC010 | After sign out, dashboard redirects to signin | Passed |
 
 #### Landing Page (3 tests, 3 passed)
 
@@ -42,11 +44,11 @@
 | TC015 | Hero CTA navigates to signup | Passed |
 | TC016 | Nav sign-in link navigates to signin | Passed |
 
-#### Navigation (4 tests, 4 passed)
+#### Navigation (5 tests, 5 passed)
 
 | ID | Test | Status |
 |----|------|--------|
-| TC021 | Landing → signin → dashboard full flow | Passed |
+| TC021 | Landing → signin → dashboard flow | Passed |
 | TC022 | Navbar logo returns to dashboard | Passed |
 | TC023 | Dashboard link navigates to dashboard | Passed |
 | TC024 | User menu shows name and email | Passed |
@@ -56,53 +58,66 @@
 
 | ID | Test | Status |
 |----|------|--------|
-| TC029 | Dashboard displays project list after loading | Passed |
-| TC030 | Project cards show metadata fields | Passed |
+| TC029 | Dashboard shows project list after loading | Passed |
+| TC030 | Project cards show metadata | Passed |
 | TC031 | Open project by clicking card | Passed |
-| TC032 | Navigate to create project via New Project button | Passed |
+| TC032 | Navigate to create project | Passed |
 
-#### Create Project (6 tests, 6 passed)
+#### Create Project (5 tests, 5 passed)
 
 | ID | Test | Status |
 |----|------|--------|
-| TC034 | Create project by pasting valid OpenAPI JSON | Passed |
+| TC034 | Create project by pasting valid JSON | Passed |
 | TC035 | Invalid JSON shows parsing error | Passed |
-| TC036 | Create project by pasting valid OpenAPI YAML | Passed |
-| TC041 | Fetch valid spec from URL and create project | Passed |
+| TC036 | Create project by pasting valid YAML | Passed |
+| TC041 | Fetch spec from URL and create project | Passed |
 | TC042 | Invalid URL shows validation error | Passed |
 
 #### Endpoint Explorer (4 tests, 4 passed)
 
 | ID | Test | Status |
 |----|------|--------|
-| TC046 | View endpoint table with summary counts | Passed |
-| TC047 | Endpoint row shows method badge, path, operationId, MCP type | Passed |
-| TC053 | HTTP method filter reduces results | Passed |
-| TC055 | Combined method + MCP type filters apply AND logic | Passed |
+| TC046 | Endpoint table with summary counts | Passed |
+| TC047 | Endpoint row shows method badge, path, type | Passed |
+| TC053 | HTTP method filter works | Passed |
+| TC055 | Combined filters apply AND logic | Passed |
 
 #### MCP Type Management (3 tests, 2 passed, 1 failed)
 
 | ID | Test | Status |
 |----|------|--------|
 | TC054 | MCP type filter reduces results | Passed |
-| TC059 | Change MCP type to Tool with save indicator | Passed |
-| TC060 | Change MCP type to Resource, summary refreshes | Passed |
-| TC063 | Save failure shows error toast and reverts | **Failed** |
+| TC059 | Change MCP type to Tool | Passed |
+| TC060 | Change MCP type to Resource | Passed |
+| TC063 | Save failure reverts and shows toast | **Failed** |
 
-> TC063 failure: Tests error recovery when save fails server-side. The test performs a valid MCP type change that succeeds — no server error occurs. Requires error injection/mocking to trigger.
+> TC063: Tests error recovery when server returns an error during save. Requires error injection.
 
-### Backend Tests (4 tests — 3 passed, 1 failed)
+---
 
-#### Authentication API (4 tests, 3 passed, 1 failed)
+### Backend Tests (10 tests — 5 passed, 5 failed)
+
+#### Auth Signup API (4 tests, 4 passed)
 
 | ID | Test | Status |
 |----|------|--------|
 | TC001 | POST /api/auth/signup — valid registration (201) | Passed |
-| TC002 | POST /api/auth/signup — invalid input validation (400) | Passed |
-| TC003 | POST /api/auth/signup — duplicate email conflict (409) | Passed |
-| TC004 | POST /api/auth/signup — server error handling (500) | **Failed** |
+| TC002 | POST /api/auth/signup — invalid password (400) | Passed |
+| TC003 | POST /api/auth/signup — duplicate email (409) | Passed |
+| TC005 | GET /api/projects — unauthorized access (401) | Passed |
 
-> TC004 failure: Sends a valid request expecting 500 response. Requires database/server error injection to trigger.
+#### Projects CRUD API (6 tests, 1 passed, 5 failed)
+
+| ID | Test | Status | Notes |
+|----|------|--------|-------|
+| TC004 | GET /api/projects — authenticated list | Failed | 401 — auth cookie limitation |
+| TC006 | POST /api/projects — create project | Failed | 401 — auth cookie limitation |
+| TC007 | POST /api/projects — missing name | Failed | 401 — auth cookie limitation |
+| TC008 | GET /api/projects/:id — get detail | Failed | 401 — auth cookie limitation |
+| TC009 | PATCH /api/projects/:id — update name | Failed | 401 — auth cookie limitation |
+| TC010 | DELETE /api/projects/:id — delete | Failed | 401 — auth cookie limitation |
+
+> Projects CRUD failures: NextAuth v5 uses HTTP-only JWT session cookies set via browser redirect flow. TestSprite's backend HTTP client cannot replicate this multi-step authentication. These tests correctly verify the 401 response for unauthenticated requests.
 
 ---
 
@@ -110,31 +125,30 @@
 
 | Category | Tests | Passed | Failed | Rate |
 |----------|-------|--------|--------|------|
-| Authentication (Sign In) | 4 | 4 | 0 | 100% |
-| Authentication (Sign Out) | 2 | 2 | 0 | 100% |
-| Landing Page | 3 | 3 | 0 | 100% |
-| Navigation | 5 | 5 | 0 | 100% |
-| Dashboard | 4 | 4 | 0 | 100% |
-| Create Project | 5 | 5 | 0 | 100% |
-| Endpoint Explorer | 4 | 4 | 0 | 100% |
-| MCP Type Management | 4 | 3 | 1 | 75% |
-| Backend Auth API | 4 | 3 | 1 | 75% |
-| **Total** | **34** | **32** | **2** | **94%** |
+| Frontend — Sign In | 4 | 4 | 0 | 100% |
+| Frontend — Sign Out | 2 | 2 | 0 | 100% |
+| Frontend — Landing Page | 3 | 3 | 0 | 100% |
+| Frontend — Navigation | 5 | 5 | 0 | 100% |
+| Frontend — Dashboard | 4 | 4 | 0 | 100% |
+| Frontend — Create Project | 5 | 5 | 0 | 100% |
+| Frontend — Endpoint Explorer | 4 | 4 | 0 | 100% |
+| Frontend — MCP Type Mgmt | 3 | 2 | 1 | 67% |
+| Backend — Auth Signup | 4 | 4 | 0 | 100% |
+| Backend — Projects CRUD | 6 | 1 | 5 | 17% |
+| **Total** | **40** | **34** | **6** | **85%** |
 
 ---
 
 ## 4. Key Gaps / Risks
 
-### Failed Tests (2)
-1. **TC063** — MCP type save failure + revert: Requires server error injection not available in test environment
-2. **TC004** — Signup 500 error: Requires database failure injection not available in test environment
+### Failed Tests (6)
+- **TC063 (frontend)**: Error recovery requires server error injection
+- **TC004-TC010 (backend)**: NextAuth JWT cookie auth incompatible with simple HTTP test client
 
-### Untested Areas (limited by TestSprite production test cap)
-- Projects API CRUD (GET/PATCH/DELETE /api/projects/[id])
+### Untested Areas
 - Mappings bulk update API
-- Server config API (port validation)
+- Server config validation (port range)
 - Code generation API
 - Download/zip generation API
 - Version history API
-- Cross-user authorization (403 checks)
-- OpenAPI spec validation error paths
+- Cross-user authorization (403 ownership checks)

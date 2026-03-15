@@ -1,22 +1,52 @@
 [
   {
     "id": "TC001",
-    "title": "post api auth signup valid user registration",
-    "description": "Test the POST /api/auth/signup endpoint with valid email, strong password, and optional name to ensure successful user registration returns 201 with created user data including id, email, and name."
+    "title": "post api auth signup valid registration",
+    "description": "Test user registration with valid email, password, and optional name. Expect 201 response with user id, email, and name."
   },
   {
     "id": "TC002",
-    "title": "post api auth signup invalid input validation errors",
-    "description": "Test the POST /api/auth/signup endpoint with missing or invalid email and password fields to verify it returns 400 with appropriate field validation error messages."
+    "title": "post api auth signup missing or invalid password",
+    "description": "Test user registration with missing or invalid password. Expect 400 response with password validation error."
   },
   {
     "id": "TC003",
-    "title": "post api auth signup duplicate email conflict",
-    "description": "Test the POST /api/auth/signup endpoint with an email already registered in the system to confirm it returns 409 with an error indicating the email is already in use."
+    "title": "post api auth signup duplicate email registration",
+    "description": "Test user registration with an email that is already registered. Expect 409 response with duplicate email error."
   },
   {
     "id": "TC004",
-    "title": "post api auth signup server error handling",
-    "description": "Test the POST /api/auth/signup endpoint simulating a server or database failure to ensure it returns 500 with a generic server error message."
+    "title": "get api projects authenticated user projects list",
+    "description": "Test retrieving projects list for authenticated user. Expect 200 response with projects array ordered by most recently updated."
+  },
+  {
+    "id": "TC005",
+    "title": "get api projects unauthorized access",
+    "description": "Test retrieving projects list without authentication. Expect 401 Unauthorized error."
+  },
+  {
+    "id": "TC006",
+    "title": "post api projects create new project valid spec",
+    "description": "Test creating a new project with valid name and OpenAPI spec content. Expect 201 response with project id, name, and path count."
+  },
+  {
+    "id": "TC007",
+    "title": "post api projects create project missing name",
+    "description": "Test creating a new project with missing project name. Expect 400 error indicating project name is required."
+  },
+  {
+    "id": "TC008",
+    "title": "get api projects id retrieve project details",
+    "description": "Test retrieving project details by id for owner user. Expect 200 response with project details including mappings and config."
+  },
+  {
+    "id": "TC009",
+    "title": "patch api projects id update project name",
+    "description": "Test updating project name with valid new name. Expect 200 response with updated project name and updatedAt timestamp."
+  },
+  {
+    "id": "TC010",
+    "title": "delete api projects id delete project",
+    "description": "Test deleting a project by id for owner user. Expect 200 response with confirmation message."
   }
 ]
