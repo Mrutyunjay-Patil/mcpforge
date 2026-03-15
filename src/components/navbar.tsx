@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, ChevronDown } from "lucide-react";
+import { ForgeHammer } from "@/components/forge-hammer";
 
 export async function Navbar() {
   const session = await auth();
@@ -15,7 +16,7 @@ export async function Navbar() {
   return (
     <nav
       aria-label="Main navigation"
-      className="h-12 border-b border-white/[0.06] bg-[#09090B]/80 backdrop-blur-md"
+      className="h-16 border-b border-white/[0.06] bg-[#09090B]/80 backdrop-blur-md"
     >
       <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4">
         <div className="flex items-center gap-6">
@@ -23,19 +24,7 @@ export async function Navbar() {
             href={user ? "/dashboard" : "/"}
             className="flex items-center gap-2 text-[15px] font-semibold text-[#FAFAFA] hover:text-white transition-colors duration-150"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[#F97316]"
-            >
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-            </svg>
+            <ForgeHammer size={20} className="text-[#F97316]" />
             MCPForge
           </Link>
           {user && (
@@ -52,7 +41,7 @@ export async function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-[#FAFAFA] hover:bg-[#27272A] transition-colors duration-150 focus:outline-none">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#27272A] text-[11px] font-medium">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F97316] font-mono text-[12px] font-bold text-white">
                   {user.name?.[0]?.toUpperCase() ||
                     user.email?.[0]?.toUpperCase() ||
                     "U"}
@@ -101,7 +90,7 @@ export async function Navbar() {
               </Link>
               <Link
                 href="/auth/signup"
-                className="rounded-md bg-[#F97316] px-3 py-1.5 text-[13px] font-medium text-black hover:bg-[#EA580C] transition-colors duration-150"
+                className="rounded-full bg-[#F97316] px-3 py-1.5 text-[13px] font-medium text-black hover:bg-[#EA580C] transition-colors duration-150"
               >
                 Sign up
               </Link>

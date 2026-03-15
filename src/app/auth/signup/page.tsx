@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ForgeHammer } from "@/components/forge-hammer";
 
 interface FieldErrors {
   name?: string;
@@ -106,19 +107,52 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#09090B] px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-[22px] font-semibold text-[#FAFAFA]">MCPForge</h1>
+    <div className="flex min-h-screen bg-[#111111]">
+      {/* Left branded panel */}
+      <div
+        className="hidden w-[42%] flex-col justify-between p-12 lg:flex"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(249,115,22,0.18) 0%, #111111 50%)",
+        }}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-2.5">
+          <ForgeHammer size={28} className="text-[#F97316]" />
+          <span className="font-[family-name:var(--font-mono)] text-xl font-bold text-[#FAFAFA]">
+            MCPForge
+          </span>
         </div>
 
-        <div className="rounded-md border border-white/[0.06] bg-[#18181B] p-6">
-          <h2 className="mb-6 text-center text-lg font-medium text-[#FAFAFA]">
-            Create your account
+        {/* Center tagline */}
+        <div className="flex flex-col gap-4">
+          <h2 className="font-[family-name:var(--font-mono)] text-[36px] font-bold leading-tight text-[#FAFAFA]">
+            Start building MCP servers in minutes.
           </h2>
+          <p className="text-[16px] leading-relaxed text-[#A1A1AA]">
+            Join thousands of developers who ship MCP integrations faster with
+            MCPForge.
+          </p>
+        </div>
+
+        {/* Bottom text */}
+        <p className="text-[13px] text-[#71717A]">
+          Free forever. No credit card required.
+        </p>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex flex-1 items-center justify-center bg-[#09090B] px-6">
+        <div className="w-full max-w-md">
+          <h1 className="font-[family-name:var(--font-mono)] text-[28px] font-bold text-[#FAFAFA]">
+            Create your account
+          </h1>
+          <p className="mt-2 mb-8 text-[15px] text-[#71717A]">
+            Get started with MCPForge for free
+          </p>
 
           <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {errors.server && (
                 <div
                   role="alert"
@@ -130,7 +164,7 @@ export default function SignUpPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="name" className="text-[13px] text-[#FAFAFA]">
-                  Name <span className="text-[#71717A]">(optional)</span>
+                  Full name <span className="text-[#71717A]">(optional)</span>
                 </Label>
                 <Input
                   id="name"
@@ -142,7 +176,7 @@ export default function SignUpPage() {
                   autoComplete="name"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "name-error" : undefined}
-                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
+                  className="h-11 rounded-lg border-white/[0.08] bg-[#18181B] text-[14px] text-[#FAFAFA] placeholder:text-[#52525B] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.name && (
                   <p
@@ -175,7 +209,7 @@ export default function SignUpPage() {
                   autoComplete="email"
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
-                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
+                  className="h-11 rounded-lg border-white/[0.08] bg-[#18181B] text-[14px] text-[#FAFAFA] placeholder:text-[#52525B] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.email && (
                   <p
@@ -209,7 +243,7 @@ export default function SignUpPage() {
                   aria-describedby={
                     errors.password ? "password-error" : "password-hint"
                   }
-                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
+                  className="h-11 rounded-lg border-white/[0.08] bg-[#18181B] text-[14px] text-[#FAFAFA] placeholder:text-[#52525B] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.password ? (
                   <p
@@ -228,7 +262,7 @@ export default function SignUpPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="confirmPassword" className="text-[13px] text-[#FAFAFA]">
-                  Confirm Password
+                  Confirm password
                 </Label>
                 <Input
                   id="confirmPassword"
@@ -250,7 +284,7 @@ export default function SignUpPage() {
                   aria-describedby={
                     errors.confirmPassword ? "confirm-password-error" : undefined
                   }
-                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
+                  className="h-11 rounded-lg border-white/[0.08] bg-[#18181B] text-[14px] text-[#FAFAFA] placeholder:text-[#52525B] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.confirmPassword && (
                   <p
@@ -265,23 +299,23 @@ export default function SignUpPage() {
 
               <Button
                 type="submit"
-                className="w-full rounded-md bg-[#F97316] text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#EA580C] disabled:opacity-50"
+                className="h-11 w-full rounded-full bg-[#F97316] text-[15px] font-semibold text-black transition-colors duration-150 hover:bg-[#EA580C] disabled:opacity-50"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoading ? "Creating account..." : "Create Account"}
               </Button>
             </div>
           </form>
-        </div>
 
-        <div className="mt-4 rounded-md border border-white/[0.06] bg-[#18181B] px-4 py-3 text-center text-[13px] text-[#FAFAFA]">
-          Already have an account?{" "}
-          <Link
-            href="/auth/signin"
-            className="text-[#F97316] transition-colors duration-150 hover:underline"
-          >
-            Sign in
-          </Link>
+          <p className="mt-6 text-center text-[14px] text-[#A1A1AA]">
+            Already have an account?{" "}
+            <Link
+              href="/auth/signin"
+              className="font-medium text-[#F97316] transition-colors duration-150 hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

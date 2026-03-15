@@ -1,19 +1,22 @@
 import Link from "next/link";
 import { ArrowRight, Github, Upload, FileCode, Terminal, Zap, Layers, Shield, GitBranch, FolderOpen, Radio, Eye, MousePointerClick } from "lucide-react";
+import { ForgeHammer } from "@/components/forge-hammer";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
       {/* ── Nav ── */}
       <nav className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-[#09090B]/80 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between px-6">
+        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-            </svg>
+            <ForgeHammer size={20} className="text-[#F97316]" />
             <span className="font-mono text-[15px] font-bold text-[#FAFAFA]">MCPForge</span>
           </Link>
           <div className="flex items-center gap-2">
+            <a href="#features" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Features</a>
+            <a href="#docs" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Docs</a>
+            <a href="#pricing" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Pricing</a>
+            <div className="mx-1 hidden h-4 w-px bg-white/[0.06] md:block" />
             <a
               href="https://github.com/Mrutyunjay-Patil/mcpforge"
               target="_blank"
@@ -30,7 +33,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/auth/signup"
-              className="rounded-md bg-[#F97316] px-3.5 py-1.5 font-sans text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#FB923C]"
+              className="rounded-full bg-[#F97316] px-3.5 py-1.5 font-sans text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#FB923C]"
             >
               Get started
             </Link>
@@ -39,7 +42,12 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden pt-14">
+      <section
+        className="relative overflow-hidden pt-16"
+        style={{
+          background: "linear-gradient(to bottom, rgba(249,115,22,0.06) 0%, #09090B 35%)",
+        }}
+      >
         {/* Grid background */}
         <div
           className="forge-grid pointer-events-none absolute inset-0"
@@ -54,43 +62,49 @@ export default function LandingPage() {
         <div className="relative mx-auto max-w-[1200px] px-6 pb-20 pt-28 md:pb-28 md:pt-36">
           {/* Badge */}
           <div className="mb-6 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#18181B] px-3.5 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" />
-              <span className="font-sans text-[12px] text-[#A1A1AA]">Open source</span>
+            <div
+              className="inline-flex items-center gap-2 rounded-full border border-[rgba(249,115,22,0.25)] px-4 py-1.5"
+              style={{
+                background: "linear-gradient(135deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.04) 100%)",
+              }}
+            >
+              <Zap className="h-3.5 w-3.5 text-[#F97316]" />
+              <span className="font-sans text-[12px] text-[#F97316]/90">Transform OpenAPI specs into MCP servers instantly</span>
             </div>
           </div>
 
-          <h1 className="mx-auto max-w-[740px] text-center font-mono text-[40px] font-bold leading-[1.1] tracking-[-0.03em] text-[#FAFAFA] md:text-[56px]">
-            Forge your API into an{" "}
-            <span className="text-[#F97316]">MCP server</span>
+          <h1 className="mx-auto max-w-[740px] text-center font-mono text-[40px] font-bold leading-[1.1] tracking-[-3px] text-[#FAFAFA] md:text-[56px]">
+            Build MCP Servers
+            <br />
+            <span className="text-[#F97316]">From Any API</span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-[500px] text-center font-sans text-[16px] leading-[1.6] text-[#A1A1AA]">
-            Upload an OpenAPI spec. Visually map each endpoint to Tools, Resources, and Templates. Download a production-ready TypeScript MCP server.
+          <p className="mx-auto mt-5 max-w-[640px] text-center font-sans text-[18px] leading-[1.6] text-[#A1A1AA]">
+            Drop in your OpenAPI spec. Map endpoints to tools and resources. Download a production-ready MCP server in seconds.
           </p>
 
           <div className="mt-8 flex items-center justify-center gap-3">
             <Link
               href="/auth/signup"
-              className="group inline-flex items-center gap-1.5 rounded-md bg-[#F97316] px-4 py-2 font-sans text-[14px] font-medium text-black transition-colors duration-150 hover:bg-[#FB923C]"
+              className="group inline-flex items-center gap-1.5 rounded-full bg-[#F97316] px-6 py-3 font-sans text-[14px] font-medium text-black transition-colors duration-150 hover:bg-[#FB923C]"
             >
-              Start forging
+              Start Building — Free
               <ArrowRight className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
             </Link>
-            <a
-              href="https://github.com/Mrutyunjay-Patil/mcpforge"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.06] px-4 py-2 font-sans text-[14px] text-[#FAFAFA] transition-colors duration-150 hover:border-[rgba(249,115,22,0.25)] hover:bg-[#18181B]"
+            <Link
+              href="#docs"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] px-6 py-3 font-sans text-[14px] text-[#FAFAFA] transition-colors duration-150 hover:border-[rgba(249,115,22,0.25)] hover:bg-[#18181B]"
             >
-              <Github className="h-3.5 w-3.5" />
-              GitHub
-            </a>
+              View Documentation
+            </Link>
           </div>
 
           {/* ── Hero Visual: App Mockup ── */}
           <div className="mx-auto mt-16 max-w-[960px]">
-            <div className="overflow-hidden rounded-md border border-white/[0.06] bg-[#09090B] shadow-2xl shadow-black/60">
+            <div
+              className="overflow-hidden rounded-md border border-white/[0.06] bg-[#09090B] shadow-2xl"
+              style={{ boxShadow: "0 25px 50px -12px rgba(249,115,22,0.12)" }}
+            >
               {/* Window chrome */}
               <div className="flex items-center justify-between border-b border-white/[0.06] bg-[#18181B] px-4 py-2.5">
                 <div className="flex items-center gap-3">
@@ -405,9 +419,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/[0.06] px-6 py-6">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-            </svg>
+            <ForgeHammer size={14} className="text-[#F97316]" />
             <span className="font-mono text-[12px] text-[#71717A]">MCPForge</span>
           </div>
           <a
