@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to the sign-in page (/auth/signin).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields and click the Sign In button to log in (input email into element 692, password into element 696, then click element 700).
+        # -> Fill the email field, fill the password field, and click the 'Sign In' button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +52,19 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (Petstore MCP Server) to open the project pages and view endpoints (click element index 60557).
+        # -> Click on the first project card (Petstore MCP Server) to open the project page and view endpoints (click element index 51054).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div[2]/div').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div[2]/a[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the MCP type combobox for the POST /pets endpoint (index 60754) to open the MCP type options list.
+        # -> Click the MCP type dropdown on the first endpoint row to open the options (use element index 51244). Then wait for the options to render.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[3]/div/table/tbody/tr[2]/td[7]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[3]/div/table/tbody/tr/td[7]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Resource' option in the MCP type options list to attempt to change the MCP type for POST /pets.
+        # -> Click the 'Resource' option (element index 51681) to attempt to change the MCP type to Resource, then wait for the save attempt result (toast and cell revert).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/div/div[2]').nth(0)
@@ -78,10 +75,10 @@ async def run_test():
         current_url = await frame.evaluate("() => window.location.href")
         assert '/dashboard' in current_url
         assert await frame.locator("xpath=//*[contains(., 'Endpoints')]").nth(0).is_visible(), "Expected 'Endpoints' to be visible"
-        assert await frame.locator("xpath=//*[contains(., 'Tool')]").nth(0).is_visible(), "Expected 'Tool' to be visible"
-        assert await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Tool')]").nth(0).is_visible(), "Expected 'Tool' to be visible in the MCP type options list"
+        assert await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to be visible in the MCP type cell for that endpoint row"
         assert await frame.locator("xpath=//*[contains(., 'Failed to save')]").nth(0).is_visible(), "Expected 'Failed to save' to be visible"
-        assert not await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to not be visible"
+        assert not await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to not be visible in the MCP type cell for that endpoint row"
         await asyncio.sleep(5)
 
     finally:

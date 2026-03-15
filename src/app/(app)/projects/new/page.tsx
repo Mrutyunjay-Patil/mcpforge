@@ -151,38 +151,31 @@ export default function CreateProjectPage() {
 
     setIsFetching(true);
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
     try {
-      const res = await fetch(url.toString(), { signal: controller.signal });
-      clearTimeout(timeout);
+      const res = await fetch("/api/fetch-spec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.toString() }),
+      });
+
+      const data = await res.json();
 
       if (!res.ok) {
         setErrors((prev) => ({
           ...prev,
-          url: `Failed to fetch: ${res.status}`,
+          url: data.error || `Failed to fetch: ${res.status}`,
         }));
         return;
       }
 
-      const text = await res.text();
-      setFetchedContent(text);
+      setFetchedContent(data.content);
       setFetchSuccess(true);
     } catch (err: unknown) {
-      clearTimeout(timeout);
-      if (err instanceof DOMException && err.name === "AbortError") {
-        setErrors((prev) => ({
-          ...prev,
-          url: "Request timed out after 10 seconds",
-        }));
-      } else {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        setErrors((prev) => ({
-          ...prev,
-          url: `Failed to fetch: ${msg}`,
-        }));
-      }
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setErrors((prev) => ({
+        ...prev,
+        url: `Failed to fetch: ${msg}`,
+      }));
     } finally {
       setIsFetching(false);
     }

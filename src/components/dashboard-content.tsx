@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Plus, Search, Trash2, Wrench, Clock, Server } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -228,10 +229,10 @@ export default function DashboardContent() {
       {filteredProjects.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProjects.map((project) => (
-            <div
+            <Link
               key={project.id}
+              href={`/projects/${project.id}`}
               className="group cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#18181B] shadow-sm transition-all duration-200 hover:border-[rgba(249,115,22,0.3)] hover:shadow-md hover:shadow-orange-500/5"
-              onClick={() => router.push(`/projects/${project.id}`)}
               role="article"
               aria-label={`Project: ${project.name}`}
             >
@@ -270,7 +271,10 @@ export default function DashboardContent() {
                           size="icon"
                           className="h-8 w-8 shrink-0 rounded-md text-[#A1A1AA] opacity-0 transition-all duration-150 hover:bg-[#27272A] hover:text-[#EF4444] group-hover:opacity-100"
                           aria-label={`Delete project ${project.name}`}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
                           disabled={deletingId === project.id}
                         />
                       }
@@ -326,7 +330,7 @@ export default function DashboardContent() {
                   {formatRelativeDate(project.updatedAt)}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

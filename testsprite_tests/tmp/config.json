@@ -8,13 +8,19 @@
   "executionArgs": {
     "projectName": "mcpforge-app",
     "projectPath": "D:\\apps\\mcpforge\\mcpforge-app",
-    "testIds": [],
-    "additionalInstruction": "The app requires authentication. Test credentials: email: test@mcpforge.dev, password: Password1. The sign-in page is at /auth/signin with email and password fields. After login, the user is redirected to /dashboard. There is one existing project called \"Petstore MCP Server\" with 11 endpoints. The signup page is at /auth/signup.",
+    "testIds": [
+      "TC031",
+      "TC041",
+      "TC054",
+      "TC060",
+      "TC063"
+    ],
+    "additionalInstruction": "Re-running 5 previously failing tests after application fixes. Test credentials: email: test@mcpforge.dev, password: Password1. The app has one existing project called \"Petstore MCP Server\" with 11 endpoints.",
     "serverMode": "production",
     "envs": {
       "API_KEY": "sk-user-uhWwMJ4MEvEN1YDWzUT1TJdnQ-SOBcb3ujt6Fw4ZclonuqbxB7UlGA3Gm-Je8JIVW3Dwu7v6z42rqqXqogj83gnJfzXzI72GGRqDLCKApMvYhSLR9M21aACjpkB59GR4-f8"
     }
   },
-  "serverPort": 58322,
-  "proxy": "http://e0d684fd-030b-4e15-a21f-728a7d7f78c8:Nmtce24X1D2HDnLsNrUXzweExV8jJTPq@tun.testsprite.com:8080"
+  "serverPort": 58952,
+  "proxy": "http://f151c7b4-6627-4d03-907c-b22123be56e9:tgiSo6CZcP9QIn2RWO4oDvs3IwAW4aBm@tun.testsprite.com:8080"
 }
