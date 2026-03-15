@@ -1,0 +1,4998 @@
+[
+  {
+    "id": "TC001",
+    "title": "Sign in successfully with valid email and password and land on Dashboard",
+    "description": "Verifies a user can sign in with correct credentials and is redirected to the authenticated dashboard.",
+    "category": "User Sign In",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Sign In\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Projects\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Invalid password shows error and stays on Sign In page",
+    "description": "Verifies an incorrect password shows the expected error and does not navigate away from the sign-in page.",
+    "category": "User Sign In",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"fake.user@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"wrong-password\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid email or password\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Sign In button shows a loading state after submit",
+    "description": "Verifies the sign-in button indicates progress after the user submits credentials.",
+    "category": "User Sign In",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Signing in\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Submit sign-in form using Enter key from the password field",
+    "description": "Verifies keyboard submission triggers sign-in without clicking the button.",
+    "category": "User Sign In",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Create New Project\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Missing email prevents sign-in and does not reach Dashboard",
+    "description": "Verifies the sign-in form blocks submission (or shows validation) when email is missing.",
+    "category": "User Sign In",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Email\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Missing password prevents sign-in and does not reach Dashboard",
+    "description": "Verifies the sign-in form blocks submission (or shows validation) when password is missing.",
+    "category": "User Sign In",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Password\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Sign in with an email that does not exist shows invalid credentials error",
+    "description": "Verifies unknown user credentials are rejected with the same invalid-credentials message.",
+    "category": "User Sign In",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"does.not.exist.12345@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"some-password\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign In\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid email or password\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Navigate from Landing page to Sign In via the Sign in link",
+    "description": "Verifies users can reach the sign-in page through in-app navigation from the landing page.",
+    "category": "User Sign In",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Sign In\""
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Sign out successfully from dashboard and land on sign-in page",
+    "description": "Verifies a signed-in user can sign out via the navbar dropdown and is redirected to the sign-in page.",
+    "category": "User Sign Out (Logout)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click avatar/user dropdown in the top-right navbar"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign out\" button in dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "After sign out, direct navigation to dashboard sends user back to sign-in",
+    "description": "Verifies the session is cleared after logout by checking dashboard access redirects to sign-in.",
+    "category": "User Sign Out (Logout)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click avatar/user dropdown in the top-right navbar"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign out\" button in dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Sign out option is visible and accessible from the navbar dropdown",
+    "description": "Verifies the user dropdown exposes a visible Sign out action while authenticated.",
+    "category": "User Sign Out (Logout)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click avatar/user dropdown in the top-right navbar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sign out\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Sign out from dashboard works even after interacting with the page content",
+    "description": "Verifies logout remains reliable after typical dashboard usage (e.g., scrolling) and still redirects to sign-in.",
+    "category": "User Sign Out (Logout)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the page"
+      },
+      {
+        "type": "action",
+        "description": "Click avatar/user dropdown in the top-right navbar"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign out\" button in dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Open the sign-in page after logout and confirm sign-in UI is present",
+    "description": "Verifies the post-logout destination is the credential sign-in page with the expected form visible.",
+    "category": "User Sign Out (Logout)",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click avatar/user dropdown in the top-right navbar"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign out\" button in dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sign in\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Landing page renders key marketing sections",
+    "description": "Verifies the landing page shows the hero content, workflow explanation, code preview, and features grid content.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"MCPForge\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Start Building - Free\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the three-step workflow section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"1\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the code output preview section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"code output preview\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the features grid section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"features\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Primary hero CTA navigates to Sign up",
+    "description": "Verifies clicking the main hero CTA sends the user to the sign-up page.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Start Building - Free\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Building - Free\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signup\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sign up\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Top navigation Sign in link navigates to Sign in page",
+    "description": "Verifies the navbar \"Sign in\" link routes to the email/password sign-in screen.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sign in\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign in\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Email\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Password\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Top navigation Get started link navigates to Sign up page",
+    "description": "Verifies the navbar \"Get started\" link routes to the sign-up screen.",
+    "category": "Landing Page",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Get started\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Get started\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signup\""
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Bottom CTA Get started free navigates to Sign up",
+    "description": "Verifies the bottom-of-page CTA navigates to the sign-up page.",
+    "category": "Landing Page",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom CTA section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Get started free\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Get started free\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signup\""
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "View Documentation link is present and clickable",
+    "description": "Verifies the landing page includes a \"View Documentation\" link and it is clickable.",
+    "category": "Landing Page",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"View Documentation\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"View Documentation\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Documentation\""
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Authenticated user is redirected away from Sign in to Dashboard",
+    "description": "Verifies a signed-in user cannot stay on the sign-in page and is redirected to the dashboard.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/auth/signin\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign in\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "Start from landing page nav to Sign in, then sign in successfully to reach Dashboard",
+    "description": "Verifies the end-to-end path: landing page -> sign in page -> successful credential sign-in -> dashboard.",
+    "category": "Landing Page",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign in\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign in\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Navbar logo returns to Dashboard from an authenticated page",
+    "description": "Verifies the MCPForge logo in the navbar navigates back to /dashboard while logged in.",
+    "category": "Navbar with User Menu",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the MCPForge logo in the navbar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "Dashboard link in navbar navigates to /dashboard",
+    "description": "Verifies the \"Dashboard\" navbar link takes the user to the Dashboard page while logged in.",
+    "category": "Navbar with User Menu",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Dashboard\" link in the navbar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "User menu dropdown displays signed-in user name and email",
+    "description": "Verifies the avatar/name dropdown opens and shows the user's name and email.",
+    "category": "Navbar with User Menu",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar to open the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user name\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"{{LOGIN_USER}}\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC025",
+    "title": "Sign out from user menu logs the user out",
+    "description": "Verifies the Sign out action in the user dropdown ends the session and returns to the sign-in screen.",
+    "category": "Navbar with User Menu",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar to open the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Sign out\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/auth/signin\""
+      }
+    ]
+  },
+  {
+    "id": "TC026",
+    "title": "User menu can be opened and closed without navigating away",
+    "description": "Verifies the dropdown toggles open/closed and does not change the current page URL.",
+    "category": "Navbar with User Menu",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar to open the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar again to close the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC027",
+    "title": "Navbar remains visible after scrolling Dashboard",
+    "description": "Verifies the navbar stays visible and usable after scrolling the authenticated page.",
+    "category": "Navbar with User Menu",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the Dashboard page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"navbar\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar to open the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC028",
+    "title": "Sign out action is accessible and visible in the user dropdown",
+    "description": "Verifies the dropdown contains a visible \"Sign out\" option when opened.",
+    "category": "Navbar with User Menu",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the avatar/name in the navbar to open the dropdown menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"user dropdown menu\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sign out\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC029",
+    "title": "Dashboard displays project list after loading state",
+    "description": "Verifies the dashboard shows a loading skeleton first and then renders a grid of project cards with expected summary fields.",
+    "category": "Dashboard (Project List)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Dashboard\" in the app navigation (or equivalent link to the dashboard)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"loading skeleton\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"project cards grid\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC030",
+    "title": "Project cards show key metadata fields",
+    "description": "Verifies each project card shows project name, spec title, endpoint count, and last updated time in a visible format.",
+    "category": "Dashboard (Project List)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Dashboard\" in the app navigation (or equivalent link to the dashboard)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a project card\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"project name\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC031",
+    "title": "Open a project by clicking a project card",
+    "description": "Verifies clicking a project card navigates to the project detail page.",
+    "category": "Dashboard (Project List)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Dashboard\" in the app navigation (or equivalent link to the dashboard)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a project card\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible project card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/\""
+      }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Navigate to Create New Project from dashboard using New Project button",
+    "description": "Verifies the dashboard New Project action takes the user to the create project page.",
+    "category": "Dashboard (Project List)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Dashboard\" in the app navigation (or equivalent link to the dashboard)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new\""
+      }
+    ]
+  },
+  {
+    "id": "TC033",
+    "title": "Dashboard remains usable after rapid reload: loading skeleton then content appears",
+    "description": "Verifies a second visit to dashboard still shows a loading state then renders content (cards or empty state) without getting stuck.",
+    "category": "Dashboard (Project List)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Dashboard\" in the app navigation (or equivalent link to the dashboard)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"loading skeleton\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"project cards grid\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC034",
+    "title": "Create project successfully by pasting valid OpenAPI JSON",
+    "description": "Verifies a user can create a new project via the Paste Content tab using valid OpenAPI JSON and is redirected to the new project page with a success toast.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"My Paste JSON Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"{\\n  \\\"openapi\\\": \\\"3.0.0\\\",\\n  \\\"info\\\": { \\\"title\\\": \\\"Pet API\\\", \\\"version\\\": \\\"1.0.0\\\" },\\n  \\\"paths\\\": {\\n    \\\"/pets\\\": {\\n      \\\"get\\\": {\\n        \\\"responses\\\": {\\n          \\\"200\\\": { \\\"description\\\": \\\"OK\\\" }\\n        }\\n      }\\n    }\\n  }\\n}\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"characters\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Project created\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/"
+      }
+    ]
+  },
+  {
+    "id": "TC035",
+    "title": "Show JSON parsing error and stay on page when invalid JSON is pasted",
+    "description": "Verifies invalid JSON triggers the visible parsing error alert and the user remains on the create project page.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Invalid JSON Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"{ \\\"openapi\\\": \\\"3.0.0\\\", \\\"info\\\": { \\\"title\\\": \\\"Broken\\\", \\\"version\\\": \\\"1.0.0\\\" },\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid JSON syntax\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new\""
+      }
+    ]
+  },
+  {
+    "id": "TC036",
+    "title": "Create project successfully by pasting valid OpenAPI YAML",
+    "description": "Verifies a user can create a new project via the Paste Content tab using valid OpenAPI YAML content.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"My Paste YAML Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"openapi: 3.0.0\\ninfo:\\n  title: Pet API\\n  version: 1.0.0\\npaths:\\n  /pets:\\n    get:\\n      responses:\\n        '200':\\n          description: OK\\n\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"characters\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Project created\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/"
+      }
+    ]
+  },
+  {
+    "id": "TC037",
+    "title": "Prevent creation when Project Name is missing (client-side validation)",
+    "description": "Verifies the user cannot create a project from the Paste Content tab without providing a project name and sees a visible validation message.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"{\\n  \\\"openapi\\\": \\\"3.0.0\\\",\\n  \\\"info\\\": { \\\"title\\\": \\\"Pet API\\\", \\\"version\\\": \\\"1.0.0\\\" },\\n  \\\"paths\\\": {\\n    \\\"/pets\\\": {\\n      \\\"get\\\": {\\n        \\\"responses\\\": {\\n          \\\"200\\\": { \\\"description\\\": \\\"OK\\\" }\\n        }\\n      }\\n    }\\n  }\\n}\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Project Name\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new\""
+      }
+    ]
+  },
+  {
+    "id": "TC038",
+    "title": "Prevent creation when pasted content is empty",
+    "description": "Verifies the user cannot create a project from the Paste Content tab when the textarea is empty and sees a visible error/validation message.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Empty Spec Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"OpenAPI\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new\""
+      }
+    ]
+  },
+  {
+    "id": "TC039",
+    "title": "Character count updates after pasting content and remains visible after edits",
+    "description": "Verifies the character count is visible on the Paste Content tab and updates when the content is changed before creating the project.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Char Count Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"openapi: 3.0.0\\ninfo:\\n  title: Pet API\\n  version: 1.0.0\\npaths: {}\\n\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"characters\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"#\" at the end of the spec textarea"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"characters\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC040",
+    "title": "Invalid YAML shows a visible parsing/validation error and no redirect occurs",
+    "description": "Verifies invalid YAML content produces a visible error and the user stays on the create project page.",
+    "category": "Create Project - Paste Content Tab",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Invalid YAML Project\" into the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Paste Content\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type the following into the spec textarea: \"openapi: 3.0.0\\ninfo\\n  title: Missing colon\\npaths:\\n  /pets:\\n    get: [this is not valid]\\n\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new\""
+      }
+    ]
+  },
+  {
+    "id": "TC041",
+    "title": "Fetch valid OpenAPI spec from URL and create project successfully",
+    "description": "Verifies a user can fetch a valid OpenAPI spec from a URL, preview it, and create a new project that redirects to the project detail page.",
+    "category": "Create Project - Fetch from URL Tab",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" action on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Enter a project name in the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch from URL\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Enter the URL of an OpenAPI spec"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Fetch button loading spinner\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Spec fetched successfully\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Spec preview\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Success toast notification\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/"
+      }
+    ]
+  },
+  {
+    "id": "TC042",
+    "title": "Invalid URL format shows validation error and does not fetch",
+    "description": "Verifies the Fetch from URL tab validates URL format and shows an \"Invalid URL format\" error without fetching.",
+    "category": "Create Project - Fetch from URL Tab",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" action on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Enter a project name in the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch from URL\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type \"not-a-url\" into the URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid URL format\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Spec fetched successfully\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC043",
+    "title": "Cannot create project until spec is successfully fetched",
+    "description": "Verifies the UI prevents project creation when no spec has been fetched (or indicates a visible error) and does not redirect away from /projects/new.",
+    "category": "Create Project - Fetch from URL Tab",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" action on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Enter a project name in the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch from URL\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Create Project\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Spec preview\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC044",
+    "title": "Fetch fails due to unreachable URL shows a visible fetch error",
+    "description": "Verifies a valid-looking URL that cannot be reached results in a visible error and no successful preview is shown.",
+    "category": "Create Project - Fetch from URL Tab",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" action on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Enter a project name in the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch from URL\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Type \"https://example.invalid/openapi.yaml\" into the URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Fetch error message\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Spec fetched successfully\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC045",
+    "title": "Changing URL and re-fetching updates the preview and retains success state",
+    "description": "Verifies the user can fetch once successfully, then change the URL and fetch again, and the preview remains visible after the second success.",
+    "category": "Create Project - Fetch from URL Tab",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Create New Project\" action on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/projects/new"
+      },
+      {
+        "type": "action",
+        "description": "Enter a project name in the \"Project Name\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch from URL\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Enter the URL of an OpenAPI spec"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Spec fetched successfully\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Spec preview\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Enter a different valid OpenAPI spec URL in the URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Fetch\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Spec fetched successfully\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Spec preview\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC046",
+    "title": "View endpoint explorer table with summary counts on an existing project",
+    "description": "Verifies the Endpoints tab shows a summary bar and populated endpoint rows with key columns and MCP type controls.",
+    "category": "Endpoint Explorer Table",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"summary bar showing total endpoints and MCP type totals\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table with rows\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC047",
+    "title": "Validate endpoint row content: method badge, path, operationId, and MCP type dropdown are visible",
+    "description": "Ensures a table row shows the required endpoint metadata and an MCP type dropdown control.",
+    "category": "Endpoint Explorer Table",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a method badge in the first visible endpoint row\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a path value in the first visible endpoint row\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"an operation ID value in the first visible endpoint row\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"an MCP type dropdown in the first visible endpoint row\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC048",
+    "title": "Loading state appears while endpoints data loads",
+    "description": "Verifies a loading skeleton is shown during data fetch and the table appears afterward.",
+    "category": "Endpoint Explorer Table",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"loading skeleton for endpoints table\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC049",
+    "title": "Clear the search filter to restore endpoint results",
+    "description": "Verifies that removing a filter brings back the endpoints list after an empty state.",
+    "category": "Endpoint Explorer Table",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "action",
+        "description": "Type \"zzzz-no-such-endpoint\" into the endpoint search field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No endpoints match filters\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Clear the endpoint search field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table with rows\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC050",
+    "title": "Method filter reduces the endpoint list and keeps Endpoints tab context",
+    "description": "Ensures method filtering changes the visible rows and the user stays within the Endpoints table view.",
+    "category": "Endpoint Explorer Table",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "action",
+        "description": "Select \"GET\" from the method filter dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table with rows\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC051",
+    "title": "MCP type filter shows only endpoints of a selected MCP type",
+    "description": "Verifies MCP type filtering updates results and still displays the summary bar.",
+    "category": "Endpoint Explorer Table",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Tool\" from the MCP type filter dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table with rows\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"summary bar showing total endpoints and MCP type totals\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC052",
+    "title": "Pagination shows next page of endpoints",
+    "description": "Validates that the user can move to the next page of endpoints and still sees table content.",
+    "category": "Endpoint Explorer Table",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Next page\" pagination control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"endpoints table with rows\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC053",
+    "title": "HTTP method filter reduces results to the selected method",
+    "description": "Verifies that selecting a specific HTTP method filters the endpoint table accordingly.",
+    "category": "Endpoint Search and Filters",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"GET\" from the \"All Methods\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"GET\" is visible in the endpoints table"
+      }
+    ]
+  },
+  {
+    "id": "TC054",
+    "title": "MCP type filter reduces results to the selected type",
+    "description": "Verifies that selecting an MCP type filters the endpoint table accordingly.",
+    "category": "Endpoint Search and Filters",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Types\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Tool\" from the \"All Types\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Tool\" is visible in the endpoints table"
+      }
+    ]
+  },
+  {
+    "id": "TC055",
+    "title": "Combined method + MCP type filters apply AND logic",
+    "description": "Verifies that selecting both filters narrows results to endpoints that match both criteria.",
+    "category": "Endpoint Search and Filters",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"POST\" from the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Types\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Resource\" from the \"All Types\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"POST\" is visible in the endpoints table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible in the endpoints table"
+      }
+    ]
+  },
+  {
+    "id": "TC056",
+    "title": "Changing any filter resets pagination to page 1",
+    "description": "Verifies that updating a filter returns the endpoint table to the first page of results.",
+    "category": "Endpoint Search and Filters",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the bottom of the endpoints table"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Next\" pagination button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 2\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"GET\" from the \"All Methods\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 1\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC057",
+    "title": "Clear HTTP method filter by selecting All Methods",
+    "description": "Verifies that the method filter can be cleared and results return to an unfiltered method view.",
+    "category": "Endpoint Search and Filters",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"DELETE\" from the \"All Methods\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"DELETE\" is visible in the endpoints table"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Methods\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"All Methods\" from the \"All Methods\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"All Methods\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC058",
+    "title": "Clear MCP type filter by selecting All Types",
+    "description": "Verifies that the MCP type filter can be cleared and results return to an unfiltered type view.",
+    "category": "Endpoint Search and Filters",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Types\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Exclude\" from the \"All Types\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Exclude\" is visible in the endpoints table"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"All Types\" dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"All Types\" from the \"All Types\" dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"All Types\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC059",
+    "title": "Change a single endpoint MCP type to Tool and observe successful save indicators",
+    "description": "Verifies optimistic update, saving indicator, and success UI refresh when changing one endpoint to Tool.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Tool\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Tool\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saving\" (spinner icon) is visible in that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saved\" (green checkmark indicator) is visible in that endpoint row"
+      }
+    ]
+  },
+  {
+    "id": "TC060",
+    "title": "Change a single endpoint MCP type to Resource and verify summary counts refresh",
+    "description": "Verifies that after saving a single change to Resource, the summary counts section updates to reflect the new distribution.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Summary\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Resource\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Summary\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible within the summary counts section"
+      }
+    ]
+  },
+  {
+    "id": "TC061",
+    "title": "Change a single endpoint MCP type to Resource Template and verify optimistic update and save completes",
+    "description": "Verifies the UI immediately shows Resource Template, displays a saving spinner, and completes without error.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Resource Template\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource Template\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saving\" (spinner icon) is visible in that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saved\" (green checkmark indicator) is visible in that endpoint row"
+      }
+    ]
+  },
+  {
+    "id": "TC062",
+    "title": "Change a single endpoint MCP type to Exclude and verify the row reflects the excluded state",
+    "description": "Verifies selecting Exclude updates the row immediately and completes saving successfully.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Exclude\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Exclude\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saving\" (spinner icon) is visible in that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saved\" (green checkmark indicator) is visible in that endpoint row"
+      }
+    ]
+  },
+  {
+    "id": "TC063",
+    "title": "Attempt to change MCP type and handle save failure with revert and toast",
+    "description": "Verifies that on server error, the UI shows an error toast and the dropdown reverts to the previous value.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Tool\" is visible in the MCP type options list"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Resource\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Failed to save\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is not visible in the MCP type cell for that endpoint row"
+      }
+    ]
+  },
+  {
+    "id": "TC064",
+    "title": "Verify the MCP type dropdown presents all allowed options",
+    "description": "Verifies the dropdown lists Tool, Resource, Resource Template, and Exclude for a single endpoint row.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Tool\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource Template\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Exclude\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC065",
+    "title": "Rapidly switch MCP type once and ensure the final selection is what persists on screen",
+    "description": "Verifies that after changing a type and immediately selecting another, the row ends showing the final chosen type after saving completes.",
+    "category": "Endpoint MCP Type Change (Single)",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard project list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Tool\" from the MCP type dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Click the MCP type dropdown on the same endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Select \"Resource\" from the MCP type dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Resource\" is visible in the MCP type cell for that endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Saved\" (green checkmark indicator) is visible in that endpoint row"
+      }
+    ]
+  },
+  {
+    "id": "TC066",
+    "title": "Bulk set 3 selected endpoints to Tool and clear selection on success",
+    "description": "Verifies selecting three endpoints shows the bulk action bar, successfully updates to Tool with a success toast, and then clears selection and refreshes the table.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the second endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the third endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"3 selected\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Set as Tool\" button in the bulk action bar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Loading\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Updated 3 endpoints\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC067",
+    "title": "Select-all on current page and bulk set to Resource (happy path)",
+    "description": "Verifies the header checkbox selects all visible rows and bulk action updates them to Resource with a success toast and cleared selection.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the header checkbox in the endpoints table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"selected\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Set as Resource\" button in the bulk action bar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Loading\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Updated\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC068",
+    "title": "Deselect all using header checkbox and verify bulk action bar hides",
+    "description": "Verifies the header checkbox toggles selection off and the bulk action bar disappears when nothing is selected.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the header checkbox in the endpoints table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"selected\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the header checkbox in the endpoints table"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC069",
+    "title": "Indeterminate header checkbox when selecting a subset of rows",
+    "description": "Verifies selecting a subset of endpoints shows a partial selection count and the bulk action bar reflects the correct number selected.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the second endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"2 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC070",
+    "title": "Bulk set selected endpoints to Template and verify success toast count",
+    "description": "Verifies the bulk action \"Set as Template\" updates selected endpoints and shows a success toast with the correct count.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the second endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"2 selected\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Set as Template\" button in the bulk action bar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Loading\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Updated 2 endpoints\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC071",
+    "title": "Bulk exclude selected endpoints and verify selection clears after refresh",
+    "description": "Verifies the bulk action \"Exclude\" updates selected endpoints and clears the selection after the table refreshes.",
+    "category": "Endpoint Bulk Actions",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Endpoints\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the first endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the second endpoint row"
+      },
+      {
+        "type": "action",
+        "description": "Click the checkbox for the third endpoint row"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"3 selected\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Exclude\" button in the bulk action bar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Loading\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Updated 3 endpoints\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0 selected\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC072",
+    "title": "Paginate to next page of endpoints and see page indicator update",
+    "description": "Verifies that clicking Next moves from page 1 to page 2 and updates the visible page indicator and results range.",
+    "category": "Endpoint Pagination",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 1 of\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the next page button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 2 of\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC073",
+    "title": "Showing range text updates after moving to the next page",
+    "description": "Verifies that the visible \"Showing X-Y of Z endpoints\" range changes when moving from page 1 to page 2.",
+    "category": "Endpoint Pagination",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Showing 1-20 of\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the next page button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Showing 21-\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC074",
+    "title": "Previous moves back from page 2 to page 1",
+    "description": "Verifies that clicking Previous after navigating to page 2 returns to page 1 and updates the page indicator.",
+    "category": "Endpoint Pagination",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click the next page button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 2 of\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the previous page button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page 1 of\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC075",
+    "title": "Pagination controls are visible with page info on endpoints list",
+    "description": "Verifies that the endpoints list shows both the range text and page count indicator along with navigation controls.",
+    "category": "Endpoint Pagination",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Showing\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"of\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Page\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Previous page button\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Next page button\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC076",
+    "title": "Server Config: Switch transport to SSE and save valid port",
+    "description": "Verifies that selecting SSE transport reveals the port field and auto-saves a valid port with visible Saved status.",
+    "category": "Server Config Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"SSE (Hono)\" transport radio option"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Port\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"4000\" into the port field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saving...\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC077",
+    "title": "Server Config: Invalid port shows validation error and prevents auto-save",
+    "description": "Verifies immediate client/server validation message for an out-of-range port and that the Saved status is not shown until corrected.",
+    "category": "Server Config Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"SSE (Hono)\" transport radio option"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Port\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"999\" into the port field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Port must be between 1024 and 65535\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC078",
+    "title": "Server Config: Fix invalid port and confirm auto-save succeeds",
+    "description": "Verifies that correcting a previously invalid port clears the error and results in a Saved status after debounce.",
+    "category": "Server Config Panel",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"SSE (Hono)\" transport radio option"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"999\" into the port field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Port must be between 1024 and 65535\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"4000\" into the port field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Port must be between 1024 and 65535\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC079",
+    "title": "Server Config: Change auth method to API Key and show .env note then save",
+    "description": "Verifies that selecting a non-none auth method shows the .env credentials note and the change auto-saves.",
+    "category": "Server Config Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the auth method dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"API Key\" from dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \".env\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saving...\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC080",
+    "title": "Server Config: Change auth method back to None hides .env note and saves",
+    "description": "Verifies that switching auth to None removes the .env note and the change auto-saves.",
+    "category": "Server Config Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the auth method dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select \"None\" from dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \".env\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC081",
+    "title": "Server Config: Enter invalid server version format shows validation error",
+    "description": "Verifies that a non-semver server version triggers a visible validation error and prevents Saved state until fixed.",
+    "category": "Server Config Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"1\" into the server version field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"semver\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC082",
+    "title": "Server Config: Enter too-long server name shows validation error",
+    "description": "Verifies that exceeding the maximum server name length displays a field-level validation error and blocks saving.",
+    "category": "Server Config Panel",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"This server name is intentionally made very long to exceed fifty characters\" into the server name field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"max\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC083",
+    "title": "Server Config: Transport stdio hides port field and saves transport change",
+    "description": "Verifies that choosing stdio transport hides the port field and the change auto-saves successfully.",
+    "category": "Server Config Panel",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Server Config\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"stdio\" transport radio option"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Port\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Saved\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC084",
+    "title": "Code Preview loads generated code with skeleton then shows index.ts by default",
+    "description": "Verifies the Preview tab generates code, shows a loading skeleton, then renders syntax-highlighted code for the default index.ts file with file size visible.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"code preview loading skeleton\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC085",
+    "title": "Preview tab renders index.ts code pane with line numbers and file size after loading completes",
+    "description": "Verifies that once code generation completes, the code pane is visible with syntax highlighting, line numbers, and the index.ts tab shows a file size indicator.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"index.ts tab\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC086",
+    "title": "Switch between all code file tabs and verify each shows code content and file size",
+    "description": "Verifies users can switch among the five file tabs and each tab displays code content plus a file size indicator in the tab header.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"package.json\" file tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"package.json\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC087",
+    "title": "Copy-to-clipboard shows checkmark and toast notification",
+    "description": "Verifies clicking the copy icon in Preview shows a checkmark state and a visible toast confirming clipboard copy.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Click the copy icon button in the code preview header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Copied to clipboard\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC088",
+    "title": "Preview shows Regenerating overlay after a project change (mapping/config)",
+    "description": "Verifies that making a change triggers live regeneration and a visible \"Regenerating...\" overlay in the Preview pane.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Config\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Type \"9001\" into the port field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Regenerating\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC089",
+    "title": "When code generation fails during regeneration, an error message is displayed in the preview pane",
+    "description": "Verifies that a visible error message is shown in the Preview pane when generation fails after a project change.",
+    "category": "Code Preview",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Config\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Type \"-1\" into the port field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"code generation error message\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC090",
+    "title": "Preview remains usable after a generation error by switching file tabs",
+    "description": "Verifies that after an error is shown, the user can still interact with the Preview UI (e.g., switch tabs) and see the error state consistently.",
+    "category": "Code Preview",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Config\" tab on the project detail page"
+      },
+      {
+        "type": "action",
+        "description": "Type \"-1\" into the port field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Preview\" tab on the project detail page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"code generation error message\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"README.md\" file tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"code generation error message\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC091",
+    "title": "View version history list for an existing project",
+    "description": "Verifies that the History tab shows a list of version snapshots with summary fields visible.",
+    "category": "Version History",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"History\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Projects\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      }
+    ]
+  },
+  {
+    "id": "TC092",
+    "title": "Open History tab from project detail page",
+    "description": "Verifies that the user can open the History tab and see the version history section render.",
+    "category": "Version History",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"History\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      }
+    ]
+  },
+  {
+    "id": "TC093",
+    "title": "Expand a version row to view detailed snapshot fields",
+    "description": "Verifies that expanding a version reveals detailed snapshot information such as transport and counts.",
+    "category": "Version History",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first version row in the history list"
+      }
+    ]
+  },
+  {
+    "id": "TC094",
+    "title": "Collapse an expanded version row",
+    "description": "Verifies that clicking an expanded version row collapses the detailed snapshot view.",
+    "category": "Version History",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first version row in the history list"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first version row in the history list"
+      }
+    ]
+  },
+  {
+    "id": "TC095",
+    "title": "Verify version list appears ordered by most recent (basic check)",
+    "description": "Verifies that the first visible version entry appears as the most recent by checking for a visible timestamp/date on the first entry.",
+    "category": "Version History",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"the first version row timestamp/date\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC096",
+    "title": "Empty state shown when project has no versions",
+    "description": "Verifies that the History tab displays the empty state guidance message when no versions exist.",
+    "category": "Version History",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Use the dashboard search input to search for \"NoVersions\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the project card named \"NoVersions\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      }
+    ]
+  },
+  {
+    "id": "TC097",
+    "title": "Empty state message content is visible and accurate",
+    "description": "Verifies the specific empty state text is visible for projects with no versions.",
+    "category": "Version History",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Use the dashboard search input to search for \"NoVersions\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the project card named \"NoVersions\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No versions yet. Download your project to create the first version.\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC098",
+    "title": "History tab remains readable after switching away and back",
+    "description": "Verifies that the History tab content can be revisited after navigating within the project detail page tabs.",
+    "category": "Version History",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the projects list"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"History\" tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"the version history list or empty state section\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC099",
+    "title": "Save project name inline with Enter",
+    "description": "Verifies a user can edit the project name inline and save with Enter, seeing a success toast and updated header name.",
+    "category": "Inline Project Name Editing",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Project name inline input\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Renamed Project 1\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Renamed Project 1\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC100",
+    "title": "Save project name inline using the check icon",
+    "description": "Verifies a user can save an inline project name edit using the check icon and sees a loading spinner and success feedback.",
+    "category": "Inline Project Name Editing",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Renamed Project 2\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Click the check icon to save"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Toast notification\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Renamed Project 2\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC101",
+    "title": "Inline input is auto-focused and pre-selected when entering edit mode",
+    "description": "Verifies the inline input appears on pencil click and is ready for immediate typing (auto-focused/pre-selected behavior).",
+    "category": "Inline Project Name Editing",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Project name inline input\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Quick Replace Name\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Quick Replace Name\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC102",
+    "title": "Save shows spinner then success toast and updated name remains after refresh navigation",
+    "description": "Verifies saving shows visible progress feedback and the updated name persists when returning to the dashboard and re-opening the project.",
+    "category": "Inline Project Name Editing",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Persistent Name\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Click the check icon to save"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Toast notification\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Persistent Name\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Dashboard\" navigation link (or app logo) to return to the dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Click on the same project card again to reopen it"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Persistent Name\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC103",
+    "title": "Attempt to save an empty project name shows failure feedback and reverts",
+    "description": "Verifies saving an empty name results in visible error feedback and the displayed name reverts (no empty header name).",
+    "category": "Inline Project Name Editing",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "action",
+        "description": "Type \"\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Toast notification\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Project name text in header\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC104",
+    "title": "Special characters in name save successfully and display correctly",
+    "description": "Verifies a project name containing punctuation characters can be saved and is rendered in the header.",
+    "category": "Inline Project Name Editing",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /auth/signin"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Sign in\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/dashboard\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first project card in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Click the pencil icon next to the project name"
+      },
+      {
+        "type": "action",
+        "description": "Type \"MCPForge: Tools & Resources (v1.0)\" into the project name input field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"MCPForge: Tools & Resources (v1.0)\" is visible"
+      }
+    ]
+  }
+]
