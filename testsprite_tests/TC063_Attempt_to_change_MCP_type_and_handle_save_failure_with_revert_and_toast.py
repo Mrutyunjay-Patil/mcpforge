@@ -33,10 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin
-        await page.goto("http://localhost:3000/auth/signin")
+        # -> Click the 'Sign in' link to go to the sign-in page.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email field, fill the password field, and click the 'Sign In' button.
+        # -> Fill the email and password fields and click the 'Sign In' button to authenticate (then verify navigation to /dashboard).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,19 +55,19 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click on the first project card (Petstore MCP Server) to open the project page and view endpoints (click element index 51054).
+        # -> Click the first project card in the dashboard project list to open the project page (project element at index 59712).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div[2]/a[3]').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the MCP type dropdown on the first endpoint row to open the options (use element index 51244). Then wait for the options to render.
+        # -> Click the MCP type dropdown for the first endpoint row (POST /pet) to open the options list so the 'Resource' option can be selected and the save-failure behavior observed.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[3]/div/table/tbody/tr/td[7]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Resource' option (element index 51681) to attempt to change the MCP type to Resource, then wait for the save attempt result (toast and cell revert).
+        # -> Click the 'Resource' option in the MCP type dropdown for POST /pet (option element index 60599) to attempt the change and trigger the save behavior.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/div/div[2]').nth(0)
@@ -75,10 +78,10 @@ async def run_test():
         current_url = await frame.evaluate("() => window.location.href")
         assert '/dashboard' in current_url
         assert await frame.locator("xpath=//*[contains(., 'Endpoints')]").nth(0).is_visible(), "Expected 'Endpoints' to be visible"
-        assert await frame.locator("xpath=//*[contains(., 'Tool')]").nth(0).is_visible(), "Expected 'Tool' to be visible in the MCP type options list"
-        assert await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to be visible in the MCP type cell for that endpoint row"
+        assert await frame.locator("xpath=//*[contains(., 'Tool')]").nth(0).is_visible(), "Expected 'Tool' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to be visible"
         assert await frame.locator("xpath=//*[contains(., 'Failed to save')]").nth(0).is_visible(), "Expected 'Failed to save' to be visible"
-        assert not await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to not be visible in the MCP type cell for that endpoint row"
+        assert not await frame.locator("xpath=//*[contains(., 'Resource')]").nth(0).is_visible(), "Expected 'Resource' to not be visible"
         await asyncio.sleep(5)
 
     finally:

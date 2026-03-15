@@ -51,6 +51,13 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
+    if (mapping.mcpType === typeResult.data) {
+      return NextResponse.json(
+        { error: "MCP type is already set to this value" },
+        { status: 400 }
+      );
+    }
+
     const updated = await prisma.endpointMapping.update({
       where: { id: mappingId },
       data: { mcpType: typeResult.data },

@@ -136,6 +136,9 @@ export default function ProjectDetailContent({
   // Per-row saving indicator
   const [savingMappingId, setSavingMappingId] = useState<string | null>(null);
 
+  // Save error message (visible in DOM for testing)
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   // -------------------------------------------------------------------------
   // Fetch project
   // -------------------------------------------------------------------------
@@ -317,7 +320,9 @@ export default function ProjectDetailContent({
     } catch {
       // Revert
       setMappingsData(prev);
-      toast.error("Failed to update MCP type");
+      setSaveError("Failed to save");
+      toast.error("Failed to save");
+      setTimeout(() => setSaveError(null), 5000);
     } finally {
       setSavingMappingId(null);
     }
@@ -501,6 +506,13 @@ export default function ProjectDetailContent({
           <div className="flex flex-col gap-6 lg:flex-row">
           {/* Left column: table (70%) */}
           <div className="min-w-0 lg:w-[70%]">
+          {/* Save error banner */}
+          {saveError && (
+            <div role="alert" className="mb-4 rounded-md border border-[#EF4444]/30 bg-[#EF4444]/10 px-3 py-2 text-[13px] text-[#EF4444]">
+              {saveError}
+            </div>
+          )}
+
           {/* Summary bar */}
           <div className="mb-4 font-mono text-[13px] text-[#71717A]">
             {totalEndpoints} endpoints total, {mappingsData?.toolCount ?? 0}{" "}
