@@ -54,14 +54,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing
 
-All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser tests from a product requirements document.
+All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser and API tests from a product requirements document.
 
-- **50+ unique test cases** across 13 requirement categories covering authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API testing
-- **100% pass rate** across all tests
-- Tests executed across 4 separate TestSprite runs (3 frontend rounds + 1 backend round)
-- **69 test files** total in the testsprite_tests/ folder
-- Full test report and individual test scripts are in the [`testsprite_tests/`](./testsprite_tests/) folder
-- Detailed results available in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
+- **100 tests executed** across 4 TestSprite runs (3 frontend rounds + 1 backend round)
+- **86 passed, 14 failed** across all runs (86% raw pass rate)
+- **50 unique passing test cases** retained across 13 requirement categories: authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API
+- **69 test files** in the repo (some tests ran in multiple rounds)
+- Failures include: 6 flaky tests that passed in other rounds, 1 error injection edge case, 1 external URL timeout, and 5 backend tests blocked by NextAuth cookie auth
+- Full breakdown in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
+- All test scripts in [`testsprite_tests/`](./testsprite_tests/) (frontend) and [`testsprite_tests/backend/`](./testsprite_tests/backend/) (API)
 
 ## Project Structure
 
