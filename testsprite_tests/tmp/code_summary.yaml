@@ -1,476 +1,325 @@
 version: "2"
-type: frontend
+type: backend
 tech_stack:
   - TypeScript
-  - React 19
-  - Next.js 16 (App Router)
-  - NextAuth v5 (beta) with Credentials provider
+  - Next.js 16 (App Router API Routes)
   - Prisma ORM with SQLite
-  - Tailwind CSS 4
-  - shadcn/ui (Base UI components)
-  - Zod validation
-  - Sonner toast notifications
-  - react-syntax-highlighter
-  - JSZip (zip generation)
-  - bcryptjs (password hashing)
-  - swagger-parser (OpenAPI parsing)
-  - lucide-react icons
-routes:
-  - path: /
-    file: src/app/page.tsx
-    auth_required: false
-    description: Landing page with hero section, three-step flow, code output preview, features grid, and CTA
-  - path: /auth/signin
-    file: src/app/auth/signin/page.tsx
-    auth_required: false
-    description: Sign in page with email and password credentials form
-  - path: /auth/signup
-    file: src/app/auth/signup/page.tsx
-    auth_required: false
-    description: Sign up page with name, email, password, and confirm password form with client-side validation
-  - path: /dashboard
-    file: src/app/(app)/dashboard/page.tsx
-    auth_required: true
-    description: Dashboard listing all user projects as cards with search, delete, and create new project actions
-  - path: /projects/new
-    file: src/app/(app)/projects/new/page.tsx
-    auth_required: true
-    description: Create new project page with three input tabs for OpenAPI spec (upload file, paste content, fetch from URL)
-  - path: /projects/[id]
-    file: src/app/(app)/projects/[id]/page.tsx
-    auth_required: true
-    description: Project detail page with endpoint explorer table, server config panel, code preview, and version history tabs
-  - path: /api/auth/[...nextauth]
-    file: src/app/api/auth/[...nextauth]/route.ts
-    auth_required: false
-    description: NextAuth API route handler for session management and credential-based authentication
-  - path: /api/auth/signup
-    file: src/app/api/auth/signup/route.ts
-    auth_required: false
-    description: POST endpoint for user registration with email/password validation and bcrypt hashing
-  - path: /api/projects
-    file: src/app/api/projects/route.ts
-    auth_required: true
-    description: GET lists all user projects; POST creates a new project by parsing an OpenAPI spec and creating mappings and config
-  - path: /api/projects/[id]
-    file: src/app/api/projects/[id]/route.ts
-    auth_required: true
-    description: GET returns single project with mappings and config; PATCH updates project name; DELETE removes project
-  - path: /api/projects/[id]/mappings
-    file: src/app/api/projects/[id]/mappings/route.ts
-    auth_required: true
-    description: GET returns paginated endpoint mappings with search, method, and mcpType filtering
-  - path: /api/projects/[id]/mappings/[mappingId]
-    file: src/app/api/projects/[id]/mappings/[mappingId]/route.ts
-    auth_required: true
-    description: PATCH updates a single endpoint mapping mcpType (tool, resource, resource_template, exclude)
-  - path: /api/projects/[id]/mappings/bulk
-    file: src/app/api/projects/[id]/mappings/bulk/route.ts
-    auth_required: true
-    description: PATCH bulk updates mcpType for multiple selected endpoint mappings
-  - path: /api/projects/[id]/config
-    file: src/app/api/projects/[id]/config/route.ts
-    auth_required: true
-    description: GET returns server config; PUT updates server config (transport, auth, name, version, baseUrl, port)
-  - path: /api/projects/[id]/generate
-    file: src/app/api/projects/[id]/generate/route.ts
-    auth_required: true
-    description: POST generates MCP server code files from mappings and config, creates a version snapshot
-  - path: /api/projects/[id]/download
-    file: src/app/api/projects/[id]/download/route.ts
-    auth_required: true
-    description: GET generates and returns a zip file of the complete MCP server project
-  - path: /api/projects/[id]/versions
-    file: src/app/api/projects/[id]/versions/route.ts
-    auth_required: true
-    description: GET lists all version snapshots for a project ordered by most recent
+  - NextAuth v5 (beta) with Credentials provider and JWT strategy
+  - Zod schema validation
+  - bcryptjs for password hashing
+  - JSZip for zip archive generation
+  - swagger-parser for OpenAPI spec parsing
 features:
-  - name: User Sign Up
-    description: Register a new account with name (optional), email, password, and confirm password. Client-side validation enforces minimum 8 characters, 1 uppercase, 1 number. Auto-signs in after successful registration.
+  - name: Authentication API
+    description: User registration endpoint with email/password validation, duplicate email checking, and bcrypt password hashing. Returns created user on success.
     files:
-      - src/app/auth/signup/page.tsx
       - src/app/api/auth/signup/route.ts
-      - src/lib/auth.ts
-    entry_route: /auth/signup
-    user_interactions:
-      - Navigate to /auth/signup or click "Get started" / "Sign up" link
-      - Optionally enter full name
-      - Enter email address
-      - Enter password (min 8 chars, 1 uppercase, 1 number)
-      - Enter confirm password
-      - Click "Create Account" button
-      - See validation errors inline if any field is invalid
-      - On success, automatically signed in and redirected to /dashboard
-    api_calls:
+    endpoints:
       - method: POST
-        endpoint: /api/auth/signup
-      - method: POST
-        endpoint: /api/auth/[...nextauth] (signIn credentials)
-    auth_required: false
-  - name: User Sign In
-    description: Authenticate with email and password using NextAuth credentials provider. JWT session strategy.
+        path: /api/auth/signup
+        description: Register a new user account with email, password, and optional name. Validates email format, password strength (min 8 chars, 1 uppercase, 1 number), checks for duplicate emails, hashes password with bcrypt (12 rounds), and creates user in database.
+        auth_required: false
+        request_schema:
+          body:
+            email: "string (required, valid email format)"
+            password: "string (required, min 8 chars, must contain 1 uppercase letter and 1 number)"
+            name: "string (optional, trimmed)"
+        response_schema:
+          "201": "User created successfully. Returns { user: { id: string, email: string, name: string | null } }"
+          "400": "Validation errors. Returns { errors: { email?: string, password?: string } } - missing fields, invalid email format, weak password"
+          "409": "Duplicate email. Returns { errors: { email: 'An account with this email already exists' } }"
+          "500": "Unexpected server error. Returns { errors: { server: 'An unexpected error occurred' } }"
+    depends_on: []
+
+  - name: Auth Session
+    description: NextAuth.js v5 catch-all route handlers for credential-based authentication, session management, CSRF protection, and sign-out. Uses JWT session strategy with Credentials provider.
     files:
-      - src/app/auth/signin/page.tsx
-      - src/lib/auth.ts
       - src/app/api/auth/[...nextauth]/route.ts
-    entry_route: /auth/signin
-    user_interactions:
-      - Navigate to /auth/signin or click "Sign in" link
-      - Enter email address
-      - Enter password
-      - Click "Sign In" button
-      - See error message if credentials are invalid
-      - On success, redirected to /dashboard
-    api_calls:
-      - method: POST
-        endpoint: /api/auth/[...nextauth] (signIn credentials)
-    auth_required: false
-  - name: User Sign Out (Logout)
-    description: Sign out via the navbar dropdown menu. Uses NextAuth signOut server action and redirects to sign in page.
-    files:
-      - src/components/navbar.tsx
-      - src/lib/auth.ts
-    entry_route: /dashboard
-    user_interactions:
-      - Click avatar/user dropdown in the top-right navbar
-      - Click "Sign out" button in dropdown menu
-      - Redirected to /auth/signin
-    api_calls:
-      - method: POST
-        endpoint: /api/auth/[...nextauth] (signOut)
-    auth_required: true
-  - name: Dashboard (Project List)
-    description: View all projects as a grid of cards showing project name, spec title, endpoint count, and last updated time. Includes loading skeleton states and empty state.
-    files:
-      - src/app/(app)/dashboard/page.tsx
-      - src/components/dashboard-content.tsx
-    entry_route: /dashboard
-    user_interactions:
-      - View project cards in a responsive grid (1-3 columns)
-      - See project name, spec title, endpoint count, and relative update time on each card
-      - Click a project card to navigate to /projects/[id]
-      - Click "New Project" button to navigate to /projects/new
-    api_calls:
+    endpoints:
       - method: GET
-        endpoint: /api/projects
-    auth_required: true
-  - name: Search Projects
-    description: Filter projects on the dashboard by name or spec title with debounced client-side search (300ms debounce).
+        path: /api/auth/[...nextauth]
+        description: "NextAuth GET handler serving multiple sub-routes: /api/auth/session (get current session), /api/auth/csrf (get CSRF token), /api/auth/providers (list auth providers), /api/auth/signout (sign-out page)"
+        auth_required: false
+        request_schema: {}
+        response_schema:
+          "200": "Session data, CSRF token, provider list, or sign-out confirmation depending on sub-route"
+      - method: POST
+        path: /api/auth/[...nextauth]
+        description: "NextAuth POST handler for sub-routes: /api/auth/callback/credentials (sign in with email+password), /api/auth/signout (execute sign-out)"
+        auth_required: false
+        request_schema:
+          body:
+            email: "string (for credentials callback)"
+            password: "string (for credentials callback)"
+        response_schema:
+          "200": "Successful authentication with session cookie set, or successful sign-out"
+          "401": "Invalid credentials"
+    depends_on:
+      - Authentication API
+
+  - name: Projects CRUD
+    description: Full CRUD operations for managing MCP server projects. Create parses an OpenAPI spec and auto-generates endpoint mappings and server config in a single database transaction. List returns all user projects. Detail includes mappings and config. Rename validates with Zod. Delete cascades to all related data.
     files:
-      - src/components/dashboard-content.tsx
-    entry_route: /dashboard
-    user_interactions:
-      - Type a search query in the "Search projects..." input field
-      - See project cards filtered in real time (client-side)
-      - See "No results" empty state if no projects match
-    api_calls: []
-    auth_required: true
-  - name: Delete Project
-    description: Delete a project from the dashboard with a confirmation dialog. Removes project and all associated mappings, config, and versions via cascade.
-    files:
-      - src/components/dashboard-content.tsx
+      - src/app/api/projects/route.ts
       - src/app/api/projects/[id]/route.ts
-    entry_route: /dashboard
-    user_interactions:
-      - Hover over a project card to reveal the trash icon button
-      - Click the trash icon to open confirmation dialog
-      - Read the warning that deletion is permanent and includes all mappings and configs
-      - Click "Cancel" to dismiss or "Delete" to confirm
-      - See toast notification on success or failure
-      - Project card removed from grid on success
-    api_calls:
+    endpoints:
+      - method: GET
+        path: /api/projects
+        description: List all projects for the authenticated user, returning summary fields ordered by most recently updated
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { projects: [{ id: string, name: string, specTitle: string | null, pathCount: number, createdAt: string, updatedAt: string }] }"
+          "401": "Unauthorized - no valid session. Returns { error: 'Unauthorized' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+      - method: POST
+        path: /api/projects
+        description: Create a new project by providing a name and OpenAPI spec content. Parses the spec to extract endpoints, auto-generates endpoint mappings with default MCP types, and creates a server config with defaults. All done in a Prisma transaction.
+        auth_required: true
+        request_schema:
+          body:
+            name: "string (required, validated by projectNameSchema via Zod)"
+            specContent: "string (required, raw OpenAPI spec in JSON or YAML format)"
+            specFormat: "string (optional, auto-detected from content if omitted)"
+        response_schema:
+          "201": "Project created. Returns { project: { id: string, name: string, pathCount: number } }"
+          "400": "Validation error - invalid name, missing specContent, or unparseable OpenAPI spec. Returns { error: string }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+      - method: GET
+        path: /api/projects/:id
+        description: Get a single project with all endpoint mappings (ordered by path asc, method asc) and server config included
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { project: { id, name, specContent, specFormat, specTitle, specVersion, pathCount, userId, createdAt, updatedAt, mappings: [...], config: {...} } }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden - project belongs to another user. Returns { error: 'Forbidden' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+      - method: PATCH
+        path: /api/projects/:id
+        description: Update the name of an existing project. Validates new name with projectNameSchema. Updates the updatedAt timestamp.
+        auth_required: true
+        request_schema:
+          body:
+            name: "string (required, validated by projectNameSchema via Zod)"
+        response_schema:
+          "200": "Returns { project: { id: string, name: string, updatedAt: string } }"
+          "400": "Invalid project name. Returns { error: string } with Zod validation message"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden - project belongs to another user. Returns { error: 'Forbidden' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
       - method: DELETE
-        endpoint: /api/projects/[id]
-    auth_required: true
-  - name: Create Project - Upload File Tab
-    description: Create a new project by uploading a .json, .yaml, or .yml OpenAPI spec file via drag-and-drop or file picker. Max 5MB.
+        path: /api/projects/:id
+        description: Delete a project and all associated data. Cascading delete removes all endpoint mappings, server config, and version snapshots.
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { message: 'Project deleted' }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden - project belongs to another user. Returns { error: 'Forbidden' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+    depends_on: []
+
+  - name: Endpoint Mappings
+    description: Manage MCP type assignments for API endpoint-to-tool mappings. Supports paginated listing with search/filter, single mapping update, and bulk update for multiple mappings. Each mapping ties an OpenAPI endpoint to an MCP type (tool, resource, resource_template, or exclude).
     files:
-      - src/app/(app)/projects/new/page.tsx
-      - src/app/api/projects/route.ts
-      - src/lib/openapi-parser.ts
-    entry_route: /projects/new
-    user_interactions:
-      - Enter a project name in the "Project Name" field
-      - Select the "Upload File" tab (default)
-      - Drag and drop a file onto the drop zone, or click to open file picker
-      - See selected file name and size displayed
-      - Click the X button to remove file and select a different one
-      - See validation errors for wrong file type or size exceeding 5MB
-      - Click "Create Project" button
-      - On success, see toast and redirect to /projects/[id]
-    api_calls:
-      - method: POST
-        endpoint: /api/projects
-    auth_required: true
-  - name: Create Project - Paste Content Tab
-    description: Create a new project by pasting raw OpenAPI JSON or YAML content into a textarea.
-    files:
-      - src/app/(app)/projects/new/page.tsx
-      - src/app/api/projects/route.ts
-      - src/lib/openapi-parser.ts
-    entry_route: /projects/new
-    user_interactions:
-      - Enter a project name in the "Project Name" field
-      - Click the "Paste Content" tab
-      - Paste OpenAPI spec content (JSON or YAML) into the textarea
-      - See character count displayed below textarea
-      - Click "Create Project" button
-      - On success, see toast and redirect to /projects/[id]
-    api_calls:
-      - method: POST
-        endpoint: /api/projects
-    auth_required: true
-  - name: Create Project - Fetch from URL Tab
-    description: Create a new project by fetching an OpenAPI spec from a remote URL with 10-second timeout.
-    files:
-      - src/app/(app)/projects/new/page.tsx
-      - src/app/api/projects/route.ts
-      - src/lib/openapi-parser.ts
-    entry_route: /projects/new
-    user_interactions:
-      - Enter a project name in the "Project Name" field
-      - Click the "Fetch from URL" tab
-      - Enter the URL of an OpenAPI spec
-      - Click the "Fetch" button
-      - See loading spinner while fetching
-      - See "Spec fetched successfully" message with preview of first 2000 characters
-      - See error if URL is invalid, request fails, or times out after 10 seconds
-      - Click "Create Project" button
-      - On success, see toast and redirect to /projects/[id]
-    api_calls:
-      - method: POST
-        endpoint: /api/projects
-    auth_required: true
-  - name: Endpoint Explorer Table
-    description: Interactive table showing all parsed API endpoints with method badges, path, operation ID, summary, param count, and MCP type dropdown. Supports search, filtering, selection, and pagination.
-    files:
-      - src/components/project-detail-content.tsx
       - src/app/api/projects/[id]/mappings/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - View summary bar showing total endpoints, tools, resources, templates, and excluded counts
-      - See table with columns for checkbox, method badge (color-coded), path, operation ID, summary, params count, and MCP type dropdown
-      - Scroll horizontally on smaller screens
-      - View loading skeleton while data loads
-      - See empty state when no endpoints match filters
-    api_calls:
-      - method: GET
-        endpoint: /api/projects/[id]/mappings?search=&method=&mcpType=&page=1&limit=20
-    auth_required: true
-  - name: Endpoint Search and Filters
-    description: Filter endpoint table by search query (path or operation ID), HTTP method dropdown, and MCP type dropdown. Search is debounced at 300ms.
-    files:
-      - src/components/project-detail-content.tsx
-      - src/app/api/projects/[id]/mappings/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Type in the "Search by path or operation..." input
-      - Select an HTTP method from the "All Methods" dropdown (GET, POST, PUT, PATCH, DELETE)
-      - Select an MCP type from the "All Types" dropdown (Tool, Resource, Resource Template, Exclude)
-      - Filters apply in real time; page resets to 1 on filter change
-      - Clear filters by selecting "All Methods" or "All Types"
-    api_calls:
-      - method: GET
-        endpoint: /api/projects/[id]/mappings?search=&method=&mcpType=&page=1&limit=20
-    auth_required: true
-  - name: Endpoint MCP Type Change (Single)
-    description: Change the MCP type of a single endpoint mapping via an inline dropdown with optimistic UI update.
-    files:
-      - src/components/project-detail-content.tsx
       - src/app/api/projects/[id]/mappings/[mappingId]/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click the MCP type dropdown on any endpoint row
-      - Select a new type (Tool, Resource, Resource Template, or Exclude)
-      - See optimistic update immediately in the table
-      - See spinner icon while saving
-      - Summary counts refresh after save
-      - See error toast and revert on failure
-    api_calls:
-      - method: PATCH
-        endpoint: /api/projects/[id]/mappings/[mappingId]
-    auth_required: true
-  - name: Endpoint Bulk Actions
-    description: Select multiple endpoints via checkboxes and change their MCP type in bulk. Supports select-all on current page.
-    files:
-      - src/components/project-detail-content.tsx
       - src/app/api/projects/[id]/mappings/bulk/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click individual row checkboxes to select endpoints
-      - Click the header checkbox to select/deselect all on current page (supports indeterminate state)
-      - See bulk action bar appear showing count of selected items
-      - Click "Set as Tool", "Set as Resource", "Set as Template", or "Exclude" button
-      - See loading spinner during bulk update
-      - See success toast with count of updated endpoints
-      - Selection clears and table refreshes after bulk update
-    api_calls:
-      - method: PATCH
-        endpoint: /api/projects/[id]/mappings/bulk
-    auth_required: true
-  - name: Endpoint Pagination
-    description: Navigate through pages of endpoints when total exceeds 20 per page. Shows page info and previous/next controls.
-    files:
-      - src/components/project-detail-content.tsx
-      - src/app/api/projects/[id]/mappings/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - See "Showing X-Y of Z endpoints" text and "Page N of M" indicator
-      - Click previous page button (disabled on first page)
-      - Click next page button (disabled on last page)
-      - Page changes trigger new API call with updated page parameter
-    api_calls:
+    endpoints:
       - method: GET
-        endpoint: /api/projects/[id]/mappings?page=N&limit=20
-    auth_required: true
-  - name: Server Config Panel
-    description: Side panel on the project detail Endpoints tab for configuring generated MCP server settings. Auto-saves with 500ms debounce.
+        path: /api/projects/:id/mappings
+        description: List endpoint mappings with optional search (path/operationId), method filter, mcpType filter, and pagination. Returns aggregate counts by mcpType for the summary bar (unfiltered).
+        auth_required: true
+        request_schema:
+          query:
+            search: "string (optional, filters by path or operationId containing value)"
+            method: "string (optional, exact match on HTTP method e.g. GET, POST)"
+            mcpType: "string (optional, exact match on tool/resource/resource_template/exclude)"
+            page: "integer (optional, default 1, minimum 1)"
+            limit: "integer (optional, default 20, minimum 1, maximum 100)"
+        response_schema:
+          "200": "Returns { mappings: [...], total: number, page: number, totalPages: number, toolCount: number, resourceCount: number, templateCount: number, excludeCount: number }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden. Returns { error: 'Forbidden' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+      - method: PATCH
+        path: /api/projects/:id/mappings/:mappingId
+        description: Update the MCP type of a single endpoint mapping. Validates mcpType with Zod schema. Returns 400 if the type is already set to the requested value.
+        auth_required: true
+        request_schema:
+          body:
+            mcpType: "string (required, one of: tool, resource, resource_template, exclude - validated by mcpTypeSchema)"
+        response_schema:
+          "200": "Returns { mapping: { id, projectId, method, path, operationId, summary, description, paramsCount, hasBody, mcpType } }"
+          "400": "Invalid MCP type or type already set to this value. Returns { error: string }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden. Returns { error: 'Forbidden' }"
+          "404": "Project not found or mapping not found in this project. Returns { error: string }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+      - method: PATCH
+        path: /api/projects/:id/mappings/bulk
+        description: Bulk update the MCP type for multiple endpoint mappings at once. Only updates mappings that belong to the specified project.
+        auth_required: true
+        request_schema:
+          body:
+            mappingIds: "array of strings (required, non-empty array of mapping IDs)"
+            mcpType: "string (required, one of: tool, resource, resource_template, exclude - validated by mcpTypeSchema)"
+        response_schema:
+          "200": "Returns { updated: number } with count of updated mappings"
+          "400": "No mappings selected or invalid MCP type. Returns { error: string }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Forbidden. Returns { error: 'Forbidden' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+    depends_on:
+      - Projects CRUD
+
+  - name: Server Config
+    description: Read and update MCP server configuration for a project. Config includes transport type (stdio/SSE/streamable HTTP), authentication method, server name/version, base URL, and port number. Validated with Zod serverConfigSchema.
     files:
-      - src/components/server-config-panel.tsx
       - src/app/api/projects/[id]/config/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - View config panel on the right side of the Endpoints tab
-      - Select transport type via radio buttons (stdio, SSE, Streamable HTTP)
-      - See port number field appear when SSE or Streamable HTTP is selected
-      - Enter port number (1024-65535)
-      - Select auth method from dropdown (None, API Key, Bearer Token, Basic Auth)
-      - See note about .env credentials when auth is not "none"
-      - Edit server name (max 50 chars)
-      - Edit server version (semver x.y.z)
-      - Edit base URL
-      - See "Saving...", "Saved", or "Failed to save" status indicator
-      - All changes auto-save with 500ms debounce
-      - See field-level validation errors from server
-    api_calls:
+    endpoints:
       - method: GET
-        endpoint: /api/projects/[id]/config
+        path: /api/projects/:id/config
+        description: Get the MCP server configuration for a project. Returns selected config fields only (transport, authMethod, serverName, serverVersion, baseUrl, port).
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { config: { transport: string, authMethod: string, serverName: string, serverVersion: string, baseUrl: string, port: number } }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Access denied. Returns { error: 'Access denied' }"
+          "404": "Project not found or config not found (two separate 404 cases). Returns { error: string }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
       - method: PUT
-        endpoint: /api/projects/[id]/config
-    auth_required: true
-  - name: Code Preview
-    description: View generated MCP server code across five file tabs (index.ts, package.json, tsconfig.json, .env.example, README.md) with syntax highlighting, line numbers, file sizes, and copy-to-clipboard.
+        path: /api/projects/:id/config
+        description: Update the full MCP server configuration. All fields validated by serverConfigSchema (Zod). Returns field-level errors on validation failure.
+        auth_required: true
+        request_schema:
+          body:
+            transport: "string (required, validated by serverConfigSchema)"
+            authMethod: "string (required, validated by serverConfigSchema)"
+            serverName: "string (required, validated by serverConfigSchema)"
+            serverVersion: "string (required, validated by serverConfigSchema)"
+            baseUrl: "string (optional, defaults to empty string)"
+            port: "integer (required, validated by serverConfigSchema)"
+        response_schema:
+          "200": "Returns { config: { transport, authMethod, serverName, serverVersion, baseUrl, port } }"
+          "400": "Validation failed. Returns { error: 'Validation failed', fieldErrors: { [field]: string[] } }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Access denied. Returns { error: 'Access denied' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+    depends_on:
+      - Projects CRUD
+
+  - name: Code Generation
+    description: Generate MCP server source code files from project endpoint mappings and server config. Creates a versioned snapshot with auto-incrementing version number stored in the database. Uses the code-generator library to produce TypeScript server files.
     files:
-      - src/components/code-preview.tsx
       - src/app/api/projects/[id]/generate/route.ts
-      - src/lib/code-generator.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click the "Preview" tab on the project detail page
-      - See generated code auto-load with loading skeleton
-      - Switch between file tabs (index.ts, package.json, tsconfig.json, .env.example, README.md)
-      - See file size in each tab header
-      - View syntax-highlighted code with line numbers
-      - Click the copy icon button to copy file content to clipboard
-      - See checkmark icon after successful copy
-      - See error message if generation fails
-    api_calls:
+    endpoints:
       - method: POST
-        endpoint: /api/projects/[id]/generate
-    auth_required: true
-  - name: Download Project
-    description: Generate and download the complete MCP server project as a zip file. Triggers code generation, creates a version snapshot, then downloads the zip.
+        path: /api/projects/:id/generate
+        description: Generate MCP server code files from current mappings and config. Counts existing versions, creates a new ProjectVersion record with incremented version number, and stores the full config snapshot (mappings + config + files) as JSON.
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { version: { id: string, versionNumber: number, createdAt: string }, files: { [filename]: string } }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Access denied. Returns { error: 'Access denied' }"
+          "404": "Project not found or server config not found (two separate 404 cases). Returns { error: string }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+    depends_on:
+      - Projects CRUD
+      - Server Config
+      - Endpoint Mappings
+
+  - name: Download
+    description: Generate and download a complete MCP server project as a zip archive. Regenerates code on-the-fly from current mappings and config, builds a zip using JSZip, and returns it as a binary response with proper Content-Disposition header.
     files:
-      - src/components/download-button.tsx
-      - src/app/api/projects/[id]/generate/route.ts
       - src/app/api/projects/[id]/download/route.ts
-      - src/lib/code-generator.ts
-      - src/lib/zip-builder.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click the "Download" button in the project detail header
-      - See button change to "Generating..." with spinner
-      - Browser automatically downloads mcpforge-[project-name].zip file
-      - See toast notification "Project downloaded" on success
-      - See error toast if generation or download fails
-    api_calls:
-      - method: POST
-        endpoint: /api/projects/[id]/generate
+    endpoints:
       - method: GET
-        endpoint: /api/projects/[id]/download
-    auth_required: true
+        path: /api/projects/:id/download
+        description: Generate MCP server code and return as a downloadable zip file. File name follows pattern mcpforge-[kebab-project-name].zip. Regenerates code fresh on each request rather than serving a cached version.
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Binary zip file with headers Content-Type: application/zip and Content-Disposition: attachment; filename=\"mcpforge-[name].zip\""
+          "401": "Unauthorized. Returns JSON { error: 'Unauthorized' }"
+          "403": "Access denied. Returns JSON { error: 'Access denied' }"
+          "404": "Project not found or server config not found. Returns JSON { error: string }"
+          "500": "Internal server error. Returns JSON { error: 'Internal server error' }"
+    depends_on:
+      - Projects CRUD
+      - Server Config
+      - Endpoint Mappings
+
   - name: Version History
-    description: View all generated version snapshots of a project. Each version shows version number, config summary (tools, resources, transport), and timestamp. Expandable to show detailed configuration snapshot.
+    description: Retrieve all generated version snapshots for a project ordered by most recent first. Each version includes a version number, full config snapshot (JSON string with mappings, config, and files), and creation timestamp.
     files:
-      - src/components/version-history.tsx
       - src/app/api/projects/[id]/versions/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click the "History" tab on the project detail page
-      - See list of versions ordered by most recent, each showing version number, summary, and date
-      - See empty state message if no versions exist yet
-      - Click a version row to expand/collapse detailed snapshot view
-      - View transport, tool count, resource count, and file count in expanded view
-    api_calls:
+    endpoints:
       - method: GET
-        endpoint: /api/projects/[id]/versions
-    auth_required: true
-  - name: Inline Project Name Editing
-    description: Edit the project name directly on the project detail page header via inline input with Enter to save and Escape to cancel.
+        path: /api/projects/:id/versions
+        description: List all version snapshots for a project, ordered by createdAt descending. Returns id, versionNumber, configSnapshot (JSON string), and createdAt for each version.
+        auth_required: true
+        request_schema: {}
+        response_schema:
+          "200": "Returns { versions: [{ id: string, versionNumber: number, configSnapshot: string, createdAt: string }] }"
+          "401": "Unauthorized. Returns { error: 'Unauthorized' }"
+          "403": "Access denied. Returns { error: 'Access denied' }"
+          "404": "Project not found. Returns { error: 'Project not found' }"
+          "500": "Internal server error. Returns { error: 'Internal server error' }"
+    depends_on:
+      - Projects CRUD
+
+  - name: Fetch Spec Proxy
+    description: Server-side proxy endpoint to fetch remote OpenAPI specification files by URL. Avoids browser CORS restrictions. Has a 10-second timeout via AbortController. No authentication required.
     files:
-      - src/components/project-detail-content.tsx
-      - src/app/api/projects/[id]/route.ts
-    entry_route: /projects/[id]
-    user_interactions:
-      - Click the pencil icon next to the project name
-      - See inline input field replace the name text, auto-focused and pre-selected
-      - Edit the project name
-      - Press Enter or click the check icon to save
-      - Press Escape or click the X icon to cancel
-      - See loading spinner on check icon while saving
-      - See toast notification on success or failure
-      - Name reverts if save fails
-    api_calls:
-      - method: PATCH
-        endpoint: /api/projects/[id]
-    auth_required: true
-  - name: Landing Page
-    description: Public marketing landing page showcasing MCPForge with hero section, three-step workflow explanation, production-ready output preview, features grid (8 feature cards), and bottom CTA. Includes navigation links to sign in and sign up.
-    files:
-      - src/app/page.tsx
-      - src/components/forge-hammer.tsx
-    entry_route: /
-    user_interactions:
-      - View hero section with tagline and call-to-action buttons
-      - Click "Start Building - Free" to navigate to /auth/signup
-      - Click "View Documentation" link
-      - Click "Sign in" in the nav bar to go to /auth/signin
-      - Click "Get started" in the nav bar to go to /auth/signup
-      - Click GitHub icon to open GitHub repository
-      - Scroll through three-step flow, code output section, and features grid
-      - Click "Get started free" in bottom CTA to go to /auth/signup
-    api_calls: []
-    auth_required: false
-  - name: Navbar with User Menu
-    description: Persistent navigation bar shown on authenticated pages with logo link, Dashboard link, and user avatar dropdown menu showing name, email, and sign-out action.
-    files:
-      - src/components/navbar.tsx
-      - src/lib/auth.ts
-    entry_route: /dashboard
-    user_interactions:
-      - Click MCPForge logo to go to /dashboard (or / if not signed in)
-      - Click "Dashboard" link to go to /dashboard
-      - Click avatar/name to open dropdown menu
-      - View name and email in dropdown
-      - Click "Sign out" to log out
-    api_calls: []
-    auth_required: true
+      - src/app/api/fetch-spec/route.ts
+    endpoints:
+      - method: POST
+        path: /api/fetch-spec
+        description: Fetch a remote OpenAPI specification from a given URL. Validates URL format (must be HTTP/HTTPS), fetches with 10-second abort timeout, and returns raw content as text.
+        auth_required: false
+        request_schema:
+          body:
+            url: "string (required, must be a valid HTTP or HTTPS URL)"
+        response_schema:
+          "200": "Returns { content: string } with the raw specification text"
+          "400": "Missing URL, invalid URL format, or upstream fetch returned non-OK status. Returns { error: string } - error message includes upstream status code on fetch failure"
+          "408": "Request timed out. Returns { error: 'Request timed out after 10 seconds' }"
+          "500": "Unexpected fetch failure. Returns { error: 'Failed to fetch spec' }"
+    depends_on: []
+
 known_limitations:
-  - issue: Forgot password link is non-functional (points to #)
-    location: src/app/auth/signin/page.tsx
-    impact: Users cannot recover forgotten passwords
-  - issue: GitHub OAuth sign-in is commented out
-    location: src/app/auth/signin/page.tsx
-    impact: Only email/password authentication is available
-  - issue: SQLite database used in production
-    location: prisma/schema.prisma
-    impact: Not suitable for multi-instance deployment or high concurrency
-  - issue: URL fetch for OpenAPI spec happens client-side without CORS proxy
-    location: src/app/(app)/projects/new/page.tsx
-    impact: Many API spec URLs will fail due to CORS restrictions in the browser
+  - issue: Fetch Spec Proxy has no authentication requirement, allowing unauthenticated server-side request forgery (SSRF)
+    location: src/app/api/fetch-spec/route.ts
+    impact: Any unauthenticated client can use the server as a proxy to fetch arbitrary HTTP/HTTPS URLs from the server's network
+  - issue: Download endpoint regenerates code on every request instead of serving a cached or stored version
+    location: src/app/api/projects/[id]/download/route.ts
+    impact: Repeated downloads incur redundant code generation overhead; does not reuse the latest version snapshot
+  - issue: No rate limiting on any API endpoints
+    location: src/app/api/
+    impact: All endpoints are vulnerable to abuse through excessive requests including brute-force on signup/signin
+  - issue: Version number assignment uses count-based incrementing without atomicity guarantees
+    location: src/app/api/projects/[id]/generate/route.ts
+    impact: Two concurrent generate requests could read the same count and produce duplicate versionNumber values
   - issue: No email verification on signup
     location: src/app/api/auth/signup/route.ts
-    impact: Any email address can be used without verification
-  - issue: Version history shows snapshots but does not support restoring to a previous version
-    location: src/components/version-history.tsx
-    impact: Version history is read-only; users cannot rollback to earlier configurations
+    impact: Any email address can be used to create an account without ownership verification
+  - issue: SQLite database used as the datastore
+    location: prisma/schema.prisma
+    impact: Not suitable for multi-instance deployment or high-concurrency production workloads; limited to single-writer
+  - issue: Bulk mapping update does not verify that all provided mappingIds actually exist
+    location: src/app/api/projects/[id]/mappings/bulk/route.ts
+    impact: Non-existent mapping IDs are silently ignored; the returned count may be less than the number of IDs provided with no indication of which ones failed
+  - issue: Single mapping PATCH returns 400 when mcpType is already set to the requested value instead of a no-op 200
+    location: src/app/api/projects/[id]/mappings/[mappingId]/route.ts
+    impact: Clients must track current state to avoid unnecessary error handling for idempotent updates

@@ -1,22 +1,19 @@
 {
   "status": "commited",
-  "type": "frontend",
+  "type": "backend",
   "scope": "codebase",
   "localEndpoint": "http://localhost:3000",
-  "loginUser": "test@mcpforge.dev",
-  "loginPassword": "Password1",
+  "backendAuthType": "public",
   "executionArgs": {
     "projectName": "mcpforge-app",
     "projectPath": "D:\\apps\\mcpforge\\mcpforge-app",
-    "testIds": [
-      "TC063"
-    ],
-    "additionalInstruction": "Re-running TC063 after adding visible DOM error banner for save failures. When MCP type is set to the same value, API returns 400, component reverts and shows \"Failed to save\" both as a toast and as an inline error banner in the page DOM. Test credentials: email: test@mcpforge.dev, password: Password1.",
+    "testIds": [],
+    "additionalInstruction": "Execute all backend API tests. The app runs on port 3000. Auth endpoints are at /api/auth/signup. An existing test user exists: test@mcpforge.dev / Password1. There is one project called \"Petstore MCP Server\" with 11 endpoints belonging to the test user.",
     "serverMode": "production",
     "envs": {
       "API_KEY": "sk-user-uhWwMJ4MEvEN1YDWzUT1TJdnQ-SOBcb3ujt6Fw4ZclonuqbxB7UlGA3Gm-Je8JIVW3Dwu7v6z42rqqXqogj83gnJfzXzI72GGRqDLCKApMvYhSLR9M21aACjpkB59GR4-f8"
     }
   },
-  "serverPort": 65293,
-  "proxy": "http://180adae6-ef58-4cd7-9827-7b555b1cf5a7:mPqmTPOEHYYHRx1935rVXRHKjdGXcquR@tun.testsprite.com:8080"
+  "serverPort": 50066,
+  "proxy": "http://f0ae0789-248c-470f-a382-171fa29f26f7:GxPrLadxQV8ucpeuB7LiONZfIgnOxGsh@tun.testsprite.com:8080"
 }

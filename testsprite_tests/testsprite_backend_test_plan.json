@@ -1,0 +1,22 @@
+[
+  {
+    "id": "TC001",
+    "title": "post api auth signup valid user registration",
+    "description": "Test the POST /api/auth/signup endpoint with valid email, strong password, and optional name to ensure successful user registration returns 201 with created user data including id, email, and name."
+  },
+  {
+    "id": "TC002",
+    "title": "post api auth signup invalid input validation errors",
+    "description": "Test the POST /api/auth/signup endpoint with missing or invalid email and password fields to verify it returns 400 with appropriate field validation error messages."
+  },
+  {
+    "id": "TC003",
+    "title": "post api auth signup duplicate email conflict",
+    "description": "Test the POST /api/auth/signup endpoint with an email already registered in the system to confirm it returns 409 with an error indicating the email is already in use."
+  },
+  {
+    "id": "TC004",
+    "title": "post api auth signup server error handling",
+    "description": "Test the POST /api/auth/signup endpoint simulating a server or database failure to ensure it returns 500 with a generic server error message."
+  }
+]
