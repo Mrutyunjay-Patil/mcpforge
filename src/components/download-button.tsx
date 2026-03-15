@@ -67,7 +67,7 @@ export function DownloadButton({ projectId, projectName }: DownloadButtonProps) 
       onClick={handleDownload}
       disabled={loading}
       aria-label={loading ? "Generating project" : "Download project"}
-      className="bg-[#238636] text-white hover:bg-[#2ea043] border-0 transition-colors duration-150 disabled:opacity-50"
+      className="bg-[#F97316] font-medium text-black hover:bg-[#EA580C] border-0 transition-colors duration-150 disabled:opacity-50"
     >
       {loading ? (
         <>

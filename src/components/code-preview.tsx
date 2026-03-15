@@ -80,8 +80,8 @@ export function CodePreview({ projectId }: { projectId: string }) {
   if (loading) {
     return (
       <section aria-label="Code preview" className="space-y-4">
-        <Skeleton className="h-8 w-full bg-[#21262d]" />
-        <Skeleton className="h-64 w-full bg-[#21262d]" />
+        <Skeleton className="h-8 w-full bg-[#27272A]" />
+        <Skeleton className="h-64 w-full bg-[#27272A]" />
       </section>
     );
   }
@@ -97,7 +97,7 @@ export function CodePreview({ projectId }: { projectId: string }) {
   if (!files) {
     return (
       <section aria-label="Code preview">
-        <p className="text-sm text-[#8b949e]">
+        <p className="font-sans text-sm text-[#A1A1AA]">
           No generated files available.
         </p>
       </section>
@@ -107,14 +107,14 @@ export function CodePreview({ projectId }: { projectId: string }) {
   return (
     <section aria-label="Code preview">
       <Tabs defaultValue="src/index.ts">
-        <TabsList className="flex-wrap bg-[#161b22] border border-[#30363d]">
+        <TabsList className="flex-wrap bg-[#18181B] border border-white/[0.06]">
           {TABS.map((tab) => {
             const content = files[tab.key] ?? "";
             const size = new TextEncoder().encode(content).length;
             return (
-              <TabsTrigger key={tab.key} value={tab.key} className="data-[state=active]:bg-[#21262d] data-[state=active]:text-[#c9d1d9] text-[#8b949e]">
+              <TabsTrigger key={tab.key} value={tab.key} className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">
                 {tab.label}{" "}
-                <span className="ml-1 text-xs text-[#8b949e]">
+                <span className="ml-1 text-xs text-[#71717A]">
                   ({formatSize(size)})
                 </span>
               </TabsTrigger>
@@ -130,7 +130,7 @@ export function CodePreview({ projectId }: { projectId: string }) {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="absolute top-2 right-2 z-10 text-[#8b949e] hover:text-[#c9d1d9] hover:bg-[#21262d]"
+                  className="absolute top-2 right-2 z-10 text-[#71717A] hover:text-[#FAFAFA] hover:bg-[#27272A]"
                   onClick={() => copyToClipboard(content, tab.key)}
                   aria-label={`Copy ${tab.label} to clipboard`}
                   disabled={copiedTab === tab.key}
@@ -141,7 +141,7 @@ export function CodePreview({ projectId }: { projectId: string }) {
                     <Copy className="h-4 w-4" />
                   )}
                 </Button>
-                <div className="max-h-[500px] overflow-auto rounded-md border border-[#30363d]">
+                <div className="max-h-[500px] overflow-auto rounded-md border border-white/[0.06]">
                   <SyntaxHighlighter
                     language={tab.language}
                     style={oneDark}

@@ -106,14 +106,14 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0d1117] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#09090B] px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-[22px] font-semibold text-[#c9d1d9]">MCPForge</h1>
+          <h1 className="text-[22px] font-semibold text-[#FAFAFA]">MCPForge</h1>
         </div>
 
-        <div className="rounded-md border border-[#30363d] bg-[#161b22] p-6">
-          <h2 className="mb-6 text-center text-lg font-medium text-[#c9d1d9]">
+        <div className="rounded-md border border-white/[0.06] bg-[#18181B] p-6">
+          <h2 className="mb-6 text-center text-lg font-medium text-[#FAFAFA]">
             Create your account
           </h2>
 
@@ -122,15 +122,15 @@ export default function SignUpPage() {
               {errors.server && (
                 <div
                   role="alert"
-                  className="rounded-md border border-[#f85149]/40 bg-[#f85149]/10 px-3 py-2 text-[13px] text-[#f85149]"
+                  className="rounded-md border border-[#EF4444]/40 bg-[#EF4444]/10 px-3 py-2 text-[13px] text-[#EF4444]"
                 >
                   {errors.server}
                 </div>
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="name" className="text-[13px] text-[#c9d1d9]">
-                  Name <span className="text-[#8b949e]">(optional)</span>
+                <Label htmlFor="name" className="text-[13px] text-[#FAFAFA]">
+                  Name <span className="text-[#71717A]">(optional)</span>
                 </Label>
                 <Input
                   id="name"
@@ -142,13 +142,13 @@ export default function SignUpPage() {
                   autoComplete="name"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "name-error" : undefined}
-                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.name && (
                   <p
                     id="name-error"
                     role="alert"
-                    className="text-[13px] text-[#f85149]"
+                    className="text-[13px] text-[#EF4444]"
                   >
                     {errors.name}
                   </p>
@@ -156,7 +156,7 @@ export default function SignUpPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[13px] text-[#c9d1d9]">
+                <Label htmlFor="email" className="text-[13px] text-[#FAFAFA]">
                   Email
                 </Label>
                 <Input
@@ -175,13 +175,13 @@ export default function SignUpPage() {
                   autoComplete="email"
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
-                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.email && (
                   <p
                     id="email-error"
                     role="alert"
-                    className="text-[13px] text-[#f85149]"
+                    className="text-[13px] text-[#EF4444]"
                   >
                     {errors.email}
                   </p>
@@ -189,7 +189,7 @@ export default function SignUpPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-[13px] text-[#c9d1d9]">
+                <Label htmlFor="password" className="text-[13px] text-[#FAFAFA]">
                   Password
                 </Label>
                 <Input
@@ -209,25 +209,25 @@ export default function SignUpPage() {
                   aria-describedby={
                     errors.password ? "password-error" : "password-hint"
                   }
-                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.password ? (
                   <p
                     id="password-error"
                     role="alert"
-                    className="text-[13px] text-[#f85149]"
+                    className="text-[13px] text-[#EF4444]"
                   >
                     {errors.password}
                   </p>
                 ) : (
-                  <p id="password-hint" className="text-xs text-[#8b949e]">
+                  <p id="password-hint" className="text-xs text-[#71717A]">
                     Min 8 characters, 1 uppercase letter, 1 number
                   </p>
                 )}
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-[13px] text-[#c9d1d9]">
+                <Label htmlFor="confirmPassword" className="text-[13px] text-[#FAFAFA]">
                   Confirm Password
                 </Label>
                 <Input
@@ -250,13 +250,13 @@ export default function SignUpPage() {
                   aria-describedby={
                     errors.confirmPassword ? "confirm-password-error" : undefined
                   }
-                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                  className="h-9 rounded-md border-white/[0.06] bg-[#09090B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
                 />
                 {errors.confirmPassword && (
                   <p
                     id="confirm-password-error"
                     role="alert"
-                    className="text-[13px] text-[#f85149]"
+                    className="text-[13px] text-[#EF4444]"
                   >
                     {errors.confirmPassword}
                   </p>
@@ -265,7 +265,7 @@ export default function SignUpPage() {
 
               <Button
                 type="submit"
-                className="w-full rounded-md bg-[#238636] text-[13px] font-medium text-white transition-colors duration-150 hover:bg-[#2ea043] disabled:opacity-50"
+                className="w-full rounded-md bg-[#F97316] text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#EA580C] disabled:opacity-50"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create account"}
@@ -274,11 +274,11 @@ export default function SignUpPage() {
           </form>
         </div>
 
-        <div className="mt-4 rounded-md border border-[#30363d] bg-[#161b22] px-4 py-3 text-center text-[13px] text-[#c9d1d9]">
+        <div className="mt-4 rounded-md border border-white/[0.06] bg-[#18181B] px-4 py-3 text-center text-[13px] text-[#FAFAFA]">
           Already have an account?{" "}
           <Link
             href="/auth/signin"
-            className="text-[#58a6ff] transition-colors duration-150 hover:underline"
+            className="text-[#F97316] transition-colors duration-150 hover:underline"
           >
             Sign in
           </Link>

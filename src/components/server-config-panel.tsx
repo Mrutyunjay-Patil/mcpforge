@@ -114,12 +114,12 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
   if (loading) {
     return (
       <section aria-label="Server configuration" className="space-y-6">
-        <Skeleton className="h-6 w-48 bg-[#21262d]" />
-        <Skeleton className="h-10 w-full bg-[#21262d]" />
-        <Skeleton className="h-10 w-full bg-[#21262d]" />
-        <Skeleton className="h-10 w-full bg-[#21262d]" />
-        <Skeleton className="h-10 w-full bg-[#21262d]" />
-        <Skeleton className="h-10 w-full bg-[#21262d]" />
+        <Skeleton className="h-6 w-48 bg-[#27272A]" />
+        <Skeleton className="h-10 w-full bg-[#27272A]" />
+        <Skeleton className="h-10 w-full bg-[#27272A]" />
+        <Skeleton className="h-10 w-full bg-[#27272A]" />
+        <Skeleton className="h-10 w-full bg-[#27272A]" />
+        <Skeleton className="h-10 w-full bg-[#27272A]" />
       </section>
     );
   }
@@ -127,7 +127,7 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
   if (!config) {
     return (
       <section aria-label="Server configuration">
-        <p className="text-sm text-[#8b949e]">
+        <p className="font-sans text-sm text-[#A1A1AA]">
           Unable to load server configuration.
         </p>
       </section>
@@ -140,15 +140,15 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
   return (
     <section aria-label="Server configuration" className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-[#c9d1d9]">Server Config</h3>
+        <h3 className="font-mono text-lg font-semibold text-[#FAFAFA]">Server Config</h3>
         <span
           className={`text-xs font-medium ${
             saveStatus === "saving"
-              ? "text-[#8b949e]"
+              ? "text-[#71717A]"
               : saveStatus === "saved"
-                ? "text-[#3fb950]"
+                ? "text-[#4ADE80]"
                 : saveStatus === "error"
-                  ? "text-[#f85149]"
+                  ? "text-[#EF4444]"
                   : "text-transparent"
           }`}
           aria-live="polite"
@@ -165,25 +165,26 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
 
       {/* Transport */}
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-[#8b949e]">Transport</legend>
+        <legend className="font-sans text-[13px] font-medium text-[#A1A1AA]">Transport</legend>
         <RadioGroup
           value={config.transport}
           onValueChange={(value: string) => updateField("transport", value)}
         >
           <div className="flex items-center gap-2">
-            <RadioGroupItem value="stdio" id="transport-stdio" />
-            <Label htmlFor="transport-stdio">stdio</Label>
+            <RadioGroupItem value="stdio" id="transport-stdio" className="border-white/[0.06] text-[#F97316] data-[state=checked]:border-[#F97316]" />
+            <Label htmlFor="transport-stdio" className="font-sans text-[#FAFAFA]">stdio</Label>
           </div>
           <div className="flex items-center gap-2">
-            <RadioGroupItem value="sse" id="transport-sse" />
-            <Label htmlFor="transport-sse">SSE</Label>
+            <RadioGroupItem value="sse" id="transport-sse" className="border-white/[0.06] text-[#F97316] data-[state=checked]:border-[#F97316]" />
+            <Label htmlFor="transport-sse" className="font-sans text-[#FAFAFA]">SSE</Label>
           </div>
           <div className="flex items-center gap-2">
             <RadioGroupItem
               value="streamable-http"
               id="transport-streamable"
+              className="border-white/[0.06] text-[#F97316] data-[state=checked]:border-[#F97316]"
             />
-            <Label htmlFor="transport-streamable">Streamable HTTP</Label>
+            <Label htmlFor="transport-streamable" className="font-sans text-[#FAFAFA]">Streamable HTTP</Label>
           </div>
         </RadioGroup>
         {fieldErrors.transport && (
@@ -196,7 +197,7 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
       {/* Port (conditional) */}
       {showPort && (
         <div className="space-y-1.5">
-          <Label htmlFor="config-port" className="text-[#8b949e]">Port</Label>
+          <Label htmlFor="config-port" className="font-sans text-[13px] text-[#A1A1AA]">Port</Label>
           <Input
             id="config-port"
             type="number"
@@ -209,7 +210,7 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
                 updateField("port", val);
               }
             }}
-            className="bg-[#0d1117] border-[#30363d] text-[#c9d1d9] focus:border-[#58a6ff]"
+            className="bg-[#09090B] border-white/[0.06] text-[#FAFAFA] focus:border-[#F97316]"
             aria-invalid={!!fieldErrors.port}
             aria-describedby={fieldErrors.port ? "port-error" : undefined}
           />
@@ -223,14 +224,14 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
 
       {/* Auth Method */}
       <div className="space-y-1.5">
-        <Label htmlFor="config-auth" className="text-[#8b949e]">Auth Method</Label>
+        <Label htmlFor="config-auth" className="font-sans text-[13px] text-[#A1A1AA]">Auth Method</Label>
         <Select
           value={config.authMethod}
           onValueChange={(value) => {
             if (value) updateField("authMethod", value);
           }}
         >
-          <SelectTrigger id="config-auth" className="w-full bg-[#0d1117] border-[#30363d] text-[#c9d1d9]">
+          <SelectTrigger id="config-auth" className="w-full bg-[#09090B] border-white/[0.06] text-[#FAFAFA]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -246,7 +247,7 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
           </p>
         )}
         {config.authMethod !== "none" && (
-          <p className="text-xs text-[#8b949e]">
+          <p className="font-sans text-xs text-[#A1A1AA]">
             Credentials will be read from environment variables in the generated
             .env file.
           </p>
@@ -255,14 +256,14 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
 
       {/* Server Name */}
       <div className="space-y-1.5">
-        <Label htmlFor="config-name" className="text-[#8b949e]">Server Name</Label>
+        <Label htmlFor="config-name" className="font-sans text-[13px] text-[#A1A1AA]">Server Name</Label>
         <Input
           id="config-name"
           type="text"
           maxLength={50}
           value={config.serverName}
           onChange={(e) => updateField("serverName", e.target.value)}
-          className="bg-[#0d1117] border-[#30363d] text-[#c9d1d9] focus:border-[#58a6ff]"
+          className="bg-[#09090B] border-white/[0.06] text-[#FAFAFA] focus:border-[#F97316]"
           aria-invalid={!!fieldErrors.serverName}
           aria-describedby={
             fieldErrors.serverName ? "name-error" : undefined
@@ -277,20 +278,20 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
 
       {/* Server Version */}
       <div className="space-y-1.5">
-        <Label htmlFor="config-version" className="text-[#8b949e]">Server Version</Label>
+        <Label htmlFor="config-version" className="font-sans text-[13px] text-[#A1A1AA]">Server Version</Label>
         <Input
           id="config-version"
           type="text"
           placeholder="1.0.0"
           value={config.serverVersion}
           onChange={(e) => updateField("serverVersion", e.target.value)}
-          className="bg-[#0d1117] border-[#30363d] text-[#c9d1d9] placeholder:text-[#8b949e] focus:border-[#58a6ff]"
+          className="bg-[#09090B] border-white/[0.06] text-[#FAFAFA] placeholder:text-[#71717A] focus:border-[#F97316]"
           aria-invalid={!!fieldErrors.serverVersion}
           aria-describedby={
             fieldErrors.serverVersion ? "version-error" : "version-hint"
           }
         />
-        <p className="text-xs text-[#8b949e]" id="version-hint">
+        <p className="font-sans text-xs text-[#A1A1AA]" id="version-hint">
           Semver format: x.y.z
         </p>
         {fieldErrors.serverVersion && (
@@ -302,14 +303,14 @@ export function ServerConfigPanel({ projectId }: { projectId: string }) {
 
       {/* Base URL */}
       <div className="space-y-1.5">
-        <Label htmlFor="config-base-url" className="text-[#8b949e]">Base URL</Label>
+        <Label htmlFor="config-base-url" className="font-sans text-[13px] text-[#A1A1AA]">Base URL</Label>
         <Input
           id="config-base-url"
           type="text"
           placeholder="https://api.example.com"
           value={config.baseUrl}
           onChange={(e) => updateField("baseUrl", e.target.value)}
-          className="bg-[#0d1117] border-[#30363d] text-[#c9d1d9] placeholder:text-[#8b949e] focus:border-[#58a6ff]"
+          className="bg-[#09090B] border-white/[0.06] text-[#FAFAFA] placeholder:text-[#71717A] focus:border-[#F97316]"
           aria-invalid={!!fieldErrors.baseUrl}
           aria-describedby={
             fieldErrors.baseUrl ? "baseurl-error" : undefined

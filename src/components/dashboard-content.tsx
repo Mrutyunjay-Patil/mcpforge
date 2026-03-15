@@ -38,11 +38,11 @@ function formatDate(dateStr: string): string {
 
 function ProjectCardSkeleton() {
   return (
-    <div className="rounded-md border border-[#30363d] bg-[#161b22] p-5">
-      <Skeleton className="h-5 w-3/4 bg-[#21262d]" />
-      <Skeleton className="mt-2 h-4 w-1/2 bg-[#21262d]" />
-      <Skeleton className="mt-4 h-4 w-1/4 bg-[#21262d]" />
-      <Skeleton className="mt-3 h-3 w-2/3 bg-[#21262d]" />
+    <div className="rounded-md border border-white/[0.06] bg-[#18181B] p-5">
+      <Skeleton className="h-5 w-3/4 bg-[#27272A]" />
+      <Skeleton className="mt-2 h-4 w-1/2 bg-[#27272A]" />
+      <Skeleton className="mt-4 h-4 w-1/4 bg-[#27272A]" />
+      <Skeleton className="mt-3 h-3 w-2/3 bg-[#27272A]" />
     </div>
   );
 }
@@ -123,10 +123,10 @@ export default function DashboardContent() {
         className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
       >
         <div className="mb-8 flex items-center justify-between">
-          <Skeleton className="h-8 w-48 bg-[#21262d]" />
-          <Skeleton className="h-10 w-32 bg-[#21262d]" />
+          <Skeleton className="h-8 w-48 bg-[#27272A]" />
+          <Skeleton className="h-10 w-32 bg-[#27272A]" />
         </div>
-        <Skeleton className="mb-6 h-10 w-full max-w-sm bg-[#21262d]" />
+        <Skeleton className="mb-6 h-10 w-full max-w-sm bg-[#27272A]" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <ProjectCardSkeleton />
           <ProjectCardSkeleton />
@@ -144,17 +144,17 @@ export default function DashboardContent() {
       {/* Header */}
       <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-[#c9d1d9]">
+          <h1 className="font-mono text-2xl font-semibold tracking-tight text-[#FAFAFA]">
             Projects
           </h1>
-          <p className="text-[13px] text-[#8b949e]">
+          <p className="font-sans text-[13px] text-[#A1A1AA]">
             Manage your MCPForge projects
           </p>
         </div>
         <Button
           onClick={() => router.push("/projects/new")}
           aria-label="Create new project"
-          className="rounded-md bg-[#238636] text-[13px] font-medium text-white transition-colors duration-150 hover:bg-[#2ea043]"
+          className="rounded-md bg-[#F97316] text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#EA580C]"
         >
           <Plus className="mr-2 h-4 w-4" />
           New Project
@@ -164,28 +164,28 @@ export default function DashboardContent() {
       {/* Search bar - only show when there are projects */}
       {projects.length > 0 && (
         <div className="relative mb-6 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8b949e]" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#71717A]" />
           <Input
             type="search"
             placeholder="Search projects..."
             aria-label="Search projects"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 pl-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+            className="h-9 pl-9 rounded-md border-white/[0.06] bg-[#18181B] text-[13px] text-[#FAFAFA] placeholder:text-[#71717A] focus-visible:border-[#F97316] focus-visible:ring-0"
           />
         </div>
       )}
 
       {/* Empty state - no projects at all */}
       {projects.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-md border border-[#30363d] py-16 text-center">
-          <h2 className="text-base font-medium text-[#c9d1d9]">No projects yet</h2>
-          <p className="mb-6 mt-1 max-w-sm text-[13px] text-[#8b949e]">
+        <div className="flex flex-col items-center justify-center rounded-md border border-white/[0.06] py-16 text-center">
+          <h2 className="font-mono text-base font-medium text-[#FAFAFA]">No projects yet</h2>
+          <p className="mb-6 mt-1 max-w-sm font-sans text-[13px] text-[#A1A1AA]">
             Create your first MCPForge project to get started.
           </p>
           <Button
             onClick={() => router.push("/projects/new")}
-            className="rounded-md bg-[#238636] text-[13px] font-medium text-white transition-colors duration-150 hover:bg-[#2ea043]"
+            className="rounded-md bg-[#F97316] text-[13px] font-medium text-black transition-colors duration-150 hover:bg-[#EA580C]"
           >
             <Plus className="mr-2 h-4 w-4" />
             Create Project
@@ -195,9 +195,9 @@ export default function DashboardContent() {
 
       {/* Empty search state */}
       {projects.length > 0 && filteredProjects.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-md border border-[#30363d] py-16 text-center">
-          <h2 className="text-base font-medium text-[#c9d1d9]">No results</h2>
-          <p className="mt-1 text-[13px] text-[#8b949e]">
+        <div className="flex flex-col items-center justify-center rounded-md border border-white/[0.06] py-16 text-center">
+          <h2 className="font-mono text-base font-medium text-[#FAFAFA]">No results</h2>
+          <p className="mt-1 font-sans text-[13px] text-[#A1A1AA]">
             No projects match your search
           </p>
         </div>
@@ -209,18 +209,18 @@ export default function DashboardContent() {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="group cursor-pointer rounded-md border border-[#30363d] bg-[#161b22] p-5 transition-colors duration-150 hover:border-[#484f58]"
+              className="group cursor-pointer rounded-md border border-white/[0.06] bg-[#18181B] p-5 transition-all duration-150 hover:border-[rgba(249,115,22,0.25)]"
               onClick={() => router.push(`/projects/${project.id}`)}
               role="article"
               aria-label={`Project: ${project.name}`}
             >
               <div className="flex items-start justify-between">
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-[14px] font-medium text-[#58a6ff]">
+                  <h3 className="truncate font-mono text-[14px] font-medium text-[#FAFAFA]">
                     {project.name}
                   </h3>
                   {project.specTitle && (
-                    <p className="mt-1 truncate text-[13px] text-[#8b949e]">
+                    <p className="mt-1 truncate font-sans text-[13px] text-[#A1A1AA]">
                       {project.specTitle}
                     </p>
                   )}
@@ -231,7 +231,7 @@ export default function DashboardContent() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="ml-2 h-8 w-8 shrink-0 rounded-md text-[#8b949e] opacity-0 transition-all duration-150 hover:bg-[#21262d] hover:text-[#f85149] group-hover:opacity-100"
+                        className="ml-2 h-8 w-8 shrink-0 rounded-md text-[#A1A1AA] opacity-0 transition-all duration-150 hover:bg-[#27272A] hover:text-[#EF4444] group-hover:opacity-100"
                         aria-label={`Delete project ${project.name}`}
                         onClick={(e) => e.stopPropagation()}
                         disabled={deletingId === project.id}
@@ -242,20 +242,20 @@ export default function DashboardContent() {
                   </AlertDialogTrigger>
                   <AlertDialogContent
                     onClick={(e) => e.stopPropagation()}
-                    className="border-[#30363d] bg-[#161b22]"
+                    className="border-white/[0.06] bg-[#18181B]"
                   >
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="text-[#c9d1d9]">
+                      <AlertDialogTitle className="font-mono text-[#FAFAFA]">
                         Delete project?
                       </AlertDialogTitle>
-                      <AlertDialogDescription className="text-[#8b949e]">
+                      <AlertDialogDescription className="font-sans text-[#A1A1AA]">
                         This will permanently delete &quot;{project.name}&quot;
                         and all its endpoint mappings and server
                         configurations. This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter className="border-[#30363d] bg-[#0d1117]/50">
-                      <AlertDialogCancel className="border-[#30363d] bg-[#21262d] text-[#c9d1d9] hover:bg-[#30363d] hover:text-[#c9d1d9]">
+                    <AlertDialogFooter className="border-white/[0.06] bg-[#09090B]/50">
+                      <AlertDialogCancel className="border-white/[0.06] bg-[#27272A] text-[#FAFAFA] hover:bg-[#3f3f46] hover:text-[#FAFAFA]">
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
@@ -265,7 +265,7 @@ export default function DashboardContent() {
                           e.stopPropagation();
                           handleDelete(project.id);
                         }}
-                        className="bg-[#da3633] text-white hover:bg-[#f85149]"
+                        className="bg-[#EF4444] text-white hover:bg-[#DC2626]"
                       >
                         {deletingId === project.id
                           ? "Deleting..."
@@ -276,12 +276,12 @@ export default function DashboardContent() {
                 </AlertDialog>
               </div>
               <div className="mt-4 flex items-center gap-2">
-                <span className="inline-flex items-center rounded-full border border-[#30363d] bg-[#21262d] px-2 py-0.5 text-xs text-[#8b949e]">
+                <span className="inline-flex items-center rounded-full border border-white/[0.06] bg-[#27272A] px-2 py-0.5 font-mono text-[11px] text-[#A1A1AA]">
                   {project.pathCount}{" "}
                   {project.pathCount === 1 ? "endpoint" : "endpoints"}
                 </span>
               </div>
-              <p className="mt-3 text-xs text-[#8b949e]">
+              <p className="mt-3 text-xs text-[#71717A]">
                 Created {formatDate(project.createdAt)}
                 {project.updatedAt !== project.createdAt && (
                   <> &middot; Updated {formatDate(project.updatedAt)}</>

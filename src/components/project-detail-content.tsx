@@ -78,11 +78,11 @@ interface Project {
 // ---------------------------------------------------------------------------
 
 const methodColors: Record<string, string> = {
-  GET: "text-[#3fb950] bg-[#3fb950]/10 border-[#3fb950]/20",
-  POST: "text-[#58a6ff] bg-[#58a6ff]/10 border-[#58a6ff]/20",
-  PUT: "text-[#d29922] bg-[#d29922]/10 border-[#d29922]/20",
-  PATCH: "text-[#a371f7] bg-[#a371f7]/10 border-[#a371f7]/20",
-  DELETE: "text-[#f85149] bg-[#f85149]/10 border-[#f85149]/20",
+  GET: "text-[#4ADE80] bg-[rgba(34,197,94,0.15)]",
+  POST: "text-[#60A5FA] bg-[rgba(59,130,246,0.15)]",
+  PUT: "text-[#FACC15] bg-[rgba(234,179,8,0.15)]",
+  PATCH: "text-[#A78BFA] bg-[rgba(139,92,246,0.15)]",
+  DELETE: "text-[#F87171] bg-[rgba(239,68,68,0.15)]",
 };
 
 const mcpTypeLabels: Record<string, string> = {
@@ -404,10 +404,10 @@ export default function ProjectDetailContent({
         aria-label="Project loading"
         className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
       >
-        <Skeleton className="mb-4 h-5 w-40 bg-[#21262d]" />
-        <Skeleton className="mb-8 h-8 w-64 bg-[#21262d]" />
-        <Skeleton className="mb-4 h-10 w-full bg-[#21262d]" />
-        <Skeleton className="h-96 w-full bg-[#21262d]" />
+        <Skeleton className="mb-4 h-5 w-40 bg-[#27272A]" />
+        <Skeleton className="mb-8 h-8 w-64 bg-[#27272A]" />
+        <Skeleton className="mb-4 h-10 w-full bg-[#27272A]" />
+        <Skeleton className="h-96 w-full bg-[#27272A]" />
       </section>
     );
   }
@@ -426,7 +426,7 @@ export default function ProjectDetailContent({
       {/* Back link */}
       <Link
         href="/dashboard"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-[#8b949e] hover:text-[#c9d1d9] transition-colors duration-150"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-[#71717A] hover:text-[#A1A1AA] transition-colors duration-150"
       >
         <ArrowLeft className="size-4" />
         Back to Dashboard
@@ -443,7 +443,7 @@ export default function ProjectDetailContent({
                 onChange={(e) => setEditName(e.target.value)}
                 onKeyDown={handleNameKeyDown}
                 disabled={savingName}
-                className="h-9 text-2xl font-bold bg-[#0d1117] border-[#30363d] text-[#c9d1d9] focus:border-[#58a6ff]"
+                className="h-9 text-2xl font-bold bg-[#09090B] border-white/[0.06] text-[#FAFAFA] focus:border-[#F97316]"
                 aria-label="Edit project name"
               />
               <Button
@@ -471,7 +471,7 @@ export default function ProjectDetailContent({
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-[#c9d1d9]">
+              <h1 className="font-mono text-2xl font-bold tracking-tight text-[#FAFAFA]">
                 {project.name}
               </h1>
               <Button
@@ -490,10 +490,10 @@ export default function ProjectDetailContent({
 
       {/* Tabs */}
       <Tabs defaultValue="endpoints" aria-label="Project sections">
-        <TabsList className="mb-6 bg-[#161b22] border border-[#30363d]">
-          <TabsTrigger value="endpoints" className="data-[state=active]:bg-[#21262d] data-[state=active]:text-[#c9d1d9] text-[#8b949e]">Endpoints</TabsTrigger>
-          <TabsTrigger value="preview" className="data-[state=active]:bg-[#21262d] data-[state=active]:text-[#c9d1d9] text-[#8b949e]">Preview</TabsTrigger>
-          <TabsTrigger value="history" className="data-[state=active]:bg-[#21262d] data-[state=active]:text-[#c9d1d9] text-[#8b949e]">History</TabsTrigger>
+        <TabsList className="mb-6 bg-[#18181B] border border-white/[0.06]">
+          <TabsTrigger value="endpoints" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">Endpoints</TabsTrigger>
+          <TabsTrigger value="preview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">Preview</TabsTrigger>
+          <TabsTrigger value="history" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">History</TabsTrigger>
         </TabsList>
 
         {/* Endpoints Tab */}
@@ -502,7 +502,7 @@ export default function ProjectDetailContent({
           {/* Left column: table (70%) */}
           <div className="min-w-0 lg:w-[70%]">
           {/* Summary bar */}
-          <div className="mb-4 text-sm text-[#8b949e]">
+          <div className="mb-4 font-mono text-[13px] text-[#71717A]">
             {totalEndpoints} endpoints total, {mappingsData?.toolCount ?? 0}{" "}
             tools / {mappingsData?.resourceCount ?? 0} resources /{" "}
             {mappingsData?.templateCount ?? 0} templates /{" "}
@@ -512,14 +512,14 @@ export default function ProjectDetailContent({
           {/* Filters */}
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1 sm:max-w-xs">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#8b949e]" />
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#71717A]" />
               <Input
                 type="search"
                 placeholder="Search by path or operation..."
                 aria-label="Search endpoints"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-[#0d1117] border-[#30363d] text-[#c9d1d9] placeholder:text-[#8b949e] focus:border-[#58a6ff]"
+                className="pl-9 bg-[#18181B] border-white/[0.06] text-[#FAFAFA] placeholder:text-[#71717A] focus:border-[#F97316]"
               />
             </div>
 
@@ -566,8 +566,8 @@ export default function ProjectDetailContent({
 
           {/* Bulk actions */}
           {selectedIds.size > 0 && (
-            <div className="mb-4 flex items-center gap-2 rounded-md border border-[#30363d] bg-[#161b22] p-3">
-              <span className="text-sm font-medium text-[#c9d1d9]">
+            <div className="mb-4 flex items-center gap-2 rounded-md border border-white/[0.06] bg-[#18181B] p-3">
+              <span className="text-sm font-medium text-[#FAFAFA]">
                 {selectedIds.size} selected
               </span>
               <div className="flex gap-2">
@@ -605,7 +605,7 @@ export default function ProjectDetailContent({
                 </Button>
               </div>
               {bulkUpdating && (
-                <Loader2 className="size-4 animate-spin text-[#8b949e]" />
+                <Loader2 className="size-4 animate-spin text-[#71717A]" />
               )}
             </div>
           )}
@@ -614,25 +614,25 @@ export default function ProjectDetailContent({
           {mappingsLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full bg-[#21262d]" />
+                <Skeleton key={i} className="h-12 w-full bg-[#27272A]" />
               ))}
             </div>
           ) : mappings.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#30363d] py-16 text-center">
-              <Search className="mb-4 size-12 text-[#8b949e]" />
-              <h2 className="text-lg font-semibold text-[#c9d1d9]">
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-white/[0.06] py-16 text-center">
+              <Search className="mb-4 size-12 text-[#71717A]" />
+              <h2 className="font-mono text-lg font-semibold text-[#FAFAFA]">
                 No endpoints match your filters
               </h2>
-              <p className="mt-1 text-sm text-[#8b949e]">
+              <p className="mt-1 font-sans text-sm text-[#A1A1AA]">
                 Try adjusting your search or filter criteria
               </p>
             </div>
           ) : (
             <>
-              <div className="overflow-x-auto rounded-md border border-[#30363d]">
+              <div className="overflow-x-auto rounded-md border border-white/[0.06]">
                 <Table aria-label="API endpoints">
                   <TableHeader>
-                    <TableRow className="bg-[#161b22] border-[#30363d] hover:bg-[#161b22]">
+                    <TableRow className="bg-[#18181B] border-white/[0.06] hover:bg-[#18181B]">
                       <TableHead className="w-10">
                         <Checkbox
                           checked={allOnPageSelected}
@@ -657,7 +657,7 @@ export default function ProjectDetailContent({
                   </TableHeader>
                   <TableBody>
                     {mappings.map((mapping) => (
-                      <TableRow key={mapping.id} className="border-[#30363d] bg-transparent hover:bg-[#161b22] transition-colors duration-150">
+                      <TableRow key={mapping.id} className="border-white/[0.06] bg-transparent hover:bg-[#18181B] transition-colors duration-150">
                         <TableCell>
                           <Checkbox
                             checked={selectedIds.has(mapping.id)}
@@ -667,27 +667,27 @@ export default function ProjectDetailContent({
                         </TableCell>
                         <TableCell>
                           <span
-                            className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-semibold ${
+                            className={`inline-flex items-center rounded px-2 py-0.5 font-mono text-xs font-semibold ${
                               methodColors[mapping.method] ??
-                              "text-[#8b949e] bg-[#8b949e]/10 border-[#8b949e]/20"
+                              "text-[#71717A] bg-[rgba(113,113,122,0.15)]"
                             }`}
                           >
                             {mapping.method}
                           </span>
                         </TableCell>
                         <TableCell>
-                          <code className="text-sm font-mono text-[#c9d1d9]">
+                          <code className="text-sm font-mono text-[#FAFAFA]">
                             {mapping.path}
                           </code>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          <span className="text-sm text-[#8b949e]">
+                          <span className="text-sm text-[#A1A1AA]">
                             {mapping.operationId || "-"}
                           </span>
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
                           <span
-                            className="text-sm text-[#8b949e]"
+                            className="text-sm text-[#A1A1AA]"
                             title={mapping.summary ?? undefined}
                           >
                             {mapping.summary
@@ -703,7 +703,7 @@ export default function ProjectDetailContent({
                               {mapping.paramsCount}
                             </Badge>
                           ) : (
-                            <span className="text-sm text-[#8b949e]">
+                            <span className="text-sm text-[#71717A]">
                               0
                             </span>
                           )}
@@ -731,7 +731,7 @@ export default function ProjectDetailContent({
                               </SelectContent>
                             </Select>
                             {savingMappingId === mapping.id && (
-                              <Loader2 className="size-3 animate-spin text-[#8b949e]" />
+                              <Loader2 className="size-3 animate-spin text-[#71717A]" />
                             )}
                           </div>
                         </TableCell>
@@ -747,14 +747,14 @@ export default function ProjectDetailContent({
                   aria-label="Pagination"
                   className="mt-4 flex items-center justify-between"
                 >
-                  <p className="text-sm text-[#8b949e]">
+                  <p className="text-sm text-[#71717A]">
                     Showing{" "}
                     {(mappingsData.page - 1) * 20 + 1}-
                     {Math.min(mappingsData.page * 20, mappingsData.total)} of{" "}
                     {mappingsData.total} endpoints
                   </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-[#8b949e]">
+                    <span className="text-sm text-[#71717A]">
                       Page {mappingsData.page} of {mappingsData.totalPages}
                     </span>
                     <Button
@@ -786,7 +786,7 @@ export default function ProjectDetailContent({
           )}
           </div>
           {/* Right column: config panel (30%) */}
-          <aside className="lg:w-[30%] rounded-lg border border-[#30363d] bg-[#161b22] p-4">
+          <aside className="lg:w-[30%] rounded-lg border border-white/[0.06] bg-[#18181B] p-4">
             <ServerConfigPanel projectId={projectId} />
           </aside>
           </div>
