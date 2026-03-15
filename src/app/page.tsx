@@ -13,10 +13,10 @@ export default function LandingPage() {
             <span className="font-mono text-[15px] font-bold text-[#FAFAFA]">MCPForge</span>
           </Link>
           <div className="flex items-center gap-2">
-            <a href="#features" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Features</a>
+            {/* <a href="#features" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Features</a>
             <a href="#docs" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Docs</a>
             <a href="#pricing" className="hidden px-3 py-1.5 font-sans text-[13px] text-[#A1A1AA] transition-colors duration-150 hover:text-[#FAFAFA] md:inline-block">Pricing</a>
-            <div className="mx-1 hidden h-4 w-px bg-white/[0.06] md:block" />
+            <div className="mx-1 hidden h-4 w-px bg-white/[0.06] md:block" /> */}
             <a
               href="https://github.com/Mrutyunjay-Patil/mcpforge"
               target="_blank"
@@ -69,7 +69,7 @@ export default function LandingPage() {
               }}
             >
               <Zap className="h-3.5 w-3.5 text-[#F97316]" />
-              <span className="font-sans text-[12px] text-[#F97316]/90">Transform OpenAPI specs into MCP servers instantly</span>
+              <span className="font-sans text-[12px] text-[#F97316]/90">Open source on GitHub — star us and start forging</span>
             </div>
           </div>
 
