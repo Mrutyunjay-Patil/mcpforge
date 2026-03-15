@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Get started' link/button on the homepage to reach the signup page (prefer clicking over direct URL navigation).
+        # -> Click the 'Get started' link (index 49) to reach the signup page (/auth/signup). Then verify the 'Password' label is visible.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'weak' into the password field (index 694), then type 'weak' into confirm password (index 698), then click 'Create Account' (index 703). After that, verify the page shows a visible password strength hint/error and that the URL still contains '/auth/signup'.
+        # -> Type 'weak' into the password field (index 674). Then enter 'weak' into confirm password (index 678) and submit by clicking Create Account (index 683).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[3]/input').nth(0)
@@ -49,17 +49,6 @@ async def run_test():
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[4]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('weak')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the Email field with a valid address and click 'Create Account' again to observe whether weak passwords are blocked and ensure a visible password strength hint/error remains visible. Then verify the URL still contains '/auth/signup'.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[2]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('test@mcpforge.dev')
         
         frame = context.pages[-1]
         # Click element

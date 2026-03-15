@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication page (/auth/signin).
+        # -> Click the 'Sign in' link to open the sign-in page (/auth/signin) by clicking element [47].
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields then click the Sign In button to authenticate (immediate action). After login, verify URL contains '/dashboard'.
+        # -> Type the email into the email field (index 671), type the password into the password field (index 675), then click the Sign In button (index 679).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,11 +55,17 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (interactive element index 38262) to open the project detail page.
+        # -> Type 'a' into the search input (index 891) to filter visible project cards, then observe the filtered results.
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/section/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('a')
+        
+        # -> Clear the search input (index 891) by setting it to an empty string, then verify that the full project cards list is visible and finish the test.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/section/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('')
         
         # --> Test passed — verified by AI agent
         frame = context.pages[-1]

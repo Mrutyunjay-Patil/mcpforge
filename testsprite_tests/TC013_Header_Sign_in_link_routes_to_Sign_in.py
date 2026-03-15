@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the header 'Sign in' link to navigate to the sign-in page (/auth/signin). After navigation, verify URL, page title, and presence of Email and Password fields.
+        # -> Click the header 'Sign in' link (element index 47) to navigate to the signin page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)

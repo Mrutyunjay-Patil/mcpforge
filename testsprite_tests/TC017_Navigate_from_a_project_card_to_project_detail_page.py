@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the sign-in page (click element index 47).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin (use explicit navigate to http://localhost:3000/auth/signin per test step).
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Enter email into the email field (index 671) and then fill password (index 675) and submit (click index 679).
+        # -> Type the email into the email field (index 652) and password into the password field (index 653), then click Sign In (index 654).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,7 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first visible project card (index 64154) to navigate to the project detail view.
+        # -> Click the first visible project card (interactive element index 1016) to navigate to the project detail view.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)

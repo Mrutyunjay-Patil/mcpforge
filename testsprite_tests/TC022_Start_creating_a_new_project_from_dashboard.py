@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link on the homepage to go to the sign-in page (/auth/signin).
+        # -> Click the 'Sign in' link to go to the authentication page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter credentials into email and password fields and submit the form (type email into index 692, password into index 696, then click Sign In at index 701).
+        # -> Enter credentials into the sign-in form (email and password) and submit by clicking the 'Sign In' button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,7 +55,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button to navigate to the project creation page and then verify the URL and the presence of the 'create new project' element.
+        # -> Click the 'New Project' button (interactive element index 6522) to navigate to the project creation page, then verify the URL contains '/projects/new' and that the 'create new project' element is visible.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)

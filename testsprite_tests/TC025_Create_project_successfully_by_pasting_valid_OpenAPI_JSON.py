@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the "Sign in" link to open the sign-in page (/auth/signin).
+        # -> Click the 'Sign in' link to open the authentication page (use element [73]).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields with test credentials and click the Sign In button.
+        # -> Type the test credentials into the sign-in form and submit (email -> password -> click Sign In).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,10 +55,61 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' call-to-action to open the new project form (click element index 42912).
+        # -> Click the 'New Project' call-to-action to open the project creation page (index 882).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'New Project' button on the dashboard (index 787) to open the project creation page, then wait for the UI to render and verify navigation.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Type 'Paste JSON Success' into the Project Name field (index 1114) and click the 'Paste Content' tab (index 1133) to reveal the paste textarea.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Paste JSON Success')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Paste the provided OpenAPI JSON into the specification textarea (index 1230) as the next immediate action.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)
+        await asyncio.sleep(3); await elem.fill('{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pets API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/main/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the project 'Paste JSON Success' (element [1879]) to open its detail page and wait for navigation; then verify the URL contains '/projects/'.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

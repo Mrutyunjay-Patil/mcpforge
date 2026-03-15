@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signup to open the sign up page so the Create Account button and inline validation can be checked.
+        # -> Navigate to /auth/signup (use explicit navigate to http://localhost:3000/auth/signup as requested)
         await page.goto("http://localhost:3000/auth/signup")
         
-        # -> Click the 'Create Account' button to trigger inline validation (click element index 678).
+        # -> Click the 'Create Account' button to trigger inline validation for the Email field.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)

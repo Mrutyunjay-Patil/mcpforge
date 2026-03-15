@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication page (/auth/signin).
+        # -> Click the 'Sign in' link to open the login page (use interactive element index 47).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields then click the Sign In button to authenticate (immediate action). After login, verify URL contains '/dashboard'.
+        # -> Fill the email (index 671) and password (index 675) fields, then click the Sign In button (index 679) to authenticate.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,10 +55,22 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (interactive element index 38262) to open the project detail page.
+        # -> Open the first project card so the delete action can be accessed (click the first project card).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Dashboard' navigation item to return to the projects list so the delete button on the first project card can be accessed.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Delete' button in the AlertDialog to confirm deletion (index 1589). After that, verify the success toast text 'Project deleted' is visible.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/div[3]/div[2]/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

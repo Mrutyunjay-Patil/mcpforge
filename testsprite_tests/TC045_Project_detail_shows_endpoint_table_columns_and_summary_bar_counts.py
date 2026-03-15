@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link in the header to reach the sign-in page (/auth/signin).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin and load the sign-in page to start login.
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields and click the 'Sign In' button to log in.
+        # -> Type the username into the email field (index 652), type the password into the password field (index 653), then click the 'Sign In' button (index 654).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,7 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (index 974) to open the project detail page and then verify the Endpoints table and Summary bar.
+        # -> Click the first project card (index 1046) to open the project detail page so the Endpoints table, Summary bar, and 'MCP Type' can be verified.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)

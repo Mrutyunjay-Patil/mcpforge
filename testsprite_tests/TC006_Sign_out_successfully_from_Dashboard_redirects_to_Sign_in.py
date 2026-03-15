@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' navbar link to navigate to /auth/signin (click element index 77).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin (explicit navigation step) so the sign-in form can be filled.
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields and click the Sign In button to log in (submit credentials). ASSERTION: After submitting, verify the app navigates to /dashboard.
+        # -> Fill the email and password fields and click the 'Sign In' button to sign in.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,13 +52,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the user avatar in the navbar to open the account dropdown (click element index 82115).
+        # -> Click the user avatar in the navbar to open the account dropdown menu.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Sign out' button in the avatar dropdown (interactive element index 82353). After that, wait for the redirect and verify the URL contains '/auth/signin'.
+        # -> Click the 'Sign out' button in the account dropdown to sign out (then verify redirect to /auth/signin).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/button').nth(0)

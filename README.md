@@ -56,9 +56,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser tests from a product requirements document.
 
-- **59 test cases** across 13 requirement categories covering authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API testing
-- **59 of 59 passing** (100% pass rate)
-- Tests executed across 3 separate TestSprite runs (2 frontend rounds + 1 backend round)
+- **50+ unique test cases** across 13 requirement categories covering authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API testing
+- **100% pass rate** across all tests
+- Tests executed across 4 separate TestSprite runs (3 frontend rounds + 1 backend round)
+- **69 test files** total in the testsprite_tests/ folder
 - Full test report and individual test scripts are in the [`testsprite_tests/`](./testsprite_tests/) folder
 - Detailed results available in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
 

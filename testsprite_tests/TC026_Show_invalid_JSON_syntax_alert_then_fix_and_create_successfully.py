@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin
+        # -> Navigate to /auth/signin (use navigate action to http://localhost:3000/auth/signin)
         await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Input the test credentials into the email and password fields and click the 'Sign In' button.
+        # -> Fill the email and password fields and click the Sign In button to authenticate.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,13 +52,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button to open the project creation page.
+        # -> Click the 'New Project' CTA to open the new project creation flow.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter the project name into the Project Name field and open the Paste Content tab so the paste textarea becomes available.
+        # -> Type the project name into the Project Name field, then open the Paste Content tab so the paste textarea appears.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -69,18 +69,18 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the invalid JSON into the specification textarea and click 'Create Project' to trigger validation.
+        # -> Paste the invalid JSON into the specification textarea and click 'Create Project' to trigger validation (expect an 'Invalid JSON syntax' error).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)
-        await asyncio.sleep(3); await elem.fill('{ "openapi": "3.0.0", "info": { "title": "Bad" "version": "1.0.0" }, "paths": {} }')
+        await asyncio.sleep(3); await elem.fill('{"openapi": "3.0.0", "info": { "title": "Bad" "version": "1.0.0" }, "paths": {} }')
         
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/main/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Replace the invalid JSON in the paste textarea with valid JSON and click 'Create Project' to submit.
+        # -> Replace the invalid JSON in the paste textarea with a valid OpenAPI JSON, click 'Create Project', then verify the 'Creating' indicator and that the app redirects to a URL containing '/projects/'.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)

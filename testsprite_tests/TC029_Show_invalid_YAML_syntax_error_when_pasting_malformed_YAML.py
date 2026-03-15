@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to /auth/signin and then fill the login form.
+        # -> Click the 'Sign in' link to open the authentication page (use interactive element index 47). ASSERTION: 'Sign in' link (index 47) is visible on the homepage.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill email (index 672) with test@mcpforge.dev, fill password (index 676) with Password1, then click the 'Sign In' button (index 680).
+        # -> Fill the email and password fields and click the Sign In button to log into the dashboard (then verify redirect to /dashboard).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,13 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' call-to-action button to open the project creation screen.
+        # -> Click the 'New Project' call-to-action to open the project creation page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'Bad YAML' into the Project Name field and open the 'Paste Content' tab so the paste textarea becomes available.
+        # -> Enter project name 'Bad YAML' into the Project Name field (index 64114) then click the 'Paste Content' tab (index 64133).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)

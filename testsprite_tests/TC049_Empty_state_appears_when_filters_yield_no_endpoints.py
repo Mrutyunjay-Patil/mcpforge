@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to the sign-in page (/auth/signin).
+        # -> Click the 'Sign in' link to open the signin page (navigate to /auth/signin).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'test@mcpforge.dev' into the email field (index 671).
+        # -> Fill the email and password fields on the Sign In page and click the Sign In button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,13 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (Petstore MCP Server (From URL)) to open the project and view its endpoints.
+        # -> Click the first project card on the dashboard to open the project so the endpoints table and its filter input are visible.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'zzzz-no-match' into the endpoints search/filter input (index 23707) to filter the table.
+        # -> Type 'zzzz-no-match' into the endpoints search input (index 1153) to filter endpoints, then verify the 'No endpoints match your filters' message is present.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[2]/div/input').nth(0)

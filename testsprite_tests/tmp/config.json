@@ -9,12 +9,12 @@
     "projectName": "mcpforge-app",
     "projectPath": "D:\\apps\\mcpforge\\mcpforge-app",
     "testIds": [],
-    "additionalInstruction": "Execute all frontend tests. App runs on localhost:3000 in production mode. Test credentials: email test@mcpforge.dev password Password1. There is one existing project called Petstore MCP Server with 11 endpoints. Sign in page is at /auth/signin. After login user lands on /dashboard.",
+    "additionalInstruction": "This is a third round of frontend tests. Focus on tests NOT yet executed. Already executed and passing: TC001-TC006, TC009-TC017, TC020-TC027, TC029-TC036, TC039-TC042, TC045-TC050, TC053-TC055, TC059-TC060. Please run NEW test IDs only. App on localhost:3000 production mode. Credentials: test@mcpforge.dev / Password1. Multiple projects exist on the dashboard.",
     "serverMode": "production",
     "envs": {
       "API_KEY": "sk-user-uhWwMJ4MEvEN1YDWzUT1TJdnQ-SOBcb3ujt6Fw4ZclonuqbxB7UlGA3Gm-Je8JIVW3Dwu7v6z42rqqXqogj83gnJfzXzI72GGRqDLCKApMvYhSLR9M21aACjpkB59GR4-f8"
     }
   },
-  "serverPort": 59637,
-  "proxy": "http://65823a5e-71e2-4701-b3d5-d78d4f54d868:iBmJ5V78jg2HJHH96jolNpuFN7wncUht@tun.testsprite.com:8080"
+  "serverPort": 64972,
+  "proxy": "http://3f6bf182-84c8-4f52-817c-31ed937580df:yaaB0DwNA59ODkSo07VIvDnhfpMk71It@tun.testsprite.com:8080"
 }

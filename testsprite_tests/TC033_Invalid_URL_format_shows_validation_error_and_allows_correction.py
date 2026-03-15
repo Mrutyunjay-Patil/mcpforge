@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the sign in page (/auth/signin)
+        # -> Click the 'Sign in' link to open the sign-in page (index 49).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter the test credentials into the Email and Password fields and submit the Sign In form to log in (then verify /dashboard).
+        # -> Type email and password into the sign-in form, then click the 'Sign In' button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +55,25 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button to open the new project creation page (/projects/new).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'New Project' button to open the project creation page (/projects/new).
+        # -> Open the user menu (click 'Test User') so the 'New Project' option can be selected.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'Bad URL Format' into the Project Name field and switch to the 'Fetch from URL' tab so the URL input becomes available.
+        # -> Click the 'New Project' button to open the new project form.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'New Project' button to open the new project creation page (element index 882).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Type 'Bad URL Format' into the Project Name field (index 1154), then open the 'Fetch from URL' tab (index 1174) and wait for the URL input to appear.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -78,18 +84,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter 'not-a-url' into the OpenAPI Spec URL input, attempt to fetch (trigger validation), verify the 'Invalid URL format' error is shown, then replace the URL with 'https://example.com/openapi.json' and stop.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('not-a-url')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('https://example.com/openapi.json')
-        
-        # -> Type 'not-a-url' into the OpenAPI Spec URL input and click the 'Fetch' button to trigger validation (expect 'Invalid URL format' error).
+        # -> Type 'not-a-url' into the OpenAPI Spec URL input (index 1237) and submit the form to trigger validation, then check for the 'Invalid URL format' message. After that, correct the URL to 'https://example.com/openapi.json'.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)
@@ -97,10 +92,10 @@ async def run_test():
         
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/main/main/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the corrected URL 'https://example.com/openapi.json' into the OpenAPI Spec URL input (index 117651) and finish the task.
+        # -> Replace the OpenAPI Spec URL input value with 'https://example.com/openapi.json' (input index 1237) so the user can correct the URL, then finish the test.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)

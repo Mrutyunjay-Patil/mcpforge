@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication page (/auth/signin).
+        # -> Click the 'Sign in' link to open the authentication page (index 71).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields then click the Sign In button to authenticate (immediate action). After login, verify URL contains '/dashboard'.
+        # -> Fill the email and password fields and click the Sign In button to authenticate (then verify redirect to /dashboard).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,10 +55,32 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (interactive element index 38262) to open the project detail page.
+        # -> Click the 'New Project' button to open the project creation page.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'New Project' button (index 787) to open the project creation page and then verify the URL contains '/projects/new'.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Type 'Blocked Create Project' into the Project Name field (index 1114), then switch to the 'Fetch from URL' tab (index 1134), then attempt to click 'Create Project' (index 1152) to confirm it is disabled before a successful spec fetch.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Blocked Create Project')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[3]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/main/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

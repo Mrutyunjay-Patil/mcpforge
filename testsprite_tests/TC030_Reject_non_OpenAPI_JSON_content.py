@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to the sign-in page (/auth/signin).
+        # -> Click the 'Sign in' link to open the authentication (signin) page (use interactive element index 47).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields and click the Sign In button to authenticate (use test@mcpforge.dev / Password1). After that, verify the URL contains '/dashboard'.
+        # -> Type the login credentials into the Email and Password fields and click the 'Sign In' button, then wait for the app to redirect to the dashboard.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,25 +55,19 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Sign In' button (index 680) to submit credentials and trigger redirect to /dashboard, then wait for the page to load and confirm the dashboard URL.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'New Project' button (index 860) to open the project creation page.
+        # -> Click the 'New Project' call-to-action to open the project creation page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the New Project CTA to open the project creation page so the non-OpenAPI JSON can be pasted and validated.
+        # -> Open the New Project creation UI by clicking the New Project CTA (use interactive element index 71347).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the project name and switch to the 'Paste Content' tab so the paste textarea appears.
+        # -> Type 'Not OpenAPI JSON' into the Project Name field and switch to the 'Paste Content' tab so the paste textarea appears.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -84,7 +78,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Paste the provided syntactically-valid-but-not-OpenAPI JSON into the specification textarea, click Create Project, then verify that a 'non-OpenAPI' error message is displayed (mark task done afterwards).
+        # -> Paste the syntactically valid but non-OpenAPI JSON into the specification textarea and submit by clicking 'Create Project' to verify the app rejects it with a non-OpenAPI error.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)

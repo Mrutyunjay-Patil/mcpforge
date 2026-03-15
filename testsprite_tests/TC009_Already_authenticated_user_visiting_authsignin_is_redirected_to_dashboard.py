@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin by issuing a navigate action to http://localhost:3000/auth/signin
+        # -> Navigate to /auth/signin (use navigate action to http://localhost:3000/auth/signin).
         await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Input the test credentials into the sign-in form (email into [652], password into [653]) then click the Sign In button [654].
+        # -> Type the login email into the Email field (index 652) and password into the Password field (index 653), then click the Sign In button (index 654).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,10 +52,15 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # --> Test passed — verified by AI agent
+        # -> Navigate to /auth/signin to confirm authenticated users are redirected to the dashboard
+        await page.goto("http://localhost:3000/auth/signin")
+        
+        # --> Assertions to verify final state
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert '/dashboard' in current_url
+        current_url = await frame.evaluate("() => window.location.href")
+        assert '/dashboard' in current_url
         await asyncio.sleep(5)
 
     finally:

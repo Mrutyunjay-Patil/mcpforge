@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signup (http://localhost:3000/auth/signup) to open the signup form
+        # -> Navigate to http://localhost:3000/auth/signup (per test instruction).
         await page.goto("http://localhost:3000/auth/signup")
         
-        # -> Type the test email into the email field (index 675) and enter a valid password and a mismatched confirm password, then submit by clicking Create Account (index 678). After submit, verify inline 'match' text is visible and URL still contains '/auth/signup'.
+        # -> Type 'new.user+signup3@example.com' into the Email field (index 652).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[2]/input').nth(0)
@@ -52,7 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[4]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('ValidPass123?')
         
-        # -> Click the 'Create Account' button (interactive element index 678) to submit the form and trigger validation for the mismatched confirm password.
+        # -> Click the 'Create Account' button to submit the form and trigger validation (expect inline mismatch error).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)

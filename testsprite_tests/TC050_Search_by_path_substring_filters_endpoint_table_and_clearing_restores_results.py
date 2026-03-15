@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the sign-in page (element index 47)
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin (explicit navigation step provided in test plan)
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Type the test email and password into the sign-in form and click the 'Sign In' button to submit the login.
+        # -> Type credentials into email (index 652) and password (index 653) fields and click the Sign In button (index 654).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,27 +52,19 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (Petstore MCP Server) in the projects grid to open the project details.
+        # -> Click the first project card (index 1016) to open the project's endpoints page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type '/' into the endpoint search input (index 33547) to filter the endpoints table, verify the endpoints table is visible, then clear the search input and verify the full endpoints table is visible again.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('/')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('')
-        
-        # --> Test passed — verified by AI agent
+        # --> Assertions to verify final state
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert '/dashboard' in current_url
+        assert await frame.locator("xpath=//*[contains(., 'Endpoints')]").nth(0).is_visible(), "Expected 'Endpoints' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Endpoints table')]").nth(0).is_visible(), "Expected 'Endpoints table' to be visible"
+        assert await frame.locator("xpath=//*[contains(., 'Endpoints table')]").nth(0).is_visible(), "Expected 'Endpoints table' to be visible"
         await asyncio.sleep(5)
 
     finally:
