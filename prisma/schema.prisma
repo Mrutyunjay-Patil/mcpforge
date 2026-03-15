@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Project {
+  id           String             @id @default(cuid())
+  name         String
+  specContent  String
+  specFormat   String             @default("json")
+  specTitle    String?
+  specVersion  String?
+  pathCount    Int                @default(0)
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mappings     EndpointMapping[]
+  config       ServerConfig?
+  versions     ProjectVersion[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([userId])
+}
+
+model EndpointMapping {
+  id          String  @id @default(cuid())
+  projectId   String
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  method      String
+  path        String
+  operationId String?
+  summary     String?
+  description String?
+  paramsCount Int     @default(0)
+  hasBody     Boolean @default(false)
+  mcpType     String  @default("tool")
+
+  @@unique([projectId, method, path])
+  @@index([projectId])
+}
+
+model ServerConfig {
+  id            String  @id @default(cuid())
+  projectId     String  @unique
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  transport     String  @default("stdio")
+  authMethod    String  @default("none")
+  serverName    String  @default("mcp-server")
+  serverVersion String  @default("1.0.0")
+  baseUrl       String  @default("")
+  port          Int     @default(3001)
+}
+
+model ProjectVersion {
+  id             String   @id @default(cuid())
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versionNumber  Int      @default(1)
+  configSnapshot String
+  createdAt      DateTime @default(now())
+
+  @@index([projectId])
+}
