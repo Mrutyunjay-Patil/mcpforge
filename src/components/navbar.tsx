@@ -1,27 +1,12 @@
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, User, LayoutDashboard } from "lucide-react";
-
-function getInitials(name?: string | null, email?: string | null): string {
-  if (name) {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }
-  if (email) return email[0].toUpperCase();
-  return "U";
-}
+import { LogOut, ChevronDown } from "lucide-react";
 
 export async function Navbar() {
   const session = await auth();
@@ -30,76 +15,97 @@ export async function Navbar() {
   return (
     <nav
       aria-label="Main navigation"
-      className="border-b bg-background"
+      className="h-12 border-b border-[#30363d] bg-[#161b22]"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/dashboard"
-          className="text-xl font-bold tracking-tight"
-        >
-          MCPForge
-        </Link>
+      <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4">
+        <div className="flex items-center gap-6">
+          <Link
+            href={user ? "/dashboard" : "/"}
+            className="flex items-center gap-2 text-[15px] font-semibold text-[#c9d1d9] hover:text-white transition-colors duration-150"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-[#58a6ff]"
+            >
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
+            MCPForge
+          </Link>
+          {user && (
+            <Link
+              href="/dashboard"
+              className="text-[13px] text-[#8b949e] hover:text-[#c9d1d9] transition-colors duration-150"
+            >
+              Dashboard
+            </Link>
+          )}
+        </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {user ? (
-            <>
-              <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Button>
-              </Link>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-accent focus:outline-none"
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-[#c9d1d9] hover:bg-[#21262d] transition-colors duration-150 focus:outline-none">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#30363d] text-[11px] font-medium">
+                  {user.name?.[0]?.toUpperCase() ||
+                    user.email?.[0]?.toUpperCase() ||
+                    "U"}
+                </div>
+                <span className="hidden sm:inline">
+                  {user.name || user.email}
+                </span>
+                <ChevronDown className="h-3 w-3 text-[#8b949e]" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-48 bg-[#161b22] border-[#30363d]"
+              >
+                <div className="px-3 py-2">
+                  {user.name && (
+                    <p className="text-[13px] font-medium text-[#c9d1d9]">
+                      {user.name}
+                    </p>
+                  )}
+                  <p className="text-[12px] text-[#8b949e]">{user.email}</p>
+                </div>
+                <DropdownMenuSeparator className="bg-[#30363d]" />
+                <form
+                  action={async () => {
+                    "use server";
+                    await signOut({ redirectTo: "/auth/signin" });
+                  }}
                 >
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback>
-                      {getInitials(user.name, user.email)}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="flex items-center gap-2 p-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <div className="flex flex-col space-y-0.5">
-                      {user.name && (
-                        <p className="text-sm font-medium">{user.name}</p>
-                      )}
-                      <p className="text-xs text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </div>
-                  </div>
-                  <DropdownMenuSeparator />
-                  <form
-                    action={async () => {
-                      "use server";
-                      await signOut({ redirectTo: "/auth/signin" });
-                    }}
+                  <button
+                    type="submit"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-[13px] text-[#c9d1d9] hover:bg-[#21262d] transition-colors duration-150"
                   >
-                    <button
-                      type="submit"
-                      className="flex w-full cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Log out
-                    </button>
-                  </form>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+                    <LogOut className="h-3.5 w-3.5" />
+                    Sign out
+                  </button>
+                </form>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <>
-              <Link href="/auth/signin">
-                <Button variant="ghost" size="sm">
-                  Sign In
-                </Button>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/auth/signin"
+                className="rounded-md px-3 py-1.5 text-[13px] text-[#c9d1d9] hover:bg-[#21262d] transition-colors duration-150"
+              >
+                Sign in
               </Link>
-              <Link href="/auth/signup">
-                <Button size="sm">Sign Up</Button>
+              <Link
+                href="/auth/signup"
+                className="rounded-md bg-[#238636] px-3 py-1.5 text-[13px] font-medium text-white hover:bg-[#2ea043] transition-colors duration-150"
+              >
+                Sign up
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>

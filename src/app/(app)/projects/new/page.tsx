@@ -9,12 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Upload, Link as LinkIcon, FileText, X, ArrowLeft } from "lucide-react";
 import { detectFormat } from "@/lib/openapi-parser";
@@ -267,25 +261,27 @@ export default function CreateProjectPage() {
     <main className="mx-auto max-w-2xl px-4 py-8">
       <Link
         href="/dashboard"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="mb-6 inline-flex items-center gap-1 text-[13px] text-[#8b949e] transition-colors duration-150 hover:text-[#c9d1d9]"
       >
         <ArrowLeft className="size-4" />
         Back to Dashboard
       </Link>
 
-      <h1 className="mb-8 text-3xl font-bold tracking-tight">
+      <h1 className="mb-8 text-2xl font-semibold tracking-tight text-[#c9d1d9]">
         Create New Project
       </h1>
 
       <form onSubmit={handleSubmit}>
         {/* Project Name */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">Project Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Label htmlFor="project-name">Project Name</Label>
+        <div className="mb-6 rounded-md border border-[#30363d] bg-[#161b22]">
+          <div className="border-b border-[#30363d] px-5 py-3">
+            <h2 className="text-[14px] font-medium text-[#c9d1d9]">Project Details</h2>
+          </div>
+          <div className="p-5">
+            <div className="space-y-1.5">
+              <Label htmlFor="project-name" className="text-[13px] text-[#c9d1d9]">
+                Project Name
+              </Label>
               <Input
                 id="project-name"
                 type="text"
@@ -301,26 +297,27 @@ export default function CreateProjectPage() {
                 disabled={isSubmitting}
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name ? "project-name-error" : undefined}
+                className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
               />
               {errors.name && (
                 <p
                   id="project-name-error"
                   role="alert"
-                  className="text-sm text-destructive"
+                  className="text-[13px] text-[#f85149]"
                 >
                   {errors.name}
                 </p>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Spec Input Tabs */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">OpenAPI Specification</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="mb-6 rounded-md border border-[#30363d] bg-[#161b22]">
+          <div className="border-b border-[#30363d] px-5 py-3">
+            <h2 className="text-[14px] font-medium text-[#c9d1d9]">OpenAPI Specification</h2>
+          </div>
+          <div className="p-5">
             <Tabs
               value={activeTab}
               onValueChange={(value) => {
@@ -328,16 +325,25 @@ export default function CreateProjectPage() {
                 setErrors((prev) => ({ ...prev, spec: undefined }));
               }}
             >
-              <TabsList className="mb-4 w-full">
-                <TabsTrigger value="upload">
+              <TabsList className="mb-4 w-full border-b border-[#30363d] bg-transparent p-0 rounded-none h-auto">
+                <TabsTrigger
+                  value="upload"
+                  className="rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-[13px] text-[#8b949e] transition-colors duration-150 data-[state=active]:border-[#f78166] data-[state=active]:bg-transparent data-[state=active]:text-[#c9d1d9] data-[state=active]:shadow-none hover:text-[#c9d1d9]"
+                >
                   <Upload className="size-4" />
                   Upload File
                 </TabsTrigger>
-                <TabsTrigger value="paste">
+                <TabsTrigger
+                  value="paste"
+                  className="rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-[13px] text-[#8b949e] transition-colors duration-150 data-[state=active]:border-[#f78166] data-[state=active]:bg-transparent data-[state=active]:text-[#c9d1d9] data-[state=active]:shadow-none hover:text-[#c9d1d9]"
+                >
                   <FileText className="size-4" />
                   Paste Content
                 </TabsTrigger>
-                <TabsTrigger value="url">
+                <TabsTrigger
+                  value="url"
+                  className="rounded-none border-b-2 border-transparent bg-transparent px-3 py-2 text-[13px] text-[#8b949e] transition-colors duration-150 data-[state=active]:border-[#f78166] data-[state=active]:bg-transparent data-[state=active]:text-[#c9d1d9] data-[state=active]:shadow-none hover:text-[#c9d1d9]"
+                >
                   <LinkIcon className="size-4" />
                   Fetch from URL
                 </TabsTrigger>
@@ -346,14 +352,14 @@ export default function CreateProjectPage() {
               {/* Tab 1: Upload File */}
               <TabsContent value="upload">
                 {selectedFile ? (
-                  <div className="flex items-center justify-between rounded-md border p-4">
+                  <div className="flex items-center justify-between rounded-md border border-[#30363d] bg-[#0d1117] p-4">
                     <div className="flex items-center gap-3">
-                      <FileText className="size-5 text-muted-foreground" />
+                      <FileText className="size-5 text-[#8b949e]" />
                       <div>
-                        <p className="text-sm font-medium">
+                        <p className="text-[13px] font-medium text-[#c9d1d9]">
                           {selectedFile.name}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-[#8b949e]">
                           {formatFileSize(selectedFile.size)}
                         </p>
                       </div>
@@ -365,6 +371,7 @@ export default function CreateProjectPage() {
                       onClick={handleRemoveFile}
                       disabled={isSubmitting}
                       aria-label="Remove file"
+                      className="text-[#8b949e] hover:bg-[#21262d] hover:text-[#c9d1d9]"
                     >
                       <X className="size-4" />
                     </Button>
@@ -383,18 +390,18 @@ export default function CreateProjectPage() {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-8 text-center transition-colors ${
+                    className={`flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-8 text-center transition-colors duration-150 ${
                       isDragging
-                        ? "border-primary bg-primary/5"
-                        : "border-muted-foreground/25 hover:border-primary/50"
+                        ? "border-[#58a6ff] bg-[#58a6ff]/5"
+                        : "border-[#30363d] hover:border-[#484f58]"
                     }`}
                     aria-label="Upload OpenAPI specification file"
                   >
-                    <Upload className="mb-3 size-8 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">
+                    <Upload className="mb-3 size-8 text-[#8b949e]" />
+                    <p className="text-[13px] text-[#8b949e]">
                       Drag &amp; drop your OpenAPI spec here, or click to browse
                     </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="mt-1 text-xs text-[#484f58]">
                       Supports .json, .yaml, .yml (max 5MB)
                     </p>
                   </div>
@@ -411,7 +418,7 @@ export default function CreateProjectPage() {
                 {errors.file && (
                   <p
                     role="alert"
-                    className="mt-2 text-sm text-destructive"
+                    className="mt-2 text-[13px] text-[#f85149]"
                   >
                     {errors.file}
                   </p>
@@ -420,8 +427,10 @@ export default function CreateProjectPage() {
 
               {/* Tab 2: Paste Content */}
               <TabsContent value="paste">
-                <div className="space-y-2">
-                  <Label htmlFor="spec-paste">Specification Content</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="spec-paste" className="text-[13px] text-[#c9d1d9]">
+                    Specification Content
+                  </Label>
                   <Textarea
                     id="spec-paste"
                     placeholder="Paste your OpenAPI spec (JSON or YAML)..."
@@ -433,12 +442,12 @@ export default function CreateProjectPage() {
                       }
                     }}
                     disabled={isSubmitting}
-                    className="min-h-[300px] font-mono text-sm"
+                    className="min-h-[300px] rounded-md border-[#30363d] bg-[#0d1117] font-mono text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
                     aria-describedby="paste-char-count"
                   />
                   <p
                     id="paste-char-count"
-                    className="text-xs text-muted-foreground"
+                    className="text-xs text-[#8b949e]"
                   >
                     {pastedContent.length} characters
                   </p>
@@ -448,8 +457,10 @@ export default function CreateProjectPage() {
               {/* Tab 3: Fetch from URL */}
               <TabsContent value="url">
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="spec-url">OpenAPI Spec URL</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="spec-url" className="text-[13px] text-[#c9d1d9]">
+                      OpenAPI Spec URL
+                    </Label>
                     <div className="flex gap-2">
                       <Input
                         id="spec-url"
@@ -466,12 +477,14 @@ export default function CreateProjectPage() {
                         disabled={isSubmitting || isFetching}
                         aria-invalid={!!errors.url}
                         aria-describedby={errors.url ? "url-error" : undefined}
+                        className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
                       />
                       <Button
                         type="button"
                         variant="secondary"
                         onClick={handleFetchUrl}
                         disabled={isSubmitting || isFetching || !specUrl.trim()}
+                        className="rounded-md border border-[#30363d] bg-[#21262d] text-[13px] text-[#c9d1d9] transition-colors duration-150 hover:bg-[#30363d]"
                       >
                         {isFetching ? (
                           <>
@@ -487,7 +500,7 @@ export default function CreateProjectPage() {
                       <p
                         id="url-error"
                         role="alert"
-                        className="text-sm text-destructive"
+                        className="text-[13px] text-[#f85149]"
                       >
                         {errors.url}
                       </p>
@@ -496,10 +509,10 @@ export default function CreateProjectPage() {
 
                   {fetchSuccess && fetchedContent && (
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                      <p className="text-[13px] font-medium text-[#3fb950]">
                         Spec fetched successfully
                       </p>
-                      <pre className="max-h-48 overflow-auto rounded-md bg-muted p-3 text-xs">
+                      <pre className="max-h-48 overflow-auto rounded-md border border-[#30363d] bg-[#0d1117] p-3 text-xs text-[#c9d1d9]">
                         {fetchedContent.slice(0, 2000)}
                         {fetchedContent.length > 2000 && "\n... (truncated)"}
                       </pre>
@@ -508,19 +521,19 @@ export default function CreateProjectPage() {
                 </div>
               </TabsContent>
             </Tabs>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Error displays */}
         {errors.spec && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertDescription>{errors.spec}</AlertDescription>
+          <Alert variant="destructive" className="mb-4 border-[#f85149]/40 bg-[#f85149]/10 text-[#f85149]">
+            <AlertDescription className="text-[#f85149]">{errors.spec}</AlertDescription>
           </Alert>
         )}
 
         {apiError && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertDescription>{apiError}</AlertDescription>
+          <Alert variant="destructive" className="mb-4 border-[#f85149]/40 bg-[#f85149]/10 text-[#f85149]">
+            <AlertDescription className="text-[#f85149]">{apiError}</AlertDescription>
           </Alert>
         )}
 
@@ -528,7 +541,7 @@ export default function CreateProjectPage() {
         <Button
           type="submit"
           size="lg"
-          className="w-full"
+          className="w-full rounded-md bg-[#238636] text-[14px] font-medium text-white transition-colors duration-150 hover:bg-[#2ea043] disabled:opacity-50"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

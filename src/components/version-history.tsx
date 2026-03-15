@@ -76,19 +76,19 @@ export function VersionHistory({ projectId }: { projectId: string }) {
   if (loading) {
     return (
       <section aria-label="Version history" className="space-y-3">
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-6 w-40 bg-[#21262d]" />
+        <Skeleton className="h-16 w-full bg-[#21262d]" />
+        <Skeleton className="h-16 w-full bg-[#21262d]" />
       </section>
     );
   }
 
   return (
     <section aria-label="Version history" className="space-y-4">
-      <h3 className="text-lg font-semibold">Version History</h3>
+      <h3 className="text-lg font-semibold text-[#c9d1d9]">Version History</h3>
 
       {versions.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[#8b949e]">
           No versions yet. Download your project to create the first version.
         </p>
       ) : (
@@ -102,13 +102,13 @@ export function VersionHistory({ projectId }: { projectId: string }) {
               <li key={version.id}>
                 <button
                   type="button"
-                  className="flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-muted/50"
+                  className="flex w-full items-start gap-3 rounded-lg border border-[#30363d] p-3 text-left transition-colors duration-150 hover:bg-[#161b22]"
                   onClick={() =>
                     setExpandedId(isExpanded ? null : version.id)
                   }
                   aria-expanded={isExpanded}
                 >
-                  <span className="mt-0.5 text-muted-foreground">
+                  <span className="mt-0.5 text-[#8b949e]">
                     {isExpanded ? (
                       <ChevronDown className="h-4 w-4" />
                     ) : (
@@ -117,14 +117,14 @@ export function VersionHistory({ projectId }: { projectId: string }) {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">
+                      <span className="font-medium text-[#c9d1d9]">
                         v{version.versionNumber}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-[#8b949e]">
                         {summary}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1 mt-1 text-xs text-[#8b949e]">
                       <Clock className="h-3 w-3" />
                       <time dateTime={version.createdAt}>
                         {formatDate(version.createdAt)}
@@ -134,21 +134,21 @@ export function VersionHistory({ projectId }: { projectId: string }) {
                 </button>
 
                 {isExpanded && snapshot && (
-                  <div className="ml-7 mt-2 rounded-md border bg-muted/30 p-3">
-                    <h4 className="text-xs font-medium text-muted-foreground mb-2">
+                  <div className="ml-7 mt-2 rounded-md border border-[#21262d] bg-[#0d1117] p-3">
+                    <h4 className="text-xs font-medium text-[#8b949e] mb-2">
                       Configuration Snapshot
                     </h4>
                     {snapshot.config && (
                       <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                        <dt className="text-muted-foreground">Transport</dt>
+                        <dt className="text-[#8b949e]">Transport</dt>
                         <dd>{snapshot.config.transport}</dd>
-                        <dt className="text-muted-foreground">Tools</dt>
+                        <dt className="text-[#8b949e]">Tools</dt>
                         <dd>
                           {snapshot.mappings?.filter(
                             (m) => m.mcpType === "tool"
                           ).length ?? 0}
                         </dd>
-                        <dt className="text-muted-foreground">Resources</dt>
+                        <dt className="text-[#8b949e]">Resources</dt>
                         <dd>
                           {snapshot.mappings?.filter(
                             (m) =>
@@ -156,7 +156,7 @@ export function VersionHistory({ projectId }: { projectId: string }) {
                               m.mcpType === "resource_template"
                           ).length ?? 0}
                         </dd>
-                        <dt className="text-muted-foreground">Files</dt>
+                        <dt className="text-[#8b949e]">Files</dt>
                         <dd>
                           {snapshot.files
                             ? Object.keys(snapshot.files).length

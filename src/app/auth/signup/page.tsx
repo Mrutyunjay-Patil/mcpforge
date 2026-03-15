@@ -7,14 +7,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 interface FieldErrors {
   name?: string;
@@ -114,169 +106,184 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>
-            Sign up for MCPForge to get started
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {errors.server && (
-              <div
-                role="alert"
-                className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
-              >
-                {errors.server}
+    <div className="flex min-h-screen items-center justify-center bg-[#0d1117] px-4">
+      <div className="w-full max-w-sm">
+        <div className="mb-8 text-center">
+          <h1 className="text-[22px] font-semibold text-[#c9d1d9]">MCPForge</h1>
+        </div>
+
+        <div className="rounded-md border border-[#30363d] bg-[#161b22] p-6">
+          <h2 className="mb-6 text-center text-lg font-medium text-[#c9d1d9]">
+            Create your account
+          </h2>
+
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              {errors.server && (
+                <div
+                  role="alert"
+                  className="rounded-md border border-[#f85149]/40 bg-[#f85149]/10 px-3 py-2 text-[13px] text-[#f85149]"
+                >
+                  {errors.server}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <Label htmlFor="name" className="text-[13px] text-[#c9d1d9]">
+                  Name <span className="text-[#8b949e]">(optional)</span>
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={isLoading}
+                  autoComplete="name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                />
+                {errors.name && (
+                  <p
+                    id="name-error"
+                    role="alert"
+                    className="text-[13px] text-[#f85149]"
+                  >
+                    {errors.name}
+                  </p>
+                )}
               </div>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="name">Name (optional)</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
-                autoComplete="name"
-                aria-invalid={!!errors.name}
-                aria-describedby={errors.name ? "name-error" : undefined}
-              />
-              {errors.name && (
-                <p
-                  id="name-error"
-                  role="alert"
-                  className="text-sm text-destructive"
-                >
-                  {errors.name}
-                </p>
-              )}
-            </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-[13px] text-[#c9d1d9]">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) {
+                      setErrors((prev) => ({ ...prev, email: undefined }));
+                    }
+                  }}
+                  required
+                  disabled={isLoading}
+                  autoComplete="email"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                />
+                {errors.email && (
+                  <p
+                    id="email-error"
+                    role="alert"
+                    className="text-[13px] text-[#f85149]"
+                  >
+                    {errors.email}
+                  </p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (errors.email) {
-                    setErrors((prev) => ({ ...prev, email: undefined }));
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-[13px] text-[#c9d1d9]">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) {
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                    }
+                  }}
+                  required
+                  disabled={isLoading}
+                  autoComplete="new-password"
+                  aria-invalid={!!errors.password}
+                  aria-describedby={
+                    errors.password ? "password-error" : "password-hint"
                   }
-                }}
-                required
-                disabled={isLoading}
-                autoComplete="email"
-                aria-invalid={!!errors.email}
-                aria-describedby={errors.email ? "email-error" : undefined}
-              />
-              {errors.email && (
-                <p
-                  id="email-error"
-                  role="alert"
-                  className="text-sm text-destructive"
-                >
-                  {errors.email}
-                </p>
-              )}
-            </div>
+                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                />
+                {errors.password ? (
+                  <p
+                    id="password-error"
+                    role="alert"
+                    className="text-[13px] text-[#f85149]"
+                  >
+                    {errors.password}
+                  </p>
+                ) : (
+                  <p id="password-hint" className="text-xs text-[#8b949e]">
+                    Min 8 characters, 1 uppercase letter, 1 number
+                  </p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (errors.password) {
-                    setErrors((prev) => ({ ...prev, password: undefined }));
+              <div className="space-y-1.5">
+                <Label htmlFor="confirmPassword" className="text-[13px] text-[#c9d1d9]">
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errors.confirmPassword) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        confirmPassword: undefined,
+                      }));
+                    }
+                  }}
+                  required
+                  disabled={isLoading}
+                  autoComplete="new-password"
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby={
+                    errors.confirmPassword ? "confirm-password-error" : undefined
                   }
-                }}
-                required
-                disabled={isLoading}
-                autoComplete="new-password"
-                aria-invalid={!!errors.password}
-                aria-describedby={
-                  errors.password ? "password-error" : "password-hint"
-                }
-              />
-              {errors.password ? (
-                <p
-                  id="password-error"
-                  role="alert"
-                  className="text-sm text-destructive"
-                >
-                  {errors.password}
-                </p>
-              ) : (
-                <p id="password-hint" className="text-sm text-muted-foreground">
-                  Min 8 characters, 1 uppercase letter, 1 number
-                </p>
-              )}
-            </div>
+                  className="h-9 rounded-md border-[#30363d] bg-[#0d1117] text-[13px] text-[#c9d1d9] placeholder:text-[#484f58] focus-visible:border-[#58a6ff] focus-visible:ring-0"
+                />
+                {errors.confirmPassword && (
+                  <p
+                    id="confirm-password-error"
+                    role="alert"
+                    className="text-[13px] text-[#f85149]"
+                  >
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  if (errors.confirmPassword) {
-                    setErrors((prev) => ({
-                      ...prev,
-                      confirmPassword: undefined,
-                    }));
-                  }
-                }}
-                required
+              <Button
+                type="submit"
+                className="w-full rounded-md bg-[#238636] text-[13px] font-medium text-white transition-colors duration-150 hover:bg-[#2ea043] disabled:opacity-50"
                 disabled={isLoading}
-                autoComplete="new-password"
-                aria-invalid={!!errors.confirmPassword}
-                aria-describedby={
-                  errors.confirmPassword ? "confirm-password-error" : undefined
-                }
-              />
-              {errors.confirmPassword && (
-                <p
-                  id="confirm-password-error"
-                  role="alert"
-                  className="text-sm text-destructive"
-                >
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-          </CardContent>
-
-          <CardFooter className="flex flex-col gap-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating account..." : "Create Account"}
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                href="/auth/signin"
-                className="text-primary underline-offset-4 hover:underline"
               >
-                Sign in
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+                {isLoading ? "Creating account..." : "Create account"}
+              </Button>
+            </div>
+          </form>
+        </div>
+
+        <div className="mt-4 rounded-md border border-[#30363d] bg-[#161b22] px-4 py-3 text-center text-[13px] text-[#c9d1d9]">
+          Already have an account?{" "}
+          <Link
+            href="/auth/signin"
+            className="text-[#58a6ff] transition-colors duration-150 hover:underline"
+          >
+            Sign in
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
