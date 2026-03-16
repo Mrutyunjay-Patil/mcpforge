@@ -236,7 +236,7 @@ export default function CreateProjectPage() {
       }
 
       toast.success("Project created successfully");
-      router.push(`/projects/${data.id}`);
+      router.push(`/projects/${data.project.id}`);
     } catch {
       setApiError("An unexpected error occurred");
     } finally {
