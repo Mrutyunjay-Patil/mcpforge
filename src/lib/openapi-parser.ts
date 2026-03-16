@@ -79,12 +79,17 @@ export async function parseOpenApiSpec(content: string): Promise<ParsedSpec> {
     );
   }
 
-  // Validate with swagger-parser
-  // Use parse() instead of validate() because validate() rejects OpenAPI 3.1.x specs
+  // Strip external $ref pointers (e.g., ./docs/file.md) that can't be resolved
+  // when the spec is provided as raw content without accompanying files.
+  // Internal refs (#/components/...) are preserved for dereference.
+  const cleaned = stripExternalRefs(spec);
+
+  // Dereference resolves internal $refs without strict OpenAPI version validation,
+  // supporting both 3.0.x and 3.1.x specs.
   let api: Record<string, unknown>;
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    api = (await SwaggerParser.dereference(parsed as any)) as Record<
+    api = (await SwaggerParser.dereference(cleaned as any)) as Record<
       string,
       unknown
     >;
@@ -170,4 +175,24 @@ function mergeParameters(
   }
 
   return Array.from(paramMap.values());
+}
+
+/**
+ * Recursively strip external $ref pointers (file paths like ./docs/file.md)
+ * that cannot be resolved when the spec is provided as raw content.
+ * Internal refs starting with # are preserved.
+ */
+function stripExternalRefs(obj: unknown): unknown {
+  if (!obj || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(stripExternalRefs);
+  const result: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
+    if (key === "$ref" && typeof val === "string" && !val.startsWith("#")) {
+      // External file ref — remove it, keep a marker
+      result["x-external-ref"] = val;
+    } else {
+      result[key] = stripExternalRefs(val);
+    }
+  }
+  return result;
 }
