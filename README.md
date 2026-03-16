@@ -31,7 +31,7 @@ Converting OpenAPI specifications into MCP (Model Context Protocol) servers toda
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Mrutyunjay-Patil/mcpforge.git
-cd mcpforge-app
+cd mcpforge
 
 # 2. Install dependencies
 npm install
@@ -57,9 +57,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser and API tests from a product requirements document.
 
-- **Frontend: 25/27 passed (93%)** -- auth flows, landing page, dashboard, project CRUD, endpoint table, filtering, search, delete with confirmation
-- **Backend: 4/10 passed (40%)** -- signup validation, unauthorized access (remaining failures are auth cookie issues inherent to NextAuth + raw HTTP tests)
-- **69 test files** in the repo across multiple TestSprite runs
+- **Frontend**: 63 test scripts generated across 3 TestSprite runs covering auth, landing page, navigation, dashboard, project CRUD, endpoint explorer, MCP type management, search/filter
+- **Backend**: 7 test scripts covering signup validation (201, 400, 409) and unauthorized access (401)
+- **70 total test files** with test plans, normalized PRD, and execution reports in `testsprite_tests/`
 - All test scripts in [`testsprite_tests/`](./testsprite_tests/) (frontend) and [`testsprite_tests/backend/`](./testsprite_tests/backend/) (API)
 
 ## Project Structure
