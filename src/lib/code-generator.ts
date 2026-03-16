@@ -268,22 +268,37 @@ function generateIndexTs(
   switch (config.transport) {
     case "sse":
       transportImport = `import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { createServer } from "http";`;
+import { createServer, IncomingMessage, ServerResponse } from "http";`;
       transportSetup = `
-  const httpServer = createServer(async (req, res) => {
-    if (req.url === "/sse") {
+  const PORT = parseInt(process.env.PORT || "${config.port}");
+  const transports: Record<string, SSEServerTransport> = {};
+
+  const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+    const url = new URL(req.url || "/", \`http://localhost:\${PORT}\`);
+
+    if (req.method === "GET" && url.pathname === "/sse") {
+      console.error("New SSE connection");
       const transport = new SSEServerTransport("/messages", res);
+      transports[transport.sessionId] = transport;
+      res.on("close", () => { delete transports[transport.sessionId]; });
       await server.connect(transport);
-    } else if (req.url?.startsWith("/messages")) {
-      // Handle POST messages from SSE clients
-      // This is managed by the SSE transport
+    } else if (req.method === "POST" && url.pathname === "/messages") {
+      const sessionId = url.searchParams.get("sessionId");
+      if (sessionId && transports[sessionId]) {
+        await transports[sessionId].handlePostMessage(req, res);
+      } else {
+        res.writeHead(400);
+        res.end("Invalid session");
+      }
+    } else if (req.method === "GET" && url.pathname === "/health") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status: "ok" }));
     } else {
       res.writeHead(404);
       res.end("Not found");
     }
   });
 
-  const PORT = parseInt(process.env.PORT || "${config.port}");
   httpServer.listen(PORT, () => {
     console.log(\`MCP server (SSE) listening on http://localhost:\${PORT}/sse\`);
   });`;
@@ -291,24 +306,45 @@ import { createServer } from "http";`;
 
     case "streamable-http":
       transportImport = `import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { createServer, IncomingMessage, ServerResponse } from "http";`;
+import { createServer, IncomingMessage, ServerResponse } from "http";
+import { randomUUID } from "crypto";`;
       transportSetup = `
   const PORT = parseInt(process.env.PORT || "${config.port}");
+  const transports: Record<string, StreamableHTTPServerTransport> = {};
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
     if (req.method === "POST" && req.url === "/mcp") {
+      // Read request body
+      const chunks: Buffer[] = [];
+      for await (const chunk of req) { chunks.push(chunk as Buffer); }
+      const body = JSON.parse(Buffer.concat(chunks).toString());
+
+      const sessionId = req.headers["mcp-session-id"] as string | undefined;
+
+      // Existing session
+      if (sessionId && transports[sessionId]) {
+        await transports[sessionId].handleRequest(req, res, body);
+        return;
+      }
+
+      // New session (initialize request)
       const transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: undefined,
+        sessionIdGenerator: () => randomUUID(),
       });
-      res.setHeader("Content-Type", "application/json");
+      transport.onclose = () => {
+        if (transport.sessionId) delete transports[transport.sessionId];
+      };
       await server.connect(transport);
-      await transport.handleRequest(req, res);
+      await transport.handleRequest(req, res, body);
+      if (transport.sessionId) {
+        transports[transport.sessionId] = transport;
+      }
     } else if (req.method === "GET" && req.url === "/health") {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ status: "ok" }));
     } else {
-      res.writeHead(404);
-      res.end("Not found");
+      res.writeHead(405);
+      res.end("Method Not Allowed");
     }
   });
 
