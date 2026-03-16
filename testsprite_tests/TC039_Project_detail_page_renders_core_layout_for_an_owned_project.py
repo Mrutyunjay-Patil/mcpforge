@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication page (/auth/signin).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin (http://localhost:3000/auth/signin) to begin login.
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields then click the Sign In button to authenticate (immediate action). After login, verify URL contains '/dashboard'.
+        # -> Fill the email and password fields and click the Sign In button, then wait for the dashboard to load.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,7 +52,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (interactive element index 38262) to open the project detail page.
+        # -> Click the first project card (Train Travel API) to open the project detail page (use element index 889).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)

@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication (signin) page (use interactive element index 47).
+        # -> Click the 'Sign in' link to go to the signin page (/auth/signin).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the login credentials into the Email and Password fields and click the 'Sign In' button, then wait for the app to redirect to the dashboard.
+        # -> Type the test email into the Email field (index 674), then type the test password into the Password field (index 678), and click the Sign In button (index 682).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' call-to-action to open the project creation page.
+        # -> Click the 'New Project' CTA (interactive element index 780) to open the project creation page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the New Project creation UI by clicking the New Project CTA (use interactive element index 71347).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Type 'Not OpenAPI JSON' into the Project Name field and switch to the 'Paste Content' tab so the paste textarea appears.
+        # -> Type 'Not OpenAPI JSON' into the Project Name field (index 1208), then click the 'Paste Content' tab (index 1227) to reveal the paste textarea.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -78,7 +72,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Paste the syntactically valid but non-OpenAPI JSON into the specification textarea and submit by clicking 'Create Project' to verify the app rejects it with a non-OpenAPI error.
+        # -> Input the syntactically valid but non-OpenAPI JSON into the paste textarea (index 1292). Then click 'Create Project' (index 1246) and check the page for the 'non-OpenAPI' error text.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)

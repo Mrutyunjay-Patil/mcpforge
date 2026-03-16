@@ -1,6 +1,22 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import yaml from "yaml";
 
+export interface ParsedParameter {
+  name: string;
+  in: "path" | "query" | "header" | "cookie";
+  type: string; // "string" | "number" | "integer" | "boolean" | "array" | "object"
+  required: boolean;
+  description: string | null;
+  schema: Record<string, unknown> | null; // Raw JSON Schema for this parameter
+}
+
+export interface ParsedRequestBody {
+  contentType: string;
+  required: boolean;
+  description: string | null;
+  schema: Record<string, unknown> | null; // Raw JSON Schema for the body
+}
+
 export interface ParsedEndpoint {
   method: string; // GET, POST, PUT, PATCH, DELETE
   path: string; // /pets/{petId}
@@ -10,6 +26,9 @@ export interface ParsedEndpoint {
   paramsCount: number;
   hasBody: boolean;
   defaultMcpType: "tool" | "resource" | "resource_template";
+  parameters: ParsedParameter[]; // Full parameter details
+  requestBody: ParsedRequestBody | null; // Full request body details
+  securityRequirements: Array<Record<string, string[]>> | null; // Per-operation security
 }
 
 export interface ParsedSpec {
@@ -17,6 +36,8 @@ export interface ParsedSpec {
   version: string;
   baseUrl: string;
   endpoints: ParsedEndpoint[];
+  securitySchemes: Record<string, unknown>; // Raw security schemes from spec
+  globalSecurity: Array<Record<string, string[]>>; // Global security requirements
 }
 
 export function detectFormat(content: string): "json" | "yaml" {
@@ -127,6 +148,53 @@ export async function parseOpenApiSpec(content: string): Promise<ParsedSpec> {
       const hasPathParams = pathParams.length > 0;
       const hasBody = !!operation.requestBody;
 
+      // Extract full parameter details
+      const parameters: ParsedParameter[] = mergedParams.map((p) => {
+        const paramSchema = p.schema as Record<string, unknown> | undefined;
+        const paramType = paramSchema?.type as string | undefined;
+        return {
+          name: (p.name as string) || "",
+          in: (p.in as ParsedParameter["in"]) || "query",
+          type: paramType || "string",
+          required: !!(p.required as boolean),
+          description: (p.description as string) || null,
+          schema: paramSchema ? cleanSchemaForJsonSchema(paramSchema) : null,
+        };
+      });
+
+      // Extract request body details
+      let requestBody: ParsedRequestBody | null = null;
+      if (operation.requestBody) {
+        const rb = operation.requestBody as Record<string, unknown>;
+        const content = rb.content as Record<string, unknown> | undefined;
+        let contentType = "application/json";
+        let bodySchema: Record<string, unknown> | null = null;
+        if (content) {
+          // Prefer application/json, fall back to first available
+          const preferredType = content["application/json"]
+            ? "application/json"
+            : Object.keys(content)[0] || "application/json";
+          contentType = preferredType;
+          const mediaType = content[preferredType] as Record<string, unknown> | undefined;
+          if (mediaType?.schema) {
+            bodySchema = cleanSchemaForJsonSchema(
+              mediaType.schema as Record<string, unknown>
+            );
+          }
+        }
+        requestBody = {
+          contentType,
+          required: !!(rb.required as boolean),
+          description: (rb.description as string) || null,
+          schema: bodySchema,
+        };
+      }
+
+      // Extract per-operation security requirements
+      const opSecurity = operation.security as
+        | Array<Record<string, string[]>>
+        | undefined;
+
       endpoints.push({
         method: method.toUpperCase(),
         path,
@@ -136,16 +204,75 @@ export async function parseOpenApiSpec(content: string): Promise<ParsedSpec> {
         paramsCount: mergedParams.length,
         hasBody,
         defaultMcpType: getDefaultMcpType(method.toUpperCase(), hasPathParams),
+        parameters,
+        requestBody,
+        securityRequirements: opSecurity || null,
       });
     }
   }
+
+  // Extract security schemes and global security
+  const components = (api.components || {}) as Record<string, unknown>;
+  const securitySchemes = (components.securitySchemes || {}) as Record<
+    string,
+    unknown
+  >;
+  const globalSecurity = (api.security || []) as Array<
+    Record<string, string[]>
+  >;
 
   return {
     title: (info.title as string) || "Untitled API",
     version: (info.version as string) || "1.0.0",
     baseUrl: (servers[0]?.url as string) || "",
     endpoints,
+    securitySchemes,
+    globalSecurity,
   };
+}
+
+/**
+ * Clean a schema object for use as JSON Schema.
+ * Removes OpenAPI-specific properties, converts integer to number,
+ * and recursively cleans nested schemas.
+ */
+function cleanSchemaForJsonSchema(
+  schema: Record<string, unknown>
+): Record<string, unknown> {
+  if (!schema || typeof schema !== "object") return {};
+  const result = { ...schema };
+  // Remove OpenAPI-specific properties
+  delete result.nullable;
+  delete result.example;
+  delete result.xml;
+  delete result.externalDocs;
+  delete result.deprecated;
+  delete result.readOnly;
+  delete result.writeOnly;
+  // Convert integer to number
+  if (result.type === "integer") result.type = "number";
+  // Recursively clean properties
+  if (result.properties && typeof result.properties === "object") {
+    const props = result.properties as Record<string, unknown>;
+    const cleaned: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(props)) {
+      if (val && typeof val === "object") {
+        cleaned[key] = cleanSchemaForJsonSchema(
+          val as Record<string, unknown>
+        );
+      } else {
+        cleaned[key] = val;
+      }
+    }
+    result.properties = cleaned;
+  }
+  // Recursively clean array items
+  if (result.items && typeof result.items === "object") {
+    result.items = cleanSchemaForJsonSchema(
+      result.items as Record<string, unknown>
+    );
+  }
+  return result;
 }
 
 /**

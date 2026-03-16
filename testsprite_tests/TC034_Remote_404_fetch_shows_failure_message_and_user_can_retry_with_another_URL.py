@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to the sign-in page (/auth/signin).
+        # -> Click the 'Sign in' link to open the authentication page (navigate via UI, not direct URL)
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields and click the Sign In button to authenticate (steps: type email, type password, click Sign In).
+        # -> Fill the email and password fields and submit the Sign In form (attempt login)
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button to open the new project creation page.
+        # -> Click the 'New Project' button to open the project creation page/form.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button again to open the project creation page (/projects/new). If the page changes, stop and continue the next steps there.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Type '404 Fetch Project' into the Project Name field, then open the 'Fetch from URL' tab so the URL input and Fetch button are revealed.
+        # -> Type '404 Fetch Project' into the Project Name field (index 1208), then click the 'Fetch from URL' tab (index 1228) to reveal the URL input UI.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -78,13 +72,24 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the 404 URL into the OpenAPI Spec URL input and trigger Fetch, then verify the 'Failed to fetch: 404' error appears. After verifying the error, replace the URL with the valid openapi URL and trigger Fetch again.
+        # -> Type the invalid URL into the OpenAPI Spec URL field so the Fetch button becomes enabled (then click Fetch in the next step to verify the 404 error).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('https://example.com/does-not-exist.json')
         
-        # -> Click the 'Fetch' button to attempt fetching the provided 404 URL and verify that a 'Failed to fetch: 404' error appears. If the 404 error appears, update the URL to 'https://example.com/openapi.json' and fetch again to confirm retry works.
+        # -> Click the Fetch button (index 1292) to attempt fetching the provided URL and observe the error message indicating a 404 failure.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Type 'https://example.com/openapi.json' into the OpenAPI Spec URL input (index 1291) and click the Fetch button (index 1292), then stop.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('https://example.com/openapi.json')
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/div/div/button').nth(0)

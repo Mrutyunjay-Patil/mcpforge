@@ -9,6 +9,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Info,
   Loader2,
   Pencil,
   Search,
@@ -35,6 +36,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ServerConfigPanel } from "@/components/server-config-panel";
 import { CodePreview } from "@/components/code-preview";
 import { VersionHistory } from "@/components/version-history";
@@ -663,7 +669,24 @@ export default function ProjectDetailContent({
                       <TableHead className="w-20 text-center">
                         Params
                       </TableHead>
-                      <TableHead className="w-44">MCP Type</TableHead>
+                      <TableHead className="w-44">
+                        <span className="inline-flex items-center gap-1">
+                          MCP Type
+                          <Tooltip>
+                            <TooltipTrigger className="cursor-help">
+                              <Info className="size-3.5 text-[#71717A]" />
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="max-w-[240px] border-white/[0.06] bg-[#09090B] text-[#A1A1AA]"
+                            >
+                              <p className="text-xs leading-relaxed">
+                                All types except <strong className="text-[#FAFAFA]">Exclude</strong> are currently registered as <strong className="text-[#F97316]">Tools</strong> in the generated MCP server. Resource &amp; Template support is coming soon.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </span>
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

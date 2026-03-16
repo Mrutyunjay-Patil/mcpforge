@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the login page (use interactive element index 47).
+        # -> Click the 'Sign in' link to navigate to the sign-in page (use element index 84).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email (index 671) and password (index 675) fields, then click the Sign In button (index 679) to authenticate.
+        # -> Fill the email and password fields with the test credentials and submit the sign-in form (enter email, enter password, click 'Sign In').
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the first project card so the delete action can be accessed (click the first project card).
+        # -> Click the delete button on the first visible project card to open the confirmation dialog.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div[2]/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Dashboard' navigation item to return to the projects list so the delete button on the first project card can be accessed.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'Delete' button in the AlertDialog to confirm deletion (index 1589). After that, verify the success toast text 'Project deleted' is visible.
+        # -> Click the 'Delete' button in the AlertDialog (index 50069) to confirm deletion, wait for the UI update, then look for the 'Project deleted' success toast.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[3]/div[2]/button[2]').nth(0)

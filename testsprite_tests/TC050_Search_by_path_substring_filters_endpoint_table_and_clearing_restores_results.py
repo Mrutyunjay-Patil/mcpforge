@@ -33,10 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin (explicit navigation step provided in test plan)
-        await page.goto("http://localhost:3000/auth/signin")
+        # -> Click the 'Sign in' link to open the sign-in page (index 51).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Type credentials into email (index 652) and password (index 653) fields and click the Sign In button (index 654).
+        # -> Input the provided credentials into the Email and Password fields and click the 'Sign In' button to submit the form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,7 +55,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card (index 1016) to open the project's endpoints page.
+        # -> Click the first project card (Train Travel API) in the projects grid to open the project page so the endpoints list can be tested.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)

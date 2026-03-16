@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the sign-in page (/auth/signin) by clicking element [47].
+        # -> Click the 'Sign in' link to navigate to the authentication page (use element index 51).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type the email into the email field (index 671), type the password into the password field (index 675), then click the Sign In button (index 679).
+        # -> Type the provided test credentials into the email and password inputs, then submit the sign-in form by clicking the 'Sign In' button.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,13 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'a' into the search input (index 891) to filter visible project cards, then observe the filtered results.
+        # -> Type 'a' into the search input to filter project cards (use element index 782).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/section/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('a')
         
-        # -> Clear the search input (index 891) by setting it to an empty string, then verify that the full project cards list is visible and finish the test.
+        # -> Clear the search input (index 782) to restore the full project list.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/section/div/input').nth(0)

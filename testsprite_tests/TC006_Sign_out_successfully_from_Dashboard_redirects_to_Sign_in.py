@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin (explicit navigation step) so the sign-in form can be filled.
+        # -> Navigate to /auth/signin (use navigate action to http://localhost:3000/auth/signin).
         await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields and click the 'Sign In' button to sign in.
+        # -> Fill the email and password fields and click the Sign In button to attempt login.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,13 +52,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the user avatar in the navbar to open the account dropdown menu.
+        # -> Click the user avatar in the navbar to open the account dropdown (element index 877).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Sign out' button in the account dropdown to sign out (then verify redirect to /auth/signin).
+        # -> Click the 'Sign out' button in the navbar dropdown (interactive element index 1207).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/button').nth(0)

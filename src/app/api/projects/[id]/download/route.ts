@@ -6,6 +6,7 @@ import {
   type MappingData,
   type ConfigData,
 } from "@/lib/code-generator";
+import { parseOpenApiSpec } from "@/lib/openapi-parser";
 import { buildProjectZip } from "@/lib/zip-builder";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -46,16 +47,32 @@ export async function GET(_request: NextRequest, context: RouteContext) {
       );
     }
 
-    const mappings: MappingData[] = project.mappings.map((m) => ({
-      method: m.method,
-      path: m.path,
-      operationId: m.operationId,
-      summary: m.summary,
-      description: m.description,
-      paramsCount: m.paramsCount,
-      hasBody: m.hasBody,
-      mcpType: m.mcpType,
-    }));
+    // Re-parse spec to get full parameter details
+    let parsedSpec;
+    try {
+      parsedSpec = await parseOpenApiSpec(project.specContent);
+    } catch {
+      parsedSpec = null;
+    }
+
+    const mappings: MappingData[] = project.mappings.map((m) => {
+      const endpoint = parsedSpec?.endpoints.find(
+        (e) => e.method === m.method && e.path === m.path
+      );
+      return {
+        method: m.method,
+        path: m.path,
+        operationId: m.operationId,
+        summary: m.summary,
+        description: m.description,
+        paramsCount: m.paramsCount,
+        hasBody: m.hasBody,
+        mcpType: m.mcpType,
+        parameters: endpoint?.parameters ?? [],
+        requestBody: endpoint?.requestBody ?? null,
+        securityRequirements: endpoint?.securityRequirements ?? null,
+      };
+    });
 
     const config: ConfigData = {
       transport: project.config.transport,
@@ -64,6 +81,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
       serverVersion: project.config.serverVersion,
       baseUrl: project.config.baseUrl,
       port: project.config.port,
+      securitySchemes: parsedSpec?.securitySchemes ?? {},
     };
 
     const files = generateMcpServer(mappings, config);

@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to navigate to the sign-in page.
+        # -> Click the 'Sign in' link in the page header to open the sign-in page (use element index 51).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the Email and Password fields and click the 'Sign In' button to log in.
+        # -> Type the email into the email field (element 675) then type the password into the password field (element 679) and click the Sign In button (element 683).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,19 +55,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' button to open the project creation form (element index 58872).
+        # -> Click the 'New Project' CTA (element 901) to open the project creation page so the form can be tested.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Verify the app navigated to the project creation page (URL contains '/projects/new') and, if not navigated, open the create-project UI so the project name field is visible.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Type 'Empty Paste Content' into the project name field (index 59104), then click 'Create Project' (index 59142), wait for response and verify the alert text is visible.
+        # -> Type 'Empty Paste Content' into the Project Name input (element 1241) and then submit the form to check for the expected alert text.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)

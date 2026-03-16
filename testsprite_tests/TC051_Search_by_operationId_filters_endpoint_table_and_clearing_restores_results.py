@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the sign-in page (element index 81).
+        # -> Click the 'Sign in' link to open the sign-in page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the login form (email and password) and click 'Sign In' to authenticate.
+        # -> Type test@mcpforge.dev into the email field (index 675), type Password1 into the password field (index 679), then click the Sign In button (index 683).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,22 +55,34 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first project card in the projects grid to open the project page (index 76630).
+        # -> Click the first project card in the projects grid to open the project (element index 877).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'get' into the endpoint search input (index 76751) to exercise the filter and observe results.
+        # -> Type 'get' into the endpoint search input to filter endpoints by operationId (index 1248). Then verify the table is filtered.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[2]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('get')
         
-        # -> Verify the filtered endpoints UI (message/table), clear the search input, then verify the unfiltered endpoints UI (message/table) and finish.
+        # -> Clear the endpoint search input (index 1248) to verify the endpoints table returns to the unfiltered view, then confirm the table is visible and stop.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div/div[2]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('')
+        
+        # -> Type 'get' into endpoint search (index 1248) to confirm filtering, extract the visible Operation ID texts and row count, then clear the search input (index 1248) and extract the visible Operation ID texts and row count again to verify the table returns to unfiltered view.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('get')
+        
+        # -> Clear the endpoint search input (index 1248) and extract the visible Operation ID column values and the number of visible endpoint rows to confirm the table returns to the unfiltered view, then stop.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/main/section/div/div[2]/div/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('')
         
         # --> Test passed — verified by AI agent

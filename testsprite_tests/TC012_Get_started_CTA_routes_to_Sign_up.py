@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the primary CTA 'Get started' (index 49) to navigate to the signup page.
+        # -> Click the primary 'Get started' CTA (interactive element index 56) to navigate to the signup page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[3]').nth(0)

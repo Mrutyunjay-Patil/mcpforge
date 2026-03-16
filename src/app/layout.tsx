@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
-        {children}
+        <TooltipProvider delay={200}>
+          {children}
+        </TooltipProvider>
         <Toaster />
       </body>
     </html>

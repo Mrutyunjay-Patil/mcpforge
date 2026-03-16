@@ -33,13 +33,13 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Get started' link (index 49) to reach the signup page (/auth/signup). Then verify the 'Password' label is visible.
+        # -> Click the 'Get started' button (index 6) to navigate to the signup page (/auth/signup).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[3]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Type 'weak' into the password field (index 674). Then enter 'weak' into confirm password (index 678) and submit by clicking Create Account (index 683).
+        # -> Type 'weak' into the Password field, type 'weak' into the Confirm password field, then click 'Create Account' to see whether the weak password is blocked and whether a visible strength hint/error appears.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[3]/input').nth(0)

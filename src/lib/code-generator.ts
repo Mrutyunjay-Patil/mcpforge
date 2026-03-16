@@ -1,3 +1,23 @@
+// ---------------------------------------------------------------------------
+// Interfaces
+// ---------------------------------------------------------------------------
+
+export interface ParsedParameter {
+  name: string;
+  in: "path" | "query" | "header" | "cookie";
+  type: string;
+  required: boolean;
+  description: string | null;
+  schema: Record<string, unknown> | null;
+}
+
+export interface ParsedRequestBody {
+  contentType: string;
+  required: boolean;
+  description: string | null;
+  schema: Record<string, unknown> | null;
+}
+
 export interface MappingData {
   method: string;
   path: string;
@@ -7,6 +27,9 @@ export interface MappingData {
   paramsCount: number;
   hasBody: boolean;
   mcpType: string; // "tool" | "resource" | "resource_template" | "exclude"
+  parameters: ParsedParameter[];
+  requestBody: ParsedRequestBody | null;
+  securityRequirements: Array<Record<string, string[]>> | null;
 }
 
 export interface ConfigData {
@@ -16,6 +39,7 @@ export interface ConfigData {
   serverVersion: string;
   baseUrl: string;
   port: number;
+  securitySchemes: Record<string, unknown>; // From OpenAPI spec
 }
 
 export interface GeneratedFiles {
@@ -31,7 +55,7 @@ export interface GeneratedFiles {
 // ---------------------------------------------------------------------------
 
 /**
- * Derive a safe function/tool name from a mapping.
+ * Derive a safe tool name from a mapping.
  * Prefer operationId; fall back to method_path slug.
  */
 function toIdentifier(mapping: MappingData): string {
@@ -47,30 +71,11 @@ function toIdentifier(mapping: MappingData): string {
 }
 
 /**
- * Convert an OpenAPI path like /pets/{petId} to a URL-building expression.
- */
-function buildUrlExpression(path: string, baseUrlVar: string): string {
-  // Replace {param} with ${encodeURIComponent(param)} for safe URL building
-  const templated = path.replace(/\{([^}]+)\}/g, "${encodeURIComponent($1)}");
-  return "`${" + baseUrlVar + "}" + templated + "`";
-}
-
-/**
- * Extract path parameter names from an OpenAPI path.
- */
-function extractPathParams(path: string): string[] {
-  const matches = path.match(/\{([^}]+)\}/g);
-  if (!matches) return [];
-  return matches.map((m) => m.slice(1, -1));
-}
-
-/**
- * Build the description string for a tool/resource.
+ * Build the description string for a tool.
  */
 function descriptionFor(mapping: MappingData): string {
   if (mapping.summary) return mapping.summary;
   if (mapping.description) {
-    // Truncate long descriptions
     return mapping.description.length > 120
       ? mapping.description.slice(0, 117) + "..."
       : mapping.description;
@@ -78,207 +83,136 @@ function descriptionFor(mapping: MappingData): string {
   return `${mapping.method} ${mapping.path}`;
 }
 
-// ---------------------------------------------------------------------------
-// Auth helpers generation
-// ---------------------------------------------------------------------------
-
-function generateAuthHeaders(authMethod: string): string {
-  switch (authMethod) {
-    case "api-key":
-      return `
-function getAuthHeaders(): Record<string, string> {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) return {};
-  return { "X-API-Key": apiKey };
-}`;
-    case "bearer":
-      return `
-function getAuthHeaders(): Record<string, string> {
-  const token = process.env.BEARER_TOKEN;
-  if (!token) return {};
-  return { Authorization: \`Bearer \${token}\` };
-}`;
-    case "basic":
-      return `
-function getAuthHeaders(): Record<string, string> {
-  const username = process.env.BASIC_USERNAME;
-  const password = process.env.BASIC_PASSWORD;
-  if (!username || !password) return {};
-  const encoded = Buffer.from(\`\${username}:\${password}\`).toString("base64");
-  return { Authorization: \`Basic \${encoded}\` };
-}`;
-    default:
-      return `
-function getAuthHeaders(): Record<string, string> {
-  return {};
-}`;
-  }
+/**
+ * Escape a string for safe embedding inside a JS double-quoted string literal.
+ */
+function escStr(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
 }
 
 // ---------------------------------------------------------------------------
-// Tool generation
+// Build JSON Schema inputSchema for a tool from its parameters + requestBody
 // ---------------------------------------------------------------------------
 
-function generateToolRegistration(mapping: MappingData): string {
-  const name = toIdentifier(mapping);
-  const desc = descriptionFor(mapping);
-  const pathParams = extractPathParams(mapping.path);
+interface ToolSchemaResult {
+  inputSchema: Record<string, unknown>;
+  executionParameters: Array<{ name: string; in: string }>;
+  requestBodyContentType: string | undefined;
+}
 
-  // Build Zod shape for the tool parameters
-  const shapeEntries: string[] = [];
-  for (const p of pathParams) {
-    shapeEntries.push(`    ${p}: z.string().describe("Path parameter: ${p}")`);
+function buildToolSchema(mapping: MappingData): ToolSchemaResult {
+  const properties: Record<string, Record<string, unknown>> = {};
+  const required: string[] = [];
+  const executionParameters: Array<{ name: string; in: string }> = [];
+
+  for (const param of mapping.parameters) {
+    const prop: Record<string, unknown> = {};
+
+    if (param.schema && Object.keys(param.schema).length > 0) {
+      // Use the raw schema but ensure it has a type
+      Object.assign(prop, param.schema);
+    } else {
+      // Infer from type field
+      prop.type = param.type === "integer" ? "number" : param.type || "string";
+    }
+
+    if (param.description) {
+      prop.description = param.description;
+    }
+
+    properties[param.name] = prop;
+    executionParameters.push({ name: param.name, in: param.in });
+
+    if (param.required) {
+      required.push(param.name);
+    }
   }
-  if (mapping.hasBody) {
-    shapeEntries.push(
-      `    body: z.record(z.unknown()).describe("Request body")`
+
+  // Add request body as a "requestBody" property
+  let requestBodyContentType: string | undefined;
+  if (mapping.requestBody) {
+    requestBodyContentType = mapping.requestBody.contentType;
+    const bodyProp: Record<string, unknown> = {};
+
+    if (mapping.requestBody.schema && Object.keys(mapping.requestBody.schema).length > 0) {
+      Object.assign(bodyProp, mapping.requestBody.schema);
+    } else {
+      bodyProp.type = "object";
+    }
+
+    if (mapping.requestBody.description) {
+      bodyProp.description = mapping.requestBody.description;
+    }
+
+    properties["requestBody"] = bodyProp;
+
+    if (mapping.requestBody.required) {
+      required.push("requestBody");
+    }
+  }
+
+  const inputSchema: Record<string, unknown> = {
+    type: "object",
+    properties,
+  };
+
+  if (required.length > 0) {
+    inputSchema.required = required;
+  }
+
+  return { inputSchema, executionParameters, requestBodyContentType };
+}
+
+// ---------------------------------------------------------------------------
+// Generate toolDefinitionMap entries
+// ---------------------------------------------------------------------------
+
+function generateToolMapEntries(mappings: MappingData[]): string {
+  const entries: string[] = [];
+
+  for (const mapping of mappings) {
+    const name = toIdentifier(mapping);
+    const desc = descriptionFor(mapping);
+    const { inputSchema, executionParameters, requestBodyContentType } =
+      buildToolSchema(mapping);
+
+    const secReqs = mapping.securityRequirements
+      ? JSON.stringify(mapping.securityRequirements)
+      : "[]";
+
+    entries.push(
+      `  ["${escStr(name)}", {
+    name: "${escStr(name)}",
+    description: "${escStr(desc)}",
+    inputSchema: ${JSON.stringify(inputSchema)},
+    method: "${mapping.method.toLowerCase()}",
+    pathTemplate: "${escStr(mapping.path)}",
+    executionParameters: ${JSON.stringify(executionParameters)},
+    requestBodyContentType: ${requestBodyContentType ? `"${escStr(requestBodyContentType)}"` : "undefined"},
+    securityRequirements: ${secReqs},
+  }]`
     );
   }
-  // Add optional query string param bucket
-  shapeEntries.push(
-    `    queryParams: z.record(z.string()).optional().describe("Optional query parameters")`
-  );
 
-  const shapeStr =
-    shapeEntries.length > 0
-      ? `{\n${shapeEntries.join(",\n")}\n  }`
-      : "{}";
-
-  const urlExpr = buildUrlExpression(mapping.path, "BASE_URL");
-
-  const fetchOptions: string[] = [];
-  fetchOptions.push(`      method: "${mapping.method}"`);
-  fetchOptions.push(
-    `      headers: { "Content-Type": "application/json", ...getAuthHeaders() }`
-  );
-  if (mapping.hasBody) {
-    fetchOptions.push(`      body: JSON.stringify(params.body)`);
-  }
-
-  const queryBuild = `
-      const qs = params.queryParams
-        ? "?" + new URLSearchParams(params.queryParams).toString()
-        : "";`;
-
-  // Destructure path params if any
-  const destructure =
-    pathParams.length > 0
-      ? `      const { ${pathParams.join(", ")} } = params;\n`
-      : "";
-
-  return `
-  server.tool(
-    "${name}",
-    "${escStr(desc)}",
-    ${shapeStr},
-    async (params) => {
-      try {
-${destructure}${queryBuild}
-        const url = ${urlExpr} + qs;
-        const res = await fetch(url, {
-${fetchOptions.join(",\n")}
-        });
-        const data = await res.text();
-        if (!res.ok) {
-          return { content: [{ type: "text", text: \`API Error (HTTP \${res.status}): \${data}\` }], isError: true };
-        }
-        return { content: [{ type: "text", text: data }] };
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        return { content: [{ type: "text", text: \`Network error: \${message}\` }], isError: true };
-      }
-    }
-  );`;
+  return entries.join(",\n");
 }
 
 // ---------------------------------------------------------------------------
-// Resource generation
+// Transport code generation
 // ---------------------------------------------------------------------------
 
-function generateResourceRegistration(mapping: MappingData): string {
-  const name = toIdentifier(mapping);
-  const desc = descriptionFor(mapping);
-  const uri = `${mapping.method.toLowerCase()}:/${name}`;
-
-  return `
-  server.resource(
-    "${name}",
-    "${uri}",
-    { description: "${escStr(desc)}" },
-    async (uri) => {
-      const url = \`\${BASE_URL}${mapping.path}\`;
-      const res = await fetch(url, {
-        method: "${mapping.method}",
-        headers: { ...getAuthHeaders() },
-      });
-      const data = await res.text();
-      return { contents: [{ uri: uri.href, text: data }] };
-    }
-  );`;
+interface TransportCode {
+  imports: string;
+  setup: string;
 }
 
-// ---------------------------------------------------------------------------
-// Resource template generation
-// ---------------------------------------------------------------------------
-
-function generateResourceTemplateRegistration(mapping: MappingData): string {
-  const name = toIdentifier(mapping);
-  const desc = descriptionFor(mapping);
-  const pathParams = extractPathParams(mapping.path);
-
-  // Build URI template: /pets/{petId} -> get-pets:/pets/{petId}
-  const uriTemplate = `${mapping.method.toLowerCase()}:/${name}/${pathParams.map((p) => `{${p}}`).join("/")}`;
-  const urlExpr = buildUrlExpression(mapping.path, "BASE_URL");
-
-  const destructure =
-    pathParams.length > 0
-      ? `      const { ${pathParams.join(", ")} } = params;\n`
-      : "";
-
-  return `
-  server.resource(
-    "${name}",
-    new ResourceTemplate("${uriTemplate}", { list: undefined }),
-    { description: "${escStr(desc)}" },
-    async (uri, params) => {
-${destructure}      const url = ${urlExpr};
-      const res = await fetch(url, {
-        method: "${mapping.method}",
-        headers: { ...getAuthHeaders() },
-      });
-      const data = await res.text();
-      return { contents: [{ uri: uri.href, text: data }] };
-    }
-  );`;
-}
-
-// ---------------------------------------------------------------------------
-// Index.ts generation
-// ---------------------------------------------------------------------------
-
-function generateIndexTs(
-  mappings: MappingData[],
-  config: ConfigData
-): string {
-  const activeMappings = mappings.filter((m) => m.mcpType !== "exclude");
-  const tools = activeMappings.filter((m) => m.mcpType === "tool");
-  const resources = activeMappings.filter((m) => m.mcpType === "resource");
-  const resourceTemplates = activeMappings.filter(
-    (m) => m.mcpType === "resource_template"
-  );
-
-  const needsResourceTemplate = resourceTemplates.length > 0;
-
-  // Determine transport imports
-  let transportImport: string;
-  let transportSetup: string;
-
+function generateTransportCode(config: ConfigData): TransportCode {
   switch (config.transport) {
     case "sse":
-      transportImport = `import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { createServer, IncomingMessage, ServerResponse } from "http";`;
-      transportSetup = `
-  const PORT = parseInt(process.env.PORT || "${config.port}");
+      return {
+        imports: `import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { createServer, type IncomingMessage, type ServerResponse } from "http";`,
+        setup: `  const PORT = parseInt(process.env.PORT || "${config.port}");
   const transports: Record<string, SSEServerTransport> = {};
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
@@ -309,33 +243,30 @@ import { createServer, IncomingMessage, ServerResponse } from "http";`;
 
   httpServer.listen(PORT, () => {
     console.log(\`MCP server (SSE) listening on http://localhost:\${PORT}/sse\`);
-  });`;
-      break;
+  });`,
+      };
 
     case "streamable-http":
-      transportImport = `import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { createServer, IncomingMessage, ServerResponse } from "http";
-import { randomUUID } from "crypto";`;
-      transportSetup = `
-  const PORT = parseInt(process.env.PORT || "${config.port}");
+      return {
+        imports: `import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { createServer, type IncomingMessage, type ServerResponse } from "http";
+import { randomUUID } from "crypto";`,
+        setup: `  const PORT = parseInt(process.env.PORT || "${config.port}");
   const transports: Record<string, StreamableHTTPServerTransport> = {};
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
     if (req.method === "POST" && req.url === "/mcp") {
-      // Read request body
       const chunks: Buffer[] = [];
       for await (const chunk of req) { chunks.push(chunk as Buffer); }
       const body = JSON.parse(Buffer.concat(chunks).toString());
 
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
 
-      // Existing session
       if (sessionId && transports[sessionId]) {
         await transports[sessionId].handleRequest(req, res, body);
         return;
       }
 
-      // New session (initialize request)
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: () => randomUUID(),
       });
@@ -358,63 +289,356 @@ import { randomUUID } from "crypto";`;
 
   httpServer.listen(PORT, () => {
     console.log(\`MCP server (Streamable HTTP) listening on http://localhost:\${PORT}/mcp\`);
-  });`;
-      break;
+  });`,
+      };
 
     default: // stdio
-      transportImport = `import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";`;
-      transportSetup = `
-  const transport = new StdioServerTransport();
+      return {
+        imports: `import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";`,
+        setup: `  const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("MCP server running on stdio");`;
-      break;
+  console.error("MCP server running on stdio");`,
+      };
   }
+}
 
-  const resourceTemplateImport = needsResourceTemplate
-    ? `\nimport { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";`
-    : "";
+// ---------------------------------------------------------------------------
+// Index.ts generation (low-level Server API)
+// ---------------------------------------------------------------------------
 
-  const sections: string[] = [];
+function generateIndexTs(
+  mappings: MappingData[],
+  config: ConfigData
+): string {
+  // Convert everything to tools (resources and resource_templates become tools too)
+  const activeMappings = mappings.filter((m) => m.mcpType !== "exclude");
+  const transport = generateTransportCode(config);
 
-  if (tools.length > 0) {
-    sections.push(`  // --- Tools ---`);
-    for (const t of tools) {
-      sections.push(generateToolRegistration(t));
+  const toolMapEntries = generateToolMapEntries(activeMappings);
+  const securitySchemesJson = JSON.stringify(config.securitySchemes || {});
+
+  return `#!/usr/bin/env node
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+${transport.imports}
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  type Tool,
+  type CallToolResult,
+  type CallToolRequest,
+} from "@modelcontextprotocol/sdk/types.js";
+
+import { z, ZodError } from 'zod';
+import { jsonSchemaToZod } from 'json-schema-to-zod';
+import axios, { type AxiosRequestConfig, type AxiosError } from 'axios';
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type JsonObject = Record<string, any>;
+
+interface McpToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: any;
+  method: string;
+  pathTemplate: string;
+  executionParameters: { name: string; in: string }[];
+  requestBodyContentType?: string;
+  securityRequirements: any[];
+}
+
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
+
+const SERVER_NAME = "${escStr(config.serverName)}";
+const SERVER_VERSION = "${escStr(config.serverVersion)}";
+const API_BASE_URL = process.env.API_BASE_URL || "${escStr(config.baseUrl)}";
+
+// ---------------------------------------------------------------------------
+// Server instance
+// ---------------------------------------------------------------------------
+
+const server = new Server(
+  { name: SERVER_NAME, version: SERVER_VERSION },
+  { capabilities: { tools: {} } }
+);
+
+// ---------------------------------------------------------------------------
+// Tool definitions
+// ---------------------------------------------------------------------------
+
+const toolDefinitionMap: Map<string, McpToolDefinition> = new Map([
+${toolMapEntries}
+]);
+
+// ---------------------------------------------------------------------------
+// Security schemes (from OpenAPI spec)
+// ---------------------------------------------------------------------------
+
+const securitySchemes: Record<string, any> = ${securitySchemesJson};
+
+// ---------------------------------------------------------------------------
+// Request handlers
+// ---------------------------------------------------------------------------
+
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  const toolsForClient: Tool[] = Array.from(toolDefinitionMap.values()).map(def => ({
+    name: def.name,
+    description: def.description,
+    inputSchema: def.inputSchema,
+  }));
+  return { tools: toolsForClient };
+});
+
+server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest): Promise<CallToolResult> => {
+  const { name: toolName, arguments: toolArgs } = request.params;
+  const toolDefinition = toolDefinitionMap.get(toolName);
+  if (!toolDefinition) {
+    return { content: [{ type: "text", text: \`Error: Unknown tool: \${toolName}\` }] };
+  }
+  return await executeApiTool(toolName, toolDefinition, toolArgs ?? {}, securitySchemes);
+});
+
+// ---------------------------------------------------------------------------
+// Zod schema helper
+// ---------------------------------------------------------------------------
+
+function getZodSchemaFromJsonSchema(jsonSchema: any): z.ZodTypeAny | null {
+  try {
+    if (!jsonSchema || typeof jsonSchema !== 'object') return null;
+    const zodSchemaCode = jsonSchemaToZod(jsonSchema, { module: "none" });
+    // jsonSchemaToZod returns code like: z.object({...})
+    // We evaluate it with z in scope
+    const fn = new Function('z', \`return \${zodSchemaCode}\`);
+    return fn(z) as z.ZodTypeAny;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Core execution function
+// ---------------------------------------------------------------------------
+
+async function executeApiTool(
+  toolName: string,
+  toolDef: McpToolDefinition,
+  args: JsonObject,
+  schemes: Record<string, any>,
+): Promise<CallToolResult> {
+  try {
+    // 1. Validate arguments with json-schema-to-zod
+    const zodSchema = getZodSchemaFromJsonSchema(toolDef.inputSchema);
+    if (zodSchema) {
+      try {
+        zodSchema.parse(args);
+      } catch (e) {
+        if (e instanceof ZodError) {
+          const issues = e.issues.map(i => \`  - \${i.path.join('.')}: \${i.message}\`).join('\\n');
+          return {
+            content: [{ type: "text", text: \`Validation error for tool "\${toolName}":\\n\${issues}\` }],
+            isError: true,
+          };
+        }
+      }
+    }
+
+    // 2. Build URL by replacing path parameters
+    let urlPath = toolDef.pathTemplate;
+    const queryParams: Record<string, string> = {};
+    const headerParams: Record<string, string> = {};
+
+    for (const param of toolDef.executionParameters) {
+      const value = args[param.name];
+      if (value === undefined || value === null) continue;
+
+      switch (param.in) {
+        case "path":
+          urlPath = urlPath.replace(\`{\${param.name}}\`, encodeURIComponent(String(value)));
+          break;
+        case "query":
+          queryParams[param.name] = String(value);
+          break;
+        case "header":
+          headerParams[param.name] = String(value);
+          break;
+        case "cookie":
+          // Cookies are handled via the Cookie header
+          headerParams["Cookie"] = (headerParams["Cookie"] ? headerParams["Cookie"] + "; " : "") +
+            \`\${param.name}=\${encodeURIComponent(String(value))}\`;
+          break;
+      }
+    }
+
+    const fullUrl = \`\${API_BASE_URL}\${urlPath}\`;
+
+    // 3. Build request config
+    const axiosConfig: AxiosRequestConfig = {
+      method: toolDef.method as any,
+      url: fullUrl,
+      headers: { ...headerParams },
+      params: Object.keys(queryParams).length > 0 ? queryParams : undefined,
+      validateStatus: () => true, // Don't throw on non-2xx
+    };
+
+    // 4. Handle request body
+    if (args.requestBody !== undefined) {
+      axiosConfig.data = args.requestBody;
+      if (toolDef.requestBodyContentType) {
+        axiosConfig.headers = axiosConfig.headers || {};
+        (axiosConfig.headers as Record<string, string>)["Content-Type"] = toolDef.requestBodyContentType;
+      } else {
+        axiosConfig.headers = axiosConfig.headers || {};
+        (axiosConfig.headers as Record<string, string>)["Content-Type"] = "application/json";
+      }
+    }
+
+    // 5. Apply security
+    applySecurity(axiosConfig, toolDef.securityRequirements, schemes);
+
+    // 6. Make request
+    const response = await axios(axiosConfig);
+
+    // 7. Format response
+    const status = response.status;
+    let responseText: string;
+    if (typeof response.data === "string") {
+      responseText = response.data;
+    } else {
+      responseText = JSON.stringify(response.data, null, 2);
+    }
+
+    if (status >= 200 && status < 300) {
+      return { content: [{ type: "text", text: responseText }] };
+    } else {
+      return {
+        content: [{ type: "text", text: \`API Error (HTTP \${status}):\\n\${responseText}\` }],
+        isError: true,
+      };
+    }
+  } catch (error: unknown) {
+    return {
+      content: [{ type: "text", text: formatApiError(error) }],
+      isError: true,
+    };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Security application
+// ---------------------------------------------------------------------------
+
+function applySecurity(
+  config: AxiosRequestConfig,
+  securityRequirements: any[],
+  schemes: Record<string, any>,
+): void {
+  if (!securityRequirements || securityRequirements.length === 0) return;
+
+  // Security requirements array uses OR logic between items.
+  // Each item object uses AND logic between its keys.
+  // Try each requirement until one can be satisfied.
+  for (const requirement of securityRequirements) {
+    if (!requirement || typeof requirement !== 'object') continue;
+    const schemeNames = Object.keys(requirement);
+    if (schemeNames.length === 0) continue; // Empty object = no auth needed
+
+    let allSatisfied = true;
+    const pendingHeaders: Record<string, string> = {};
+    const pendingParams: Record<string, string> = {};
+
+    for (const schemeName of schemeNames) {
+      const scheme = schemes[schemeName];
+      if (!scheme) { allSatisfied = false; break; }
+
+      const envSuffix = schemeName.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+      const schemeType = (scheme.type || '').toLowerCase();
+
+      if (schemeType === 'apikey') {
+        const apiKey = process.env[\`API_KEY_\${envSuffix}\`];
+        if (!apiKey) { allSatisfied = false; break; }
+        const inLocation = (scheme.in || 'header').toLowerCase();
+        const paramName = scheme.name || 'X-API-Key';
+        if (inLocation === 'header') {
+          pendingHeaders[paramName] = apiKey;
+        } else if (inLocation === 'query') {
+          pendingParams[paramName] = apiKey;
+        } else if (inLocation === 'cookie') {
+          pendingHeaders["Cookie"] = (pendingHeaders["Cookie"] ? pendingHeaders["Cookie"] + "; " : "") +
+            \`\${paramName}=\${apiKey}\`;
+        }
+      } else if (schemeType === 'http') {
+        const httpScheme = (scheme.scheme || '').toLowerCase();
+        if (httpScheme === 'bearer') {
+          const token = process.env[\`BEARER_TOKEN_\${envSuffix}\`];
+          if (!token) { allSatisfied = false; break; }
+          pendingHeaders["Authorization"] = \`Bearer \${token}\`;
+        } else if (httpScheme === 'basic') {
+          const username = process.env[\`BASIC_USERNAME_\${envSuffix}\`];
+          const password = process.env[\`BASIC_PASSWORD_\${envSuffix}\`];
+          if (!username || !password) { allSatisfied = false; break; }
+          const encoded = Buffer.from(\`\${username}:\${password}\`).toString("base64");
+          pendingHeaders["Authorization"] = \`Basic \${encoded}\`;
+        } else {
+          allSatisfied = false; break;
+        }
+      } else if (schemeType === 'oauth2') {
+        const token = process.env[\`OAUTH_TOKEN_\${envSuffix}\`];
+        if (!token) { allSatisfied = false; break; }
+        pendingHeaders["Authorization"] = \`Bearer \${token}\`;
+      } else if (schemeType === 'openidconnect') {
+        const token = process.env[\`OIDC_TOKEN_\${envSuffix}\`];
+        if (!token) { allSatisfied = false; break; }
+        pendingHeaders["Authorization"] = \`Bearer \${token}\`;
+      } else {
+        allSatisfied = false; break;
+      }
+    }
+
+    if (allSatisfied) {
+      config.headers = { ...(config.headers as Record<string, string> || {}), ...pendingHeaders };
+      if (Object.keys(pendingParams).length > 0) {
+        config.params = { ...(config.params || {}), ...pendingParams };
+      }
+      return; // First satisfied requirement wins (OR logic)
     }
   }
+  // No security requirement could be satisfied — proceed without auth
+}
 
-  if (resources.length > 0) {
-    sections.push(`\n  // --- Resources ---`);
-    for (const r of resources) {
-      sections.push(generateResourceRegistration(r));
+// ---------------------------------------------------------------------------
+// Error formatting
+// ---------------------------------------------------------------------------
+
+function formatApiError(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const axErr = error as AxiosError;
+    const status = axErr.response?.status;
+    const data = axErr.response?.data;
+    const dataStr = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    if (status) {
+      return \`API Error (HTTP \${status}):\\n\${dataStr || axErr.message}\`;
     }
+    return \`Network error: \${axErr.message}\`;
   }
-
-  if (resourceTemplates.length > 0) {
-    sections.push(`\n  // --- Resource Templates ---`);
-    for (const rt of resourceTemplates) {
-      sections.push(generateResourceTemplateRegistration(rt));
-    }
+  if (error instanceof Error) {
+    return \`Error: \${error.message}\`;
   }
+  return \`Error: \${String(error)}\`;
+}
 
-  return `import "dotenv/config";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";${resourceTemplateImport}
-${transportImport}
-import { z } from "zod";
-
-const BASE_URL = process.env.BASE_URL || "${escStr(config.baseUrl)}";
-${generateAuthHeaders(config.authMethod)}
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
 
 async function main() {
-  const server = new McpServer({
-    name: "${escStr(config.serverName)}",
-    version: "${escStr(config.serverVersion)}",
-  });
-
-${sections.join("\n")}
-
-  // --- Connect Transport ---
-${transportSetup}
+${transport.setup}
 }
 
 main().catch((err) => {
@@ -431,7 +655,9 @@ main().catch((err) => {
 function generatePackageJson(config: ConfigData): string {
   const deps: Record<string, string> = {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    axios: "^1.7.9",
     dotenv: "^16.4.7",
+    "json-schema-to-zod": "^2.6.0",
     zod: "^3.24.2",
   };
 
@@ -440,10 +666,6 @@ function generatePackageJson(config: ConfigData): string {
     start: "node dist/index.js",
     dev: "npx tsx src/index.ts",
   };
-
-  if (config.transport === "sse" || config.transport === "streamable-http") {
-    // Node http module is built-in, no extra dep needed
-  }
 
   const pkg = {
     name: config.serverName,
@@ -492,13 +714,13 @@ function generateTsConfig(): string {
 }
 
 // ---------------------------------------------------------------------------
-// .env.example generation
+// .env.example generation (per-scheme env vars)
 // ---------------------------------------------------------------------------
 
 function generateEnvExample(config: ConfigData): string {
   const lines: string[] = [
     "# Base URL of the upstream API",
-    `BASE_URL=${config.baseUrl}`,
+    `API_BASE_URL=${config.baseUrl}`,
     "",
   ];
 
@@ -508,23 +730,59 @@ function generateEnvExample(config: ConfigData): string {
     lines.push("");
   }
 
-  switch (config.authMethod) {
-    case "api-key":
-      lines.push("# API Key for upstream API");
-      lines.push("API_KEY=your-api-key-here");
-      break;
-    case "bearer":
-      lines.push("# Bearer token for upstream API");
-      lines.push("BEARER_TOKEN=your-token-here");
-      break;
-    case "basic":
-      lines.push("# Basic auth credentials for upstream API");
-      lines.push("BASIC_USERNAME=your-username");
-      lines.push("BASIC_PASSWORD=your-password");
-      break;
+  const schemes = config.securitySchemes || {};
+  const schemeEntries = Object.entries(schemes);
+
+  if (schemeEntries.length > 0) {
+    lines.push("# --- Security credentials ---");
+    lines.push("# Set the env vars for the security schemes your API requires.");
+    lines.push("");
+
+    for (const [schemeName, schemeValue] of schemeEntries) {
+      const scheme = schemeValue as Record<string, unknown>;
+      const envSuffix = schemeName.toUpperCase().replace(/[^A-Z0-9]/g, "_");
+      const schemeType = ((scheme.type as string) || "").toLowerCase();
+
+      lines.push(`# Security scheme: ${schemeName} (${schemeType})`);
+
+      if (schemeType === "apikey") {
+        lines.push(`API_KEY_${envSuffix}=your-api-key-here`);
+      } else if (schemeType === "http") {
+        const httpScheme = ((scheme.scheme as string) || "").toLowerCase();
+        if (httpScheme === "bearer") {
+          lines.push(`BEARER_TOKEN_${envSuffix}=your-bearer-token-here`);
+        } else if (httpScheme === "basic") {
+          lines.push(`BASIC_USERNAME_${envSuffix}=your-username`);
+          lines.push(`BASIC_PASSWORD_${envSuffix}=your-password`);
+        }
+      } else if (schemeType === "oauth2") {
+        lines.push(`OAUTH_TOKEN_${envSuffix}=your-oauth-token-here`);
+      } else if (schemeType === "openidconnect") {
+        lines.push(`OIDC_TOKEN_${envSuffix}=your-oidc-token-here`);
+      }
+
+      lines.push("");
+    }
+  } else {
+    // Fall back to legacy single-auth env vars for backward compat
+    switch (config.authMethod) {
+      case "api-key":
+        lines.push("# API Key for upstream API");
+        lines.push("API_KEY_DEFAULT=your-api-key-here");
+        break;
+      case "bearer":
+        lines.push("# Bearer token for upstream API");
+        lines.push("BEARER_TOKEN_DEFAULT=your-token-here");
+        break;
+      case "basic":
+        lines.push("# Basic auth credentials for upstream API");
+        lines.push("BASIC_USERNAME_DEFAULT=your-username");
+        lines.push("BASIC_PASSWORD_DEFAULT=your-password");
+        break;
+    }
+    lines.push("");
   }
 
-  lines.push("");
   return lines.join("\n");
 }
 
@@ -537,11 +795,6 @@ function generateReadme(
   config: ConfigData
 ): string {
   const activeMappings = mappings.filter((m) => m.mcpType !== "exclude");
-  const tools = activeMappings.filter((m) => m.mcpType === "tool");
-  const resources = activeMappings.filter((m) => m.mcpType === "resource");
-  const resourceTemplates = activeMappings.filter(
-    (m) => m.mcpType === "resource_template"
-  );
 
   let connectInstructions = "";
   switch (config.transport) {
@@ -557,7 +810,7 @@ Add this to your Claude Desktop config file:
       "command": "node",
       "args": ["${config.serverName}/dist/index.js"],
       "env": {
-        "BASE_URL": "${config.baseUrl}"
+        "API_BASE_URL": "${config.baseUrl}"
       }
     }
   }
@@ -585,19 +838,9 @@ http://localhost:${config.port}/mcp
   }
 
   const toolList =
-    tools.length > 0
-      ? tools.map((t) => `- \`${toIdentifier(t)}\` — ${descriptionFor(t)}`).join("\n")
-      : "_None_";
-
-  const resourceList =
-    resources.length > 0
-      ? resources.map((r) => `- \`${toIdentifier(r)}\` — ${descriptionFor(r)}`).join("\n")
-      : "_None_";
-
-  const templateList =
-    resourceTemplates.length > 0
-      ? resourceTemplates
-          .map((rt) => `- \`${toIdentifier(rt)}\` — ${descriptionFor(rt)}`)
+    activeMappings.length > 0
+      ? activeMappings
+          .map((t) => `- \`${toIdentifier(t)}\` — ${descriptionFor(t)}`)
           .join("\n")
       : "_None_";
 
@@ -629,16 +872,11 @@ npm run dev
 
 ${connectInstructions}
 
-## Capabilities
+## Tools (${activeMappings.length})
 
-### Tools (${tools.length})
+All API endpoints are exposed as MCP tools. The server uses the low-level Server API with \`setRequestHandler\` for ListTools and CallTool.
+
 ${toolList}
-
-### Resources (${resources.length})
-${resourceList}
-
-### Resource Templates (${resourceTemplates.length})
-${templateList}
 
 ## Transport
 
@@ -646,16 +884,8 @@ ${templateList}
 
 ## Authentication
 
-${config.authMethod === "none" ? "No authentication configured." : `Using **${config.authMethod}** authentication. Set the appropriate environment variables in \`.env\`.`}
+${Object.keys(config.securitySchemes || {}).length > 0 ? `This server supports per-endpoint security based on the OpenAPI security schemes. Set the appropriate environment variables in \`.env\`.` : config.authMethod === "none" ? "No authentication configured." : `Using **${config.authMethod}** authentication. Set the appropriate environment variables in \`.env\`.`}
 `;
-}
-
-// ---------------------------------------------------------------------------
-// Escape helper
-// ---------------------------------------------------------------------------
-
-function escStr(s: string): string {
-  return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
 }
 
 // ---------------------------------------------------------------------------

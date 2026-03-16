@@ -17,7 +17,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 interface Project {
@@ -73,6 +72,8 @@ export default function DashboardContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -114,24 +115,32 @@ export default function DashboardContent() {
     );
   });
 
-  const handleDelete = async (projectId: string) => {
-    setDeletingId(projectId);
+  const openDeleteDialog = (projectId: string) => {
+    setDeleteTargetId(projectId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTargetId) return;
+    setDeletingId(deleteTargetId);
+    setDeleteDialogOpen(false);
     try {
-      const res = await fetch(`/api/projects/${projectId}`, {
+      const res = await fetch(`/api/projects/${deleteTargetId}`, {
         method: "DELETE",
       });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to delete project");
       }
-      setProjects((prev) => prev.filter((p) => p.id !== projectId));
-      toast.success("Project deleted successfully");
+      setProjects((prev) => prev.filter((p) => p.id !== deleteTargetId));
+      toast.success("Project deleted");
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "Failed to delete project";
       toast.error(msg);
     } finally {
       setDeletingId(null);
+      setDeleteTargetId(null);
     }
   };
 
@@ -229,15 +238,22 @@ export default function DashboardContent() {
       {filteredProjects.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProjects.map((project) => (
-            <Link
+            <div
               key={project.id}
-              href={`/projects/${project.id}`}
-              className="group cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#18181B] shadow-sm transition-all duration-200 hover:border-[rgba(249,115,22,0.3)] hover:shadow-md hover:shadow-orange-500/5"
+              className="group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#18181B] shadow-sm transition-all duration-200 hover:border-[rgba(249,115,22,0.3)] hover:shadow-md hover:shadow-orange-500/5"
               role="article"
               aria-label={`Project: ${project.name}`}
             >
+              {/* Clickable overlay for navigation */}
+              <Link
+                href={`/projects/${project.id}`}
+                className="absolute inset-0 z-0"
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+
               {/* Card body */}
-              <div className="p-5">
+              <div className="relative z-10 p-5 pointer-events-none">
                 {/* Top row: icon + status badge */}
                 <div className="flex items-start justify-between">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#F97316] to-[#EA580C]">
@@ -261,65 +277,23 @@ export default function DashboardContent() {
                   </p>
                 )}
 
-                {/* Delete button (overlay, top-right on hover) */}
-                <div className="mt-2 flex justify-end">
-                  <AlertDialog>
-                    <AlertDialogTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 shrink-0 rounded-md text-[#A1A1AA] opacity-0 transition-all duration-150 hover:bg-[#27272A] hover:text-[#EF4444] group-hover:opacity-100"
-                          aria-label={`Delete project ${project.name}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                          disabled={deletingId === project.id}
-                        />
-                      }
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </AlertDialogTrigger>
-                    <AlertDialogContent
-                      onClick={(e) => e.stopPropagation()}
-                      className="border-white/[0.06] bg-[#18181B]"
-                    >
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="font-mono text-[#FAFAFA]">
-                          Delete project?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="font-sans text-[#A1A1AA]">
-                          This will permanently delete &quot;{project.name}&quot;
-                          and all its endpoint mappings and server
-                          configurations. This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="border-white/[0.06] bg-[#09090B]/50">
-                        <AlertDialogCancel className="border-white/[0.06] bg-[#27272A] text-[#FAFAFA] hover:bg-[#3f3f46] hover:text-[#FAFAFA]">
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          variant="destructive"
-                          disabled={deletingId === project.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(project.id);
-                          }}
-                          className="bg-[#EF4444] text-white hover:bg-[#DC2626]"
-                        >
-                          {deletingId === project.id
-                            ? "Deleting..."
-                            : "Delete"}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                {/* Delete button */}
+                <div className="mt-2 flex justify-end pointer-events-auto">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0 rounded-md text-[#71717A] transition-all duration-150 hover:bg-[#27272A] hover:text-[#EF4444]"
+                    aria-label={`Delete project ${project.name}`}
+                    disabled={deletingId === project.id}
+                    onClick={() => openDeleteDialog(project.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
 
               {/* Bottom stats footer */}
-              <div className="flex items-center gap-4 border-t border-white/[0.06] px-5 py-3">
+              <div className="relative z-10 flex items-center gap-4 border-t border-white/[0.06] px-5 py-3 pointer-events-none">
                 <span className="inline-flex items-center gap-1.5 text-[12px] text-[#71717A]">
                   <Wrench className="h-3.5 w-3.5" />
                   {project.pathCount}{" "}
@@ -330,10 +304,36 @@ export default function DashboardContent() {
                   {formatRelativeDate(project.updatedAt)}
                 </span>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
+      {/* Shared delete confirmation dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="border-white/[0.06] bg-[#18181B]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-mono text-[#FAFAFA]">
+              Delete project?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-sans text-[#A1A1AA]">
+              This will permanently delete this project and all its endpoint
+              mappings and server configurations. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="border-white/[0.06] bg-[#09090B]/50">
+            <AlertDialogCancel className="border-white/[0.06] bg-[#27272A] text-[#FAFAFA] hover:bg-[#3f3f46] hover:text-[#FAFAFA]">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={handleDelete}
+              className="bg-[#EF4444] text-white hover:bg-[#DC2626]"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 }

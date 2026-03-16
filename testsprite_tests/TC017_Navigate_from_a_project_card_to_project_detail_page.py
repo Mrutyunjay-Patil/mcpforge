@@ -33,10 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Navigate to /auth/signin (use explicit navigate to http://localhost:3000/auth/signin per test step).
+        # -> Navigate to /auth/signin (http://localhost:3000/auth/signin)
         await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Type the email into the email field (index 652) and password into the password field (index 653), then click Sign In (index 654).
+        # -> Fill the email field with test@mcpforge.dev, fill the password field with Password1, then click the 'Sign In' button to authenticate.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -52,7 +52,12 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the first visible project card (interactive element index 1016) to navigate to the project detail view.
+        # -> Click the 'Dashboard' navigation item (index 872) to ensure dashboard is active, then click the first visible project card (index 895) to navigate to the project detail view.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)

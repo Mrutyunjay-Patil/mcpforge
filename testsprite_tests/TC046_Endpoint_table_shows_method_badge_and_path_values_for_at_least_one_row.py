@@ -33,6 +33,31 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
+        # -> Navigate to /auth/signin (http://localhost:3000/auth/signin) to reach the sign-in form so credentials can be entered.
+        await page.goto("http://localhost:3000/auth/signin")
+        
+        # -> Type email into the email field (index 655) then password into the password field (index 656) and click the Sign In button (index 657).
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('test@mcpforge.dev')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password1')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the first project card in the dashboard to open the project and view its endpoints table (immediately after that, verify endpoint row UI elements).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/main/section/div[2]/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         # --> Test passed — verified by AI agent
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")

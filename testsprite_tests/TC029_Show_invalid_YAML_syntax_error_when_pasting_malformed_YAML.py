@@ -33,13 +33,10 @@ async def run_test():
         # -> Navigate to http://localhost:3000
         await page.goto("http://localhost:3000")
         
-        # -> Click the 'Sign in' link to open the authentication page (use interactive element index 47). ASSERTION: 'Sign in' link (index 47) is visible on the homepage.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/nav/div/div/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Navigate to /auth/signin (explicit navigation step from test plan).
+        await page.goto("http://localhost:3000/auth/signin")
         
-        # -> Fill the email and password fields and click the Sign In button to log into the dashboard (then verify redirect to /dashboard).
+        # -> Fill the Email and Password fields and click the Sign In button to authenticate (perform inputs into indexes 658 and 659, then click index 660). After the click, check that the app navigates to the dashboard (URL contains '/dashboard').
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/div/input').nth(0)
@@ -55,13 +52,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/div[2]/div/form/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Project' call-to-action to open the project creation page.
+        # -> Click the 'New Project' call-to-action to open the new project creation page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/main/section/header/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter project name 'Bad YAML' into the Project Name field (index 64114) then click the 'Paste Content' tab (index 64133).
+        # -> Type 'Bad YAML' into the Project Name field, then click the 'Paste Content' tab to reveal the textarea for pasting the malformed YAML.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div/div[2]/div/input').nth(0)
@@ -72,7 +69,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Paste the malformed YAML into the paste textarea and click 'Create Project' to trigger validation.
+        # -> Paste the malformed YAML into the specification textarea (index 1313) and click the Create Project button (index 1267). After that, verify that the text 'Invalid YAML syntax' is visible.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/main/main/form/div[2]/div[2]/div/div[2]/div/textarea').nth(0)
