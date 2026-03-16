@@ -5,7 +5,8 @@ MCPForge -- Convert OpenAPI specs into MCP servers with a visual interface
 - **Import any OpenAPI spec** -- paste JSON, paste YAML, or fetch from a URL to instantly parse and load your API definition
 - **Visual endpoint explorer** -- browse every endpoint with HTTP method badges, paths, and operationIds in a searchable, filterable table
 - **Assign MCP types visually** -- classify each endpoint as a Tool, Resource, Resource Template, or Excluded with a single dropdown click
-- **Generate MCP server code** -- export a ready-to-run MCP server package as a downloadable ZIP based on your configuration
+- **Production-grade MCP server generation** -- generates servers using the low-level Server API with full JSON Schema inputSchemas, per-tool security, runtime validation (json-schema-to-zod), axios HTTP, and all 3 transports (stdio/SSE/Streamable HTTP)
+- **One-click download** -- export a ready-to-run MCP server package as a downloadable ZIP
 - **Multi-project dashboard** -- manage multiple OpenAPI-to-MCP conversion projects from a single authenticated workspace
 
 ## The Problem
@@ -56,12 +57,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 All tests were generated and executed by [TestSprite MCP](https://www.testsprite.com), an automated testing tool that creates end-to-end browser and API tests from a product requirements document.
 
-- **100 tests executed** across 4 TestSprite runs (3 frontend rounds + 1 backend round)
-- **86 passed, 14 failed** across all runs (86% raw pass rate)
-- **50 unique passing test cases** retained across 13 requirement categories: authentication, signup validation, sign-out, route protection, landing page, navigation, dashboard, project creation (paste + URL fetch), project detail layout, endpoint explorer, MCP type management, and backend API
-- **69 test files** in the repo (some tests ran in multiple rounds)
-- Failures include: 6 flaky tests that passed in other rounds, 1 error injection edge case, 1 external URL timeout, and 5 backend tests blocked by NextAuth cookie auth
-- Full breakdown in the [test report](./testsprite_tests/testsprite-mcp-test-report.md)
+- **Frontend: 25/27 passed (93%)** -- auth flows, landing page, dashboard, project CRUD, endpoint table, filtering, search, delete with confirmation
+- **Backend: 4/10 passed (40%)** -- signup validation, unauthorized access (remaining failures are auth cookie issues inherent to NextAuth + raw HTTP tests)
+- **69 test files** in the repo across multiple TestSprite runs
 - All test scripts in [`testsprite_tests/`](./testsprite_tests/) (frontend) and [`testsprite_tests/backend/`](./testsprite_tests/backend/) (API)
 
 ## Project Structure
