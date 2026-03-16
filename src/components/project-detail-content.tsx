@@ -497,15 +497,14 @@ export default function ProjectDetailContent({
       <Tabs defaultValue="endpoints" aria-label="Project sections">
         <TabsList className="mb-6 bg-[#18181B] border border-white/[0.06]">
           <TabsTrigger value="endpoints" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">Endpoints</TabsTrigger>
+          <TabsTrigger value="config" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">Config</TabsTrigger>
           <TabsTrigger value="preview" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">Preview</TabsTrigger>
           <TabsTrigger value="history" className="data-[state=active]:border-b-2 data-[state=active]:border-[#F97316] data-[state=active]:text-[#FAFAFA] text-[#71717A]">History</TabsTrigger>
         </TabsList>
 
         {/* Endpoints Tab */}
         <TabsContent value="endpoints">
-          <div className="flex flex-col gap-6 lg:flex-row">
-          {/* Left column: table (70%) */}
-          <div className="min-w-0 lg:w-[70%]">
+          <div>
           {/* Save error banner */}
           {saveError && (
             <div role="alert" className="mb-4 rounded-md border border-[#EF4444]/30 bg-[#EF4444]/10 px-3 py-2 text-[13px] text-[#EF4444]">
@@ -797,10 +796,12 @@ export default function ProjectDetailContent({
             </>
           )}
           </div>
-          {/* Right column: config panel (30%) */}
-          <aside className="lg:w-[30%] rounded-lg border border-white/[0.06] bg-[#18181B] p-4">
+        </TabsContent>
+
+        {/* Config Tab */}
+        <TabsContent value="config">
+          <div className="mx-auto max-w-lg rounded-lg border border-white/[0.06] bg-[#18181B] p-6">
             <ServerConfigPanel projectId={projectId} />
-          </aside>
           </div>
         </TabsContent>
 
