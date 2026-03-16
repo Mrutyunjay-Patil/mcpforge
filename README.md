@@ -9,6 +9,12 @@ MCPForge -- Convert OpenAPI specs into MCP servers with a visual interface
 - **One-click download** -- export a ready-to-run MCP server package as a downloadable ZIP
 - **Multi-project dashboard** -- manage multiple OpenAPI-to-MCP conversion projects from a single authenticated workspace
 
+## Demo
+
+A 3-minute walkthrough showing the full flow - sign up, upload an OpenAPI spec, explore endpoints, assign MCP types, preview generated code, and download the project:
+
+[Watch the demo](./demo.mp4)
+
 ## The Problem
 
 Converting OpenAPI specifications into MCP (Model Context Protocol) servers today requires manual work with CLI tools and hand-written configuration files. There is no visual tool that lets you import an OpenAPI spec, see all your endpoints at a glance, classify them into MCP types, and generate a working MCP server -- all from the browser. MCPForge fills that gap.
