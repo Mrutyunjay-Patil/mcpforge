@@ -80,10 +80,11 @@ export async function parseOpenApiSpec(content: string): Promise<ParsedSpec> {
   }
 
   // Validate with swagger-parser
+  // Use parse() instead of validate() because validate() rejects OpenAPI 3.1.x specs
   let api: Record<string, unknown>;
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    api = (await SwaggerParser.validate(parsed as any)) as Record<
+    api = (await SwaggerParser.dereference(parsed as any)) as Record<
       string,
       unknown
     >;
