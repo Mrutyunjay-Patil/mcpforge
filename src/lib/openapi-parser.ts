@@ -224,11 +224,36 @@ export async function parseOpenApiSpec(content: string): Promise<ParsedSpec> {
   return {
     title: (info.title as string) || "Untitled API",
     version: (info.version as string) || "1.0.0",
-    baseUrl: (servers[0]?.url as string) || "",
+    baseUrl: resolveBaseUrl(servers),
     endpoints,
     securitySchemes,
     globalSecurity,
   };
+}
+
+/**
+ * Resolve the best base URL from the servers array.
+ * Prefers absolute URLs (starting with http/https).
+ * If only relative paths exist (e.g. /api/v3), returns empty string
+ * so the user must configure API_BASE_URL in their .env file.
+ */
+function resolveBaseUrl(
+  servers: Array<Record<string, unknown>>
+): string {
+  if (!servers || servers.length === 0) return "";
+
+  // First pass: find an absolute URL
+  for (const server of servers) {
+    const url = server.url as string | undefined;
+    if (url && /^https?:\/\//i.test(url)) {
+      // Remove trailing slash
+      return url.replace(/\/+$/, "");
+    }
+  }
+
+  // All URLs are relative — cannot be used with axios directly.
+  // Return empty so the user must set API_BASE_URL.
+  return "";
 }
 
 /**

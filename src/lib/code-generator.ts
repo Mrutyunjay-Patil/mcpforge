@@ -718,8 +718,11 @@ function generateTsConfig(): string {
 // ---------------------------------------------------------------------------
 
 function generateEnvExample(config: ConfigData): string {
+  const baseUrlComment = config.baseUrl
+    ? "# Base URL of the upstream API"
+    : "# Base URL of the upstream API (REQUIRED — the spec had a relative URL)";
   const lines: string[] = [
-    "# Base URL of the upstream API",
+    baseUrlComment,
     `API_BASE_URL=${config.baseUrl}`,
     "",
   ];
